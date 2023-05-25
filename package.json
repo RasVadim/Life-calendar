@@ -1,55 +1,32 @@
 {
   "name": "life-calendar",
-  "version": "0.1.0",
   "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "node server",
+    "build": "npm run build:client && npm run build:server",
+    "build:client": "vite build --ssrManifest --outDir dist/client",
+    "build:server": "vite build --ssr src/entry-server.tsx --outDir dist/server",
+    "preview": "cross-env NODE_ENV=production node server"
+  },
   "dependencies": {
-    "@testing-library/jest-dom": "^5.16.1",
-    "@testing-library/react": "^13.0.0",
-    "@testing-library/user-event": "^13.5.0",
-    "@types/jest": "^27.4.0",
-    "@types/node": "^17.0.10",
-    "@types/react": "^18.0.0",
-    "@types/react-dom": "^18.0.0",
+    "classnames": "^2.3.2",
+    "compression": "^1.7.4",
+    "express": "^4.18.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-scripts": "5.0.1",
-    "typescript": "^4.4.2",
-    "web-vitals": "^2.1.4",
-    "workbox-background-sync": "^6.4.2",
-    "workbox-broadcast-update": "^6.4.2",
-    "workbox-cacheable-response": "^6.4.2",
-    "workbox-core": "^6.4.2",
-    "workbox-expiration": "^6.4.2",
-    "workbox-google-analytics": "^6.4.2",
-    "workbox-navigation-preload": "^6.4.2",
-    "workbox-precaching": "^6.4.2",
-    "workbox-range-requests": "^6.4.2",
-    "workbox-routing": "^6.4.2",
-    "workbox-strategies": "^6.4.2",
-    "workbox-streams": "^6.4.2"
+    "sirv": "^2.0.2"
   },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+  "devDependencies": {
+    "@types/express": "^4.17.16",
+    "@types/node": "^18.11.12",
+    "@types/react": "^18.0.26",
+    "@types/react-dom": "^18.0.9",
+    "@vitejs/plugin-react-swc": "^3.0.0",
+    "cross-env": "^7.0.3",
+    "stylus": "^0.59.0",
+    "typescript": "^4.9.4",
+    "vite": "^4.0.4"
   }
 }
