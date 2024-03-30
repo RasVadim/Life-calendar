@@ -1,21 +1,19 @@
-import { FC, ReactNode } from 'react'
+import { FC, ReactNode } from "react";
 
-import { Header } from '../../components/header/Header'
-import { Content } from '../../components/content/Content'
-import { TabBar } from '../../components/tabBar/TabBar'
+import { Header, Content, TabBar } from "@/components";
 
-import s from './mainPage.module.styl'
+import s from "./s.module.styl";
 
 type PropsType = {
-    children?: ReactNode
-}
+  children?: ReactNode;
+};
 
-export const MainPage: FC<PropsType> = ({ children }) => {
-    return (
-        <div className={s.page}>
-            <Header />
-            <Content />
-            <TabBar />
-        </div>
-    )
-}
+export const MainPage: FC<PropsType> = () => {
+  return (
+    <div className={s.page}>
+      <Header />
+      <Content />
+      <TabBar />
+    </div>
+  );
+};

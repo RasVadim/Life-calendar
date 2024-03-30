@@ -1,9 +1,8 @@
 import { FC, ReactNode } from 'react'
 
-import { AccountButton } from '../../styledComponents/accountButton/accountButton'
-import { NavigationButton } from '../../styledComponents/navigationButton/NavigationButton'
+import { AccountButton, NavigationButton } from '@/ui-kit'
 
-import s from './header.module.styl'
+import s from './s.module.styl'
 
 type PropsType = {
     children?: ReactNode

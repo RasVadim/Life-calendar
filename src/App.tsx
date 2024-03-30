@@ -1,7 +1,6 @@
-import { MainPage } from './pages/main/MainPage'
-import { LoginPage } from './pages/login/LoginPage'
+import { MainPage, LoginPage } from '@/pages'
 
-import s from './App.module.styl'
+import s from './s.module.styl'
 
 const App = () => {
   return (

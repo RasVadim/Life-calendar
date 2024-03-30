@@ -1,6 +1,6 @@
 import { FC } from 'react'
 
-import s from './week.module.styl'
+import s from './s.module.styl'
 
 type PropsType = {
     id: string

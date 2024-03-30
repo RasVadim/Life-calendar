@@ -1,8 +1,8 @@
-export type YearType = {
+export type TYear = {
     id: string,
-    weeks: WeekType[]
+    weeks: TWeek[]
 }
 
-export type WeekType = {
+export type TWeek = {
     id: string
 }
