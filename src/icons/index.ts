@@ -10,4 +10,4 @@ export { PlansIcon } from "./plansIcon";
 
 export { SeasonsIcon } from "./seasonsIcon";
 
-export { YearsIcon } from "./yearsIcon";
+export { LifeIcon } from "./lifeIcon";
