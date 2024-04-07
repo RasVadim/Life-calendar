@@ -1,27 +1,23 @@
 import { FC } from "react";
+import { Link, useMatch } from "react-router-dom";
 
-import { MenuIcon, BackIcon, LifeIcon, EventsIcon, PlansIcon } from "@/icons";
+import { Button, type TIconName } from "@/ui-kit";
 
 import s from "./s.module.styl";
 
 type PropsType = {
-  type: "menu" | "back" | "life" | "events" | "plans";
+  icon: TIconName;
   label?: string;
+  to: string;
 };
 
-export const NavigationButton: FC<PropsType> = ({ type = "", label }) => {
-  const icon = {
-    menu: <MenuIcon />,
-    back: <BackIcon />,
-    life: <LifeIcon />,
-    events: <EventsIcon />,
-    plans: <PlansIcon />,
-  }[type];
+export const NavigationButton: FC<PropsType> = ({ to, icon, label }) => {
+  const match = useMatch(to);
 
   return (
-    <div className={s.wrap}>
-      <button className={s.button}>{icon}</button>
+    <Link to={to} className={match ? s.active : ""}>
+      <Button icon={icon} isActive={!!match} />
       {label && <p className={s.label}>{label}</p>}
-    </div>
+    </Link>
   );
 };

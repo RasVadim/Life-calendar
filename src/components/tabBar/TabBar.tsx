@@ -6,12 +6,12 @@ import s from "./s.module.styl";
 
 type PropsType = {};
 
-export const TabBar: FC<PropsType> = ({}) => {
+export const TabBar: FC<PropsType> = () => {
   return (
     <div className={s.tabBar}>
-      <NavigationButton type="life" label="life" />
-      <NavigationButton type="events" label="events" />
-      <NavigationButton type="plans" label="plans" />
+      <NavigationButton icon="life" label="life" to='/'/>
+      <NavigationButton icon="events" label="events" to='/events' />
+      <NavigationButton icon="plans" label="plans" to='/plans'/>
     </div>
   );
 };

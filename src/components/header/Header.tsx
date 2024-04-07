@@ -1,8 +1,9 @@
 import { FC, ReactNode } from 'react'
 
-import { AccountButton, NavigationButton } from '@/ui-kit'
+import { AccountButton, Button } from '@/ui-kit'
 
 import s from './s.module.styl'
+import { BurgerMenu } from '../burgeMenu/BurgerMenu'
 
 type PropsType = {
     children?: ReactNode
@@ -11,7 +12,8 @@ type PropsType = {
 export const Header: FC<PropsType> = ({ children = 'Life Calendar' }) => {
     return (
         <div className={s.header}>
-            <NavigationButton type='menu' />
+            {/* <Button icon='menu' /> */}
+            <BurgerMenu/>
             {children}
             <AccountButton />
         </div>

@@ -1,15 +1,15 @@
+import { BrowserRouter } from "react-router-dom";
 import { Provider } from "jotai";
-import { MainPage, LoginPage } from "@/pages";
 
-import s from "./s.module.styl";
+import { Routes } from "@/Routes";
 
 const App = () => {
   return (
-    <Provider>
-      <div className={s.App}>
-        <MainPage />
-      </div>
-    </Provider>
+    <BrowserRouter>
+      <Provider>
+        <Routes />
+      </Provider>
+    </BrowserRouter>
   );
 };
 
