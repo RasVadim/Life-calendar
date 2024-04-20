@@ -1,21 +1,22 @@
-import { FC, ReactNode } from 'react'
+import { FC } from "react";
+import { useTranslation } from "react-i18next";
 
-import { AccountButton, Button } from '@/ui-kit'
+import { AccountButton, SyncingLine } from "@/ui-kit";
+import { useSyncPending } from "@/store/atoms";
 
-import s from './s.module.styl'
-import { BurgerMenu } from '../burgeMenu/BurgerMenu'
+import { BurgerMenu } from "../burgeMenu/BurgerMenu";
+import s from "./s.module.styl";
 
-type PropsType = {
-    children?: ReactNode
-}
+export const Header: FC = () => {
+  const { t } = useTranslation();
+  const [pending] = useSyncPending();
 
-export const Header: FC<PropsType> = ({ children = 'Life Calendar' }) => {
-    return (
-        <div className={s.header}>
-            {/* <Button icon='menu' /> */}
-            <BurgerMenu/>
-            {children}
-            <AccountButton />
-        </div>
-    )
-}
+  return (
+    <div className={s.header}>
+      {pending && <SyncingLine />}
+      <BurgerMenu />
+      {t("layout.lifeCalendar")}
+      <AccountButton />
+    </div>
+  );
+};

@@ -1,5 +1,7 @@
-import { FC, useState } from "react";
+import { FC, useRef, useState } from "react";
 import cx from "classnames";
+
+import { Menu } from "./Menu";
 
 import s from "./s.module.styl";
 
@@ -8,13 +10,13 @@ type PropsType = {};
 export const BurgerMenu: FC<PropsType> = () => {
   // to change burger classes
   const [isOpen, setIsOpen] = useState(false);
-
-  // const [burger_class, setBurgerClass] = useState("burger-bar unclicked");
-  // const [menu_class, setMenuClass] = useState("menu hidden");
-  // const [isMenuClicked, setIsMenuClicked] = useState(false);
+  const firstOpen = useRef<boolean>(false);
 
   // toggle burger menu change
   const updateMenu = () => {
+    if (firstOpen.current !== true) {
+      firstOpen.current = true;
+    }
     setIsOpen((prev) => !prev);
   };
 
@@ -28,7 +30,15 @@ export const BurgerMenu: FC<PropsType> = () => {
         </div>
       </nav>
 
-      <div className={cx(s.menu, { [s.hidden]: !isOpen })}></div>
+      {!!firstOpen.current && (
+        <>
+          <div
+            className={cx(s.menuBackground, { [s.hidden]: !isOpen })}
+            onClick={updateMenu}
+          />
+          <Menu isOpen={isOpen} />
+        </>
+      )}
     </div>
   );
 };

@@ -1,5 +1,8 @@
 export { Page } from "./page/Page";
 
+export { SyncingLine } from "./syncingLine/SyncingLine";
+
+//buttons
 export { Button } from "./button/Button";
 
 export * from "./button/buttonIcons";
