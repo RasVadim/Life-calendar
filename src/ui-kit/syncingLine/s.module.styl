@@ -1,0 +1,43 @@
+.wrap
+  position absolute
+  top 0
+  background-color #C8C8C8
+  opacity: 0.5
+  height 1px
+  width 100%
+  animation colored 2s cubic-bezier(0.5, 0.51, 0.69, 0.7) infinite
+
+  .bar
+    position absolute
+    float left
+    width 0
+    height 1px
+    background-color #242424
+    box-shadow: 0 0 2px 5px #242424;
+    animation leftRight 2s cubic-bezier(0.5, 0.51, 0.69, 0.7) infinite
+
+@keyframes leftRight
+  0%
+    transform translate(0, 0)
+
+  20%
+    transform translate(0, 0)
+    width 40vw
+
+  51%
+    transform translate(40vw, 0)
+    width 60vw
+
+  100%
+    transform translate(100vw, 0)
+    width 0
+
+@keyframes colored
+  0%
+    background-color #C8C8C8
+
+  50%
+    background-color #3cb8ff
+
+  100%
+    background-color #C8C8C8
