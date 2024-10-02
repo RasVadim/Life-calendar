@@ -12,7 +12,7 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  --status-bar-background-color: #242424;
+  --status-bar-background-color: black;
 }
 
 * {
@@ -90,7 +90,15 @@ button:focus-visible {
     /* Задайте фон через --status-bar-background-color */
     /* Дополнительно можно использовать дополнительные стили, если необходимо */
     :root {
-      --status-bar-background-color: #242424;
+      --status-bar-background-color: black;
     }
+  }
+}
+
+/* Additional styles for iOS devices*/
+@media screen and (min-device-width: 375px) and (max-device-width: 812px) and (-webkit-device-pixel-ratio: 3) {
+  /* Styles for iPhone X and newer */
+  :root {
+    --status-bar-background-color: black;
   }
 }

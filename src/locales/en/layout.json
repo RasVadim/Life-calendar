@@ -3,6 +3,8 @@
     "lifeCalendar": "Life Calendar",
     "life": "life",
     "events": "events",
-    "plans": "plans"
+    "plans": "plans",
+    "light": "light",
+    "dark": "dark"
   }
 }

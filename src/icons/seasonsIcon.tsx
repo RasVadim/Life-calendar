@@ -7,7 +7,7 @@ type PropsType = {
 };
 
 export const SeasonsIcon: FC<PropsType> = ({
-  size = "34",
+  size = "26",
   color = "#747474",
   isActive = false,
 }) => {

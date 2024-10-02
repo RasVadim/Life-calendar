@@ -7,7 +7,7 @@ type PropsType = {
 };
 
 export const MenuIcon: FC<PropsType> = ({
-  size = "34",
+  size = "26",
   color = "#747474",
   isActive = false,
 }) => {

@@ -1,6 +1,5 @@
 
-import { FC, ReactNode } from 'react'
-import s from './backButton.module.styl'
+import { FC } from 'react'
 
 type PropsType = {
     size?: string

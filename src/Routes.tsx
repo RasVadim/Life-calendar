@@ -1,10 +1,10 @@
-
+import { memo } from "react";
 import { Routes as OriginalRoutes, Route } from "react-router-dom";
 
 import { Layout } from "./components";
 import { Life } from "./pages";
 
-export const Routes = () => {
+export const Routes = memo(() => {
   return (
     <OriginalRoutes>
       <Route path="/" element={<Layout />}>
@@ -17,4 +17,4 @@ export const Routes = () => {
       </Route>
     </OriginalRoutes>
   );
-};
+});

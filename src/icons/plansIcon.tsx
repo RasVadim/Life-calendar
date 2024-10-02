@@ -7,7 +7,7 @@ type PropsType = {
 };
 
 export const PlansIcon: FC<PropsType> = ({
-  size = "34",
+  size = "26",
   color = "#747474",
   isActive = false,
 }) => {

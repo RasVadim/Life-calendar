@@ -8,7 +8,7 @@ type PropsType = {
 };
 
 export const EventsIcon: FC<PropsType> = ({
-  size = "34",
+  size = "26",
   color = "#747474",
   secondaryColor = "#95cbc9",
   isActive = false,
