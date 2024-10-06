@@ -1,9 +1,8 @@
-import { FC, ReactNode } from "react";
+import { lazy, FC, ReactNode } from 'react';
 
-import { Page } from "@/ui-kit";
+import { Page } from '@/ui-kit';
 
-import { Content } from "@/components";
-
+const LazyContent = lazy(() => import('../../components/content/Content'));
 
 type PropsType = {
   children?: ReactNode;
@@ -11,8 +10,8 @@ type PropsType = {
 
 export const Life: FC<PropsType> = () => {
   return (
-    <Page>
-      <Content />
+    <Page name="life">
+      <LazyContent />
     </Page>
   );
 };

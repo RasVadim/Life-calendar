@@ -1,13 +1,21 @@
-import { ReactElement } from "react";
+import { ReactElement } from 'react';
 
-import { BackIcon, EventsIcon, LifeIcon, MenuIcon, PlansIcon } from "@/icons";
+import {
+  BackIcon,
+  EventsIcon,
+  HouseIcon,
+  MenuIcon,
+  PartOfLifeIcon,
+  ProfileIcon,
+} from '@/icons';
 
-export type TIconName = "menu" | "back" | "life" | "events" | "plans";
+export type TIconName = 'menu' | 'back' | 'life' | 'settings' | 'events' | 'plans';
 
 export const BUTTON_ICONS: Record<TIconName, ReactElement> = {
   menu: <MenuIcon />,
   back: <BackIcon />,
-  life: <LifeIcon />,
+  life: <PartOfLifeIcon />,
+  settings: <ProfileIcon />,
   events: <EventsIcon />,
-  plans: <PlansIcon />,
+  plans: <HouseIcon />,
 };

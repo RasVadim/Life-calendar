@@ -1,9 +1,10 @@
 {
   "layout": {
     "lifeCalendar": "Life Calendar",
-    "life": "life",
-    "events": "events",
-    "plans": "plans",
+    "life": "Life",
+    "settings": "Settings",
+    "events": "Events",
+    "plans": "Plans",
     "light": "light",
     "dark": "dark"
   }

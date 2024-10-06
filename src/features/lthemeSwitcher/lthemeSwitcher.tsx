@@ -1,9 +1,9 @@
+import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
 import { useSetThemeMode, EThemeMode } from "@/store/atoms";
 
 import s from "./s.module.styl";
-import { useEffect } from "react";
 export const ThemeSwitcher = ({testProp}) => {
   const { t } = useTranslation();
   const setTheme = useSetThemeMode();

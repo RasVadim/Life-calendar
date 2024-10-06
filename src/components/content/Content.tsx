@@ -23,3 +23,5 @@ export const Content: FC<PropsType> = ({}) => {
     </div>
   );
 };
+
+export default Content

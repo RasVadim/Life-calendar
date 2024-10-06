@@ -3,6 +3,7 @@ import {} from "../../styles/colors.styl";
 import cx from "classnames";
 
 import { LanguageSwitcher, ThemeSwitcher } from "@/features";
+import { Button } from "@/ui-kit";
 
 import s from "./s.module.styl";
 
@@ -20,6 +21,9 @@ export const Menu: FC<PropsType> = ({ isOpen }) => {
     return (
       <div className={cx(s.menu, { [s.hidden]: !isOpen })}>
         <ThemeSwitcher testProp={testProp} />
+        <Button label="button" icon="life" />
+        <br />
+        <Button label="button" icon="life" active/>
         {count}
       </div>
     );
@@ -28,6 +32,9 @@ export const Menu: FC<PropsType> = ({ isOpen }) => {
     <div className={cx(s.menu, { [s.hidden]: !isOpen })}>
       <LanguageSwitcher />
       <ThemeSwitcher testProp={testProp} />
+      <Button label="button"  icon="settings"/>
+      <br />
+      <Button label="button"  icon="settings" active/>
       {count}
     </div>
   );

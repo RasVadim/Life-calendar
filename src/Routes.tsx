@@ -1,8 +1,8 @@
-import { memo } from "react";
-import { Routes as OriginalRoutes, Route } from "react-router-dom";
+import { memo } from 'react';
+import { Routes as OriginalRoutes, Route } from 'react-router-dom';
 
-import { Layout } from "./components";
-import { Life } from "./pages";
+import { Layout } from './components';
+import { Life } from './pages';
 
 export const Routes = memo(() => {
   return (

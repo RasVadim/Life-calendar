@@ -11,3 +11,9 @@ export { PlansIcon } from "./plansIcon";
 export { SeasonsIcon } from "./seasonsIcon";
 
 export { LifeIcon } from "./lifeIcon";
+
+export { ProfileIcon } from "./profileIcon";
+
+export { PartOfLifeIcon } from "./partOfLifeIcon";
+
+export { HouseIcon } from "./houseIcon";
