@@ -1,27 +1,22 @@
-import { FC } from "react";
+import { FC } from 'react';
 
-import { USER_AGE } from "@/constants";
+import { Week, ZoomableGrid } from './components';
+import type { TWeek } from './types';
 
-import { Year } from "./year/Year";
-import type { TYear } from "./types";
-
-import s from "./s.module.styl";
+import s from './s.module.styl';
 
 type PropsType = {
-  years: TYear[];
+  weeks?: TWeek[];
 };
 
-export const LifeCalendar: FC<PropsType> = ({ years }) => {
+export const LifeCalendar: FC<PropsType> = ({ weeks }) => {
   return (
     <div className={s.calendar}>
-      {years.map((year) => (
-        <Year
-          key={year.id}
-          id={year.id}
-          weeks={year.weeks}
-          isLast={year.id === "y" + USER_AGE}
-        />
-      ))}
+      <ZoomableGrid >
+        {weeks?.map((week) => (
+          <Week key={week.id} id={week.id} />
+        ))}
+      </ZoomableGrid>
     </div>
   );
 };

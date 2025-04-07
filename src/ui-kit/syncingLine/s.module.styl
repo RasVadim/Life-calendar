@@ -1,8 +1,8 @@
 .wrap
   position absolute
   top 0
-  background-color #C8C8C8
-  opacity: 0.5
+  background-color var(--disabled-background-color)
+  opacity 0.5
   height 1px
   width 100%
   animation colored 2s cubic-bezier(0.5, 0.51, 0.69, 0.7) infinite
@@ -12,8 +12,8 @@
     float left
     width 0
     height 1px
-    background-color #242424
-    box-shadow: 0 0 2px 5px #242424;
+    background-color var(--background-color)
+    box-shadow 0 0 2px 5px var(--background-color)
     animation leftRight 2s cubic-bezier(0.5, 0.51, 0.69, 0.7) infinite
 
 @keyframes leftRight
@@ -34,10 +34,10 @@
 
 @keyframes colored
   0%
-    background-color #C8C8C8
+    background-color var(--disabled-background-color)
 
   50%
-    background-color #3cb8ff
+    background-color var(--primary-light-color)
 
   100%
-    background-color #C8C8C8
+    background-color var(--disabled-background-color)

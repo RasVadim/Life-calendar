@@ -4,11 +4,11 @@
   border none
   display flex
   align-items center
-  background-color #613EEA
+  background-color var(--primary-color)
   padding 2px 12px
   border-radius 22px
-  will-change transform
-  transition background-color 0.5s ease
+  will-change transform, background-color 
+  transition background-color 0.1s ease
 
 .small
   height 24px
@@ -20,11 +20,11 @@
   color white
 
 .disabled
-  color #747474
+  color var(--disabled-color)
 
 .gost
   background transparent
-  border: solid 2px #613EEA
+  border: solid 2px var(--primary-color)
 
 .label
   font-size 12px
@@ -46,12 +46,9 @@
     right 12px
     white-space nowrap
     opacity 0
-    transform translateX(100%)
-    transition transform 0.2s ease, opacity 0.1s ease
 
   & .activeLabel
     opacity 1
-    transform translateX(0)
 
   & .hiddenLabel
     opacity 0

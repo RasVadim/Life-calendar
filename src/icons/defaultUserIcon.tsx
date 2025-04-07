@@ -7,7 +7,7 @@ type PropsType = {
     backgroundColor?: string
 }
 
-export const DefaultUserIcon: FC<PropsType> = ({ size = '34', color = "white", backgroundColor = "#747474" }) => {
+export const DefaultUserIcon: FC<PropsType> = ({ size = '30', color = "white", backgroundColor = "#747474" }) => {
     return (
         <svg width={size} height={size} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path

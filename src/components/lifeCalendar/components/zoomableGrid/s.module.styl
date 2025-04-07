@@ -1,0 +1,11 @@
+.container
+  width 100%
+  height 100%
+  display grid
+  grid-template-columns repeat(52, minmax(0, 1fr))
+  gap 1px
+  transition grid-template-columns 3s ease
+
+@media (min-width 1200px)
+  .container
+    gap 4px

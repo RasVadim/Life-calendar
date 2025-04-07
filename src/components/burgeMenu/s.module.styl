@@ -3,12 +3,10 @@
   height 30px
   padding 5px 0
 
-  @import '../../styles/colors.styl'
-  
   nav
     width 100%
     height 100%
-    background-color #242424
+    background-color var(--background-front-color)
     display flex
     justify-content flex-start
 
@@ -34,9 +32,10 @@
 .menuBackground
   width 100%
   height 100vh
-  background-color #000
+  background-color var(--blackout-color)
   position absolute
   top 0
+  left 0
   z-index 50
   opacity 50%
   animation 0.5s show ease
@@ -51,13 +50,14 @@
 
 .menu
   display flex
-  flex-direction: column;
+  flex-direction column
   width 65%
   height 100vh
   padding 50px 10px
-  background-color #242424
+  background-color var(--background-color)
   position absolute
   top 0
+  left 0
   z-index 90
   box-shadow 0 0 25px 20px rgba(0, 0, 0, 0.1)
   opacity 97%
