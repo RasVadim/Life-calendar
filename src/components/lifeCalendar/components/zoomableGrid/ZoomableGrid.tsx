@@ -1,56 +1,121 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useRef } from 'react';
+import cx from 'classnames';
+
+import { LIFE_GRID_ZOOM_LEVELS } from '@/constants';
+import { useDevice } from '@/hooks';
+import { useLifeGridColumnsCount } from '@/store/atoms';
+
+import { getNextZoomLevelSetter, snapToClosestZoom } from './utils';
 import s from './s.module.styl';
 
-// in descending order !!
-const ZOOM_LEVELS = [52, 13, 4];
+const DEBOUNCE_TIMEOUT = 200; // finish user scroll after this delay means the end of scrolling event
 
 export const ZoomableGrid = ({ children }: { children?: React.ReactNode }) => {
-  const [columns, setColumns] = useState(52);
+  const [columns, setColumns] = useLifeGridColumnsCount();
+  // const { isDesktop } = useDevice();
 
-
-const autoZoomDebounced = () => {
-  
-}
+  const debounceTimer = useRef<NodeJS.Timeout | null>(null);
+  const animationRef = useRef<NodeJS.Timeout | null>(null);
+  const isExactLevel = LIFE_GRID_ZOOM_LEVELS.includes(columns);
 
   const handleZoom = (delta: number) => {
-    const calculateDeltaColumns = (prevCols: number) => {
-      console.log('prevCols', prevCols);
-      const newZoom = prevCols + (delta > 0 ? 1 : -1) * 3;
+    const direction = delta > 0 ? 1 : -1; // Scroll direction
 
-      console.log('newZoom', newZoom);
-      const closestColumns = ZOOM_LEVELS.reduce((prev, curr) =>
-        Math.abs(curr - newZoom) < Math.abs(prev - newZoom) ? curr : prev
-      );
+    const columnsSetter = getNextZoomLevelSetter(direction);
 
-      console.log('closestColumns', closestColumns);
+    setColumns(columnsSetter);
 
-      if (ZOOM_LEVELS[0] < newZoom) return ZOOM_LEVELS[0];
-
-      if (newZoom < ZOOM_LEVELS[ZOOM_LEVELS.length - 1])
-        return ZOOM_LEVELS[ZOOM_LEVELS.length - 1];
-
-      return newZoom;
-    };
-
-    setColumns(calculateDeltaColumns);
+    // restart debounce timer
+    if (debounceTimer.current) {
+      clearTimeout(debounceTimer.current);
+    }
+    debounceTimer.current = setTimeout(() => {
+      snapToClosestZoom({
+        currentCount: columns,
+        direction,
+        setColumns,
+        animationIntervalState: animationRef.current,
+      }); // columns can be outdated
+    }, DEBOUNCE_TIMEOUT);
   };
+
+  // watch for `columns` and update snap when debounce
+  useEffect(() => {
+    return () => {
+      if (debounceTimer.current) {
+        clearTimeout(debounceTimer.current);
+      }
+    };
+  }, []);
 
   useEffect(() => {
     const handleWheel = (e: WheelEvent) => {
       if (e.ctrlKey) {
         e.preventDefault();
-        // console.log('e.deltaY', e.deltaY);
+
         handleZoom(e.deltaY);
       }
     };
 
     window.addEventListener('wheel', handleWheel, { passive: false });
     return () => window.removeEventListener('wheel', handleWheel);
-  }, []);
+  }, [columns]);
+
+
+  // useEffect(() => {
+  //   let initialDistance: number | null = null;
+  
+  //   const getDistance = (touches: TouchList) => {
+  //     if (touches.length < 2) return 0;
+  
+  //     const dx = touches[0].clientX - touches[1].clientX;
+  //     const dy = touches[0].clientY - touches[1].clientY;
+  
+  //     return Math.sqrt(dx * dx + dy * dy);
+  //   };
+  
+  //   const onTouchStart = (e: TouchEvent) => {
+  //     if (e.touches.length === 2) {
+  //       initialDistance = getDistance(e.touches);
+  //     }
+  //   };
+  
+  //   const onTouchMove = (e: TouchEvent) => {
+  //     if (e.touches.length === 2 && initialDistance !== null) {
+  //       e.preventDefault();
+  //       const currentDistance = getDistance(e.touches);
+  //       const delta = currentDistance - initialDistance;
+  
+  //       // Зумим, только если есть заметное изменение
+  //       if (Math.abs(delta) > 10) {
+  //         handleZoom(-delta); // Минус потому что deltaY>0 = уменьшение в wheel-обработчике
+  
+  //         // обновим дистанцию, чтобы можно было плавно продолжить
+  //         initialDistance = currentDistance;
+  //       }
+  //     }
+  //   };
+  
+  //   const onTouchEnd = () => {
+  //     initialDistance = null;
+  //   };
+  
+  //   window.addEventListener('touchstart', onTouchStart, { passive: false });
+  //   window.addEventListener('touchmove', onTouchMove, { passive: false });
+  //   window.addEventListener('touchend', onTouchEnd);
+  
+  //   return () => {
+  //     window.removeEventListener('touchstart', onTouchStart);
+  //     window.removeEventListener('touchmove', onTouchMove);
+  //     window.removeEventListener('touchend', onTouchEnd);
+  //   };
+  // }, [columns]);
 
   return (
     <div
-      className={s.container}
+      className={cx(s.container, {
+        [s.dashed]: isExactLevel,
+      })}
       style={{ gridTemplateColumns: `repeat(${columns}, 1fr)` }}
     >
       {children}

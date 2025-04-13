@@ -1,5 +1,9 @@
-export * from './user'
+export * from './common';
 
-export * from './paths'
+export * from './user';
 
-export * from './tabs'
+export * from './life';
+
+export * from './paths';
+
+export * from './tabs';

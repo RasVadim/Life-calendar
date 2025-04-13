@@ -1,0 +1,1 @@
+export const LIFE_GRID_ZOOM_LEVELS = [4, 13, 52];
