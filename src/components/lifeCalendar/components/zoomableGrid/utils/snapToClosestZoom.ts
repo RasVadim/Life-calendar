@@ -7,6 +7,7 @@ type TSnapToClosestZoomOptions = {
   direction: 1 | -1;
   setColumns: React.Dispatch<React.SetStateAction<number>>;
   animationIntervalState: ReturnType<typeof setInterval> | null;
+  onAnimationEnd?: () => void;
 };
 
 export const snapToClosestZoom = ({
@@ -14,6 +15,7 @@ export const snapToClosestZoom = ({
   direction,
   setColumns,
   animationIntervalState,
+  onAnimationEnd,
 }: TSnapToClosestZoomOptions) => {
   let closest = currentCount;
   let animationStep = 2;
@@ -50,6 +52,7 @@ export const snapToClosestZoom = ({
     setColumns((prev: number) => {
       if (prev === closest) {
         clearInterval(animationIntervalState!);
+        onAnimationEnd?.();
         return prev;
       }
       const next = prev + (prev < closest ? animationStep : -animationStep);

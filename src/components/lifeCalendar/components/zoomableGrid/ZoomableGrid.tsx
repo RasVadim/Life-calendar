@@ -1,25 +1,36 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import cx from 'classnames';
 
 import { LIFE_GRID_ZOOM_LEVELS } from '@/constants';
-import { useDevice } from '@/hooks';
 import { useLifeGridColumnsCount } from '@/store/atoms';
 
-import { getNextZoomLevelSetter, snapToClosestZoom } from './utils';
+import {
+  getNextZoomLevelSetter,
+  getTwoTouchesDistance,
+  snapToClosestZoom,
+} from './utils';
 import s from './s.module.styl';
+import { useDevice } from '@/hooks';
 
 const DEBOUNCE_TIMEOUT = 200; // finish user scroll after this delay means the end of scrolling event
+const NORMAL_STEP = 2; // usual value step for normal zoom: every NORMAL_OFFSET points will be called handleZoom
+const SCROLL_STEP = 5; // if more then pause on middle level zoom is longer for desktop
+const TOUCH_ZOOM_STEP = 90; // if more than pause on middle level zoom is longer for touch screens
 
 export const ZoomableGrid = ({ children }: { children?: React.ReactNode }) => {
   const [columns, setColumns] = useLifeGridColumnsCount();
-  // const { isDesktop } = useDevice();
+  const [isZooming, setIsZooming] = useState(false);
+
+  const { isTouchScreen } = useDevice();
 
   const debounceTimer = useRef<NodeJS.Timeout | null>(null);
   const animationRef = useRef<NodeJS.Timeout | null>(null);
+  const touchesDistance = useRef<number | null>(null);
   const isExactLevel = LIFE_GRID_ZOOM_LEVELS.includes(columns);
 
   const handleZoom = (delta: number) => {
     const direction = delta > 0 ? 1 : -1; // Scroll direction
+    setIsZooming(true);
 
     const columnsSetter = getNextZoomLevelSetter(direction);
 
@@ -29,17 +40,18 @@ export const ZoomableGrid = ({ children }: { children?: React.ReactNode }) => {
     if (debounceTimer.current) {
       clearTimeout(debounceTimer.current);
     }
+
     debounceTimer.current = setTimeout(() => {
       snapToClosestZoom({
         currentCount: columns,
         direction,
         setColumns,
         animationIntervalState: animationRef.current,
+        onAnimationEnd: !isTouchScreen ? () => setIsZooming(false) : undefined,
       }); // columns can be outdated
     }, DEBOUNCE_TIMEOUT);
   };
 
-  // watch for `columns` and update snap when debounce
   useEffect(() => {
     return () => {
       if (debounceTimer.current) {
@@ -48,12 +60,18 @@ export const ZoomableGrid = ({ children }: { children?: React.ReactNode }) => {
     };
   }, []);
 
+  // watch for `columns` and update snap when debounce:
+  // DESKTOP
   useEffect(() => {
     const handleWheel = (e: WheelEvent) => {
       if (e.ctrlKey) {
         e.preventDefault();
 
-        handleZoom(e.deltaY);
+        const deltaStep =
+          columns === LIFE_GRID_ZOOM_LEVELS[1] ? SCROLL_STEP : NORMAL_STEP;
+        if (Math.abs(e.deltaY) > deltaStep) {
+          handleZoom(e.deltaY);
+        }
       }
     };
 
@@ -61,60 +79,51 @@ export const ZoomableGrid = ({ children }: { children?: React.ReactNode }) => {
     return () => window.removeEventListener('wheel', handleWheel);
   }, [columns]);
 
+  // TOUCHSCREEN DEVICE
+  useEffect(() => {
+    const onTouchStart = (e: TouchEvent) => {
+      if (e.touches.length === 2) {
+        e.preventDefault();
+        touchesDistance.current = getTwoTouchesDistance(e.touches);
+      }
+    };
 
-  // useEffect(() => {
-  //   let initialDistance: number | null = null;
-  
-  //   const getDistance = (touches: TouchList) => {
-  //     if (touches.length < 2) return 0;
-  
-  //     const dx = touches[0].clientX - touches[1].clientX;
-  //     const dy = touches[0].clientY - touches[1].clientY;
-  
-  //     return Math.sqrt(dx * dx + dy * dy);
-  //   };
-  
-  //   const onTouchStart = (e: TouchEvent) => {
-  //     if (e.touches.length === 2) {
-  //       initialDistance = getDistance(e.touches);
-  //     }
-  //   };
-  
-  //   const onTouchMove = (e: TouchEvent) => {
-  //     if (e.touches.length === 2 && initialDistance !== null) {
-  //       e.preventDefault();
-  //       const currentDistance = getDistance(e.touches);
-  //       const delta = currentDistance - initialDistance;
-  
-  //       // Зумим, только если есть заметное изменение
-  //       if (Math.abs(delta) > 10) {
-  //         handleZoom(-delta); // Минус потому что deltaY>0 = уменьшение в wheel-обработчике
-  
-  //         // обновим дистанцию, чтобы можно было плавно продолжить
-  //         initialDistance = currentDistance;
-  //       }
-  //     }
-  //   };
-  
-  //   const onTouchEnd = () => {
-  //     initialDistance = null;
-  //   };
-  
-  //   window.addEventListener('touchstart', onTouchStart, { passive: false });
-  //   window.addEventListener('touchmove', onTouchMove, { passive: false });
-  //   window.addEventListener('touchend', onTouchEnd);
-  
-  //   return () => {
-  //     window.removeEventListener('touchstart', onTouchStart);
-  //     window.removeEventListener('touchmove', onTouchMove);
-  //     window.removeEventListener('touchend', onTouchEnd);
-  //   };
-  // }, [columns]);
+    const onTouchMove = (e: TouchEvent) => {
+      if (e.touches.length !== 2 || touchesDistance.current === null) return;
+
+      e.preventDefault();
+      const currentDistance = getTwoTouchesDistance(e.touches);
+      const delta = currentDistance - touchesDistance.current;
+
+      const deltaStep =
+        columns === LIFE_GRID_ZOOM_LEVELS[1] ? TOUCH_ZOOM_STEP : NORMAL_STEP;
+
+      if (Math.abs(delta) > deltaStep) {
+        handleZoom(-delta);
+        touchesDistance.current = currentDistance;
+      }
+    };
+
+    const onTouchEnd = () => {
+      touchesDistance.current = null;
+      setIsZooming(false);
+    };
+
+    window.addEventListener('touchstart', onTouchStart, { passive: false });
+    window.addEventListener('touchmove', onTouchMove, { passive: false });
+    window.addEventListener('touchend', onTouchEnd);
+
+    return () => {
+      window.removeEventListener('touchstart', onTouchStart);
+      window.removeEventListener('touchmove', onTouchMove);
+      window.removeEventListener('touchend', onTouchEnd);
+    };
+  }, [columns]);
 
   return (
     <div
       className={cx(s.container, {
-        [s.dashed]: isExactLevel,
+        [s.dashed]: isExactLevel && isZooming,
       })}
       style={{ gridTemplateColumns: `repeat(${columns}, 1fr)` }}
     >

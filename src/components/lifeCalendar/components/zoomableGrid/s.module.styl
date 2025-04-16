@@ -4,11 +4,14 @@
   display grid
   grid-template-columns repeat(52, minmax(0, 1fr))
   gap 1px
+  padding 2px
+  border 1px dotted rgba(0, 0, 0, 0)
   transition grid-template-columns 3s ease
-  border 2px dashed rgba(0, 0, 0, 0)
+  transition border-color 1.5s ease
 
 .dashed
-  border 2px dashed var(--text-color)
+  transition border-color 0.1s ease
+  border 1px dotted var(--primary-color)
 
 @media (min-width 1200px)
   .container
