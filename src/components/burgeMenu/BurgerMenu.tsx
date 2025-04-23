@@ -5,9 +5,7 @@ import { Menu } from "./Menu";
 
 import s from "./s.module.styl";
 
-type PropsType = {};
-
-export const BurgerMenu: FC<PropsType> = () => {
+export const BurgerMenu: FC = () => {
   // to change burger classes
   const [isOpen, setIsOpen] = useState(false);
   const firstOpen = useRef<boolean>(false);

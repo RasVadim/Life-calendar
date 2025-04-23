@@ -1,7 +1,11 @@
 {
   "layout": {
     "lifeCalendar": "Life Calendar",
+    "shortLC": "LC",
     "life": "Life",
+    "years": "Years",
+    "seasons": "Seasons",
+    "months": "Months",
     "settings": "Settings",
     "events": "Events",
     "plans": "Plans",

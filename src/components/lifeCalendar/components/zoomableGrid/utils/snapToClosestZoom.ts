@@ -20,13 +20,14 @@ export const snapToClosestZoom = ({
   let closest = currentCount;
   let animationStep = 2;
 
-  for (let i = 0; i < LIFE_GRID_ZOOM_LEVELS.length; i++) {
-    const zoomLevel = LIFE_GRID_ZOOM_LEVELS[i];
+  const zoomLevels = Object.values(LIFE_GRID_ZOOM_LEVELS);
+
+  for (let i = 0; i < zoomLevels.length; i++) {
+    const zoomLevel = zoomLevels[i];
 
     if (currentCount < zoomLevel) {
       const rightLevel = zoomLevel;
-      const leftLevel =
-        LIFE_GRID_ZOOM_LEVELS[i - 1] ?? LIFE_GRID_ZOOM_LEVELS[0];
+      const leftLevel = zoomLevels[i - 1] ?? zoomLevels[0];
 
       animationStep = Math.max(1, Math.floor((rightLevel - leftLevel) / 4));
 

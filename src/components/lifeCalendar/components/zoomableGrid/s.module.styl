@@ -2,7 +2,7 @@
   width 100%
   height 100%
   display grid
-  grid-template-columns repeat(52, minmax(0, 1fr))
+  grid-template-columns repeat(52, minmax(5px, 1fr))
   gap 1px
   padding 2px
   border 1px dotted rgba(0, 0, 0, 0)
@@ -12,7 +12,3 @@
 .dashed
   transition border-color 0.1s ease
   border 1px dotted var(--primary-color)
-
-@media (min-width 1200px)
-  .container
-    gap 4px

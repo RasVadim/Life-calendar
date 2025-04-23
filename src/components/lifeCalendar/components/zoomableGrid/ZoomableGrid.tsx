@@ -26,7 +26,7 @@ export const ZoomableGrid = ({ children }: { children?: React.ReactNode }) => {
   const debounceTimer = useRef<NodeJS.Timeout | null>(null);
   const animationRef = useRef<NodeJS.Timeout | null>(null);
   const touchesDistance = useRef<number | null>(null);
-  const isExactLevel = LIFE_GRID_ZOOM_LEVELS.includes(columns);
+  const isExactLevel = Object.values(LIFE_GRID_ZOOM_LEVELS).includes(columns);
 
   const handleZoom = (delta: number) => {
     const direction = delta > 0 ? 1 : -1; // Scroll direction
@@ -68,7 +68,7 @@ export const ZoomableGrid = ({ children }: { children?: React.ReactNode }) => {
         e.preventDefault();
 
         const deltaStep =
-          columns === LIFE_GRID_ZOOM_LEVELS[1] ? SCROLL_STEP : NORMAL_STEP;
+          columns === LIFE_GRID_ZOOM_LEVELS.seasons ? SCROLL_STEP : NORMAL_STEP;
         if (Math.abs(e.deltaY) > deltaStep) {
           handleZoom(e.deltaY);
         }
@@ -96,7 +96,7 @@ export const ZoomableGrid = ({ children }: { children?: React.ReactNode }) => {
       const delta = currentDistance - touchesDistance.current;
 
       const deltaStep =
-        columns === LIFE_GRID_ZOOM_LEVELS[1] ? TOUCH_ZOOM_STEP : NORMAL_STEP;
+        columns === LIFE_GRID_ZOOM_LEVELS.seasons ? TOUCH_ZOOM_STEP : NORMAL_STEP;
 
       if (Math.abs(delta) > deltaStep) {
         handleZoom(-delta);
