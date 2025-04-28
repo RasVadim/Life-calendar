@@ -10,11 +10,40 @@
   will-change transform, background-color 
   transition background-color 0.1s ease
 
+  &.onlyIcon
+    width 28px
+    height 28px
+    padding 4px
+    border-radius 50%
+    justify-content center
+
+    svg
+      width 18px
+      height 18px
+
 .small
   height 24px
 
+  &.onlyIcon
+    width 24px
+    height 24px
+    padding 3px
+
+    svg
+      width 16px
+      height 16px
+
 .large
   height 44px
+
+  &.onlyIcon
+    width 44px
+    height 44px
+    padding 6px
+
+    svg
+      width 24px
+      height 24px
 
 .active
   color white
@@ -24,7 +53,6 @@
 
 .gost
   background transparent
-  border: solid 2px var(--primary-color)
 
 .label
   font-size 12px

@@ -1,19 +1,17 @@
-export { BackIcon } from "./backIcon";
+export { BackIcon } from './backIcon';
 
-export { DefaultUserIcon } from "./defaultUserIcon";
+export { DefaultUserIcon } from './defaultUserIcon';
 
-export { EventsIcon } from "./eventsIcon";
+export { MenuIcon } from './menuIcon';
 
-export { MenuIcon } from "./menuIcon";
+export { SeasonsIcon } from './seasonsIcon';
 
-export { PlansIcon } from "./plansIcon";
+export { ProfileIcon } from './profileIcon';
 
-export { SeasonsIcon } from "./seasonsIcon";
+export { PartOfLifeIcon } from './partOfLifeIcon';
 
-export { LifeIcon } from "./lifeIcon";
+export { HouseIcon } from './houseIcon';
 
-export { ProfileIcon } from "./profileIcon";
+export { YearsIcon } from './yearsIcon';
 
-export { PartOfLifeIcon } from "./partOfLifeIcon";
-
-export { HouseIcon } from "./houseIcon";
+export { MonthsIcon } from './monthsIcon';

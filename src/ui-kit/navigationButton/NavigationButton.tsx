@@ -2,8 +2,9 @@ import { FC } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import cx from 'classnames';
 
-import { TABS } from '@/constants';
+import { TABS, PATHS } from '@/constants';
 import { Button, type TIconName } from '@/ui-kit';
+import { useLifeMode } from '@/hooks';
 
 import s from './s.module.styl';
 
@@ -34,6 +35,7 @@ export const NavigationButton: FC<PropsType> = ({
   position,
 }) => {
   const { pathname } = useLocation();
+  const [currentMode] = useLifeMode();
   const isActive = pathname === to;
 
   const lastTabIndex = TABS.length - 1;
@@ -50,6 +52,8 @@ export const NavigationButton: FC<PropsType> = ({
       ? 'left-start'
       : undefined;
 
+  const finalIcon = to === PATHS.MAIN ? currentMode : icon;
+
   return (
     <Link
       to={to}
@@ -59,7 +63,7 @@ export const NavigationButton: FC<PropsType> = ({
       })}
     >
       <Button
-        icon={icon}
+        icon={finalIcon}
         label={label}
         active={isActive}
         gost={!isActive}

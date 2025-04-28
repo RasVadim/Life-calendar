@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useLifeGridColumnsCount } from '@/store/atoms';
 import { LIFE_GRID_ZOOM_LEVELS, LIFE_MODES } from '@/constants';
 
-type TLifeMode = (typeof LIFE_MODES)[keyof typeof LIFE_MODES];
+export type TLifeMode = (typeof LIFE_MODES)[keyof typeof LIFE_MODES];
 
 const ZOOM_MODE_MAP = Object.fromEntries(
   Object.entries(LIFE_GRID_ZOOM_LEVELS).map(([key, value]) => [
@@ -11,8 +11,8 @@ const ZOOM_MODE_MAP = Object.fromEntries(
   ])
 );
 
-export const useLifeMode = (): TLifeMode => {
-  const [columns] = useLifeGridColumnsCount();
+export const useLifeMode = (): [TLifeMode, (mode: TLifeMode) => void] => {
+  const [columns, setColumns] = useLifeGridColumnsCount();
   const [mode, setMode] = useState<TLifeMode>(
     ZOOM_MODE_MAP[columns] ?? LIFE_MODES.YEARS
   );
@@ -23,5 +23,10 @@ export const useLifeMode = (): TLifeMode => {
     }
   }, [columns]);
 
-  return mode;
+  const handleSetMode = useCallback((newMode: TLifeMode) => {
+    setMode(newMode);
+    setColumns(LIFE_GRID_ZOOM_LEVELS[newMode]);
+  }, [setColumns]);
+
+  return [mode, handleSetMode];
 };

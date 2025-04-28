@@ -1,4 +1,4 @@
-import { FC, cloneElement, memo } from 'react';
+import { FC, memo, ReactElement } from 'react';
 import cx from 'classnames';
 
 import { BUTTON_ICONS, type TIconName } from './buttonIcons';
@@ -7,7 +7,7 @@ import s from './s.module.styl';
 
 type PropsType = {
   onClick?: () => void;
-  icon?: TIconName;
+  icon?: TIconName | ReactElement;
   label?: string;
   size?: 'small' | 'medium' | 'large';
   active?: boolean;
@@ -15,13 +15,14 @@ type PropsType = {
   gost?: boolean;
   hideNonActiveLabel?: boolean;
   labelShiftAnimation?: 'right-start' | 'left-start';
+  onlyIcon?: boolean;
 };
 
 /**
  * A customizable button component that supports icons, labels, and optional animations.
  *
  * @prop {function} [onClick] - Callback function triggered when the button is clicked.
- * @prop {TIconName} [icon] - Icon to display on the button.
+ * @prop {TIconName | ReactElement} [icon] - Icon to display on the button. Can be either a predefined icon name or a React element.
  * @prop {string} [label] - Text label to display on the button.
  * @prop {'small' | 'medium' | 'large'} [size='medium'] - Size of the button.
  * @prop {boolean} [active=false] - Determines if the button is in the active state.
@@ -29,6 +30,7 @@ type PropsType = {
  * @prop {boolean} [gost=false] - If true, the button will be styled as a "ghost" button.
  * @prop {boolean} [hideNonActiveLabel=false] - If true, the label will be hidden when the button is not active.
  * @prop {'right-start' | 'left-start'} [labelShiftAnimation] - Determines the animation direction for the label.
+ * @prop {boolean} [onlyIcon=false] - If true, the button will be rendered as a circular icon button without label.
  *
  * @returns {JSX.Element} A button component with an optional icon, label, and animation.
  */
@@ -43,12 +45,16 @@ export const Button: FC<PropsType> = memo(
     gost = false,
     hideNonActiveLabel = false,
     labelShiftAnimation = '',
+    onlyIcon = false,
   }) => {
-    const buttonIcon = icon && BUTTON_ICONS[icon];
+    let iconElement: ReactElement | null = null;
 
-    const iconWithProps = buttonIcon
-      ? cloneElement(buttonIcon, { isActive: active })
-      : null;
+    if (typeof icon === 'string') {
+      const IconComponent = BUTTON_ICONS[icon];
+      iconElement = IconComponent ? <IconComponent isActive={active} /> : null;
+    } else if (icon) {
+      iconElement = icon;
+    }
 
     const labelClasses = cx(s.label, {
       [s.hidden]: hideNonActiveLabel && !active,
@@ -64,6 +70,7 @@ export const Button: FC<PropsType> = memo(
           [s.small]: size === 'small',
           [s.large]: size === 'large',
           [s.labelShiftAnimation]: labelShiftAnimation,
+          [s.onlyIcon]: onlyIcon,
         })}
         onClick={onClick}
       >
@@ -75,8 +82,8 @@ export const Button: FC<PropsType> = memo(
               [s.leftWrapper]: labelShiftAnimation === 'right-start' && active,
             })}
           >
-            {iconWithProps}
-            {label && (
+            {iconElement}
+            {label && !onlyIcon && (
               <>
                 <p className={labelClasses}>{label}</p>
                 <p className={s.hiddenLabel}>{label}</p>
@@ -85,8 +92,8 @@ export const Button: FC<PropsType> = memo(
           </div>
         ) : (
           <>
-            {iconWithProps}
-            {label && <p className={labelClasses}>{label}</p>}
+            {iconElement}
+            {label && !onlyIcon && <p className={labelClasses}>{label}</p>}
           </>
         )}
       </button>
