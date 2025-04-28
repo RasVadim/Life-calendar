@@ -7,5 +7,5 @@ export enum EThemeMode {
 
 export const ThemeMode = atomWithStorage<EThemeMode>(
   "darkMode",
-  EThemeMode.LIGHT
+  EThemeMode.DARK
 );

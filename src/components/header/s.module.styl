@@ -1,10 +1,38 @@
+.container
+  position fixed
+  top 2px
+  left 0
+  grid-area header
+  padding 0 13px
+  width 100vw
+  z-index 100
+
 .header
-    display flex
-    justify-content space-between
-    align-items center
-    padding 0 15px 0 0;
-    border-bottom solid 1px #646464
-    box-shadow 0 2px 25px -16px rgba(0, 0, 0, 0.1)
-    font-family 'Montserrat', sans-serif
-    font-size 17px
-    grid-area header
+  display flex
+  justify-content space-between
+  align-items center
+  padding 6px 10px
+  border-radius 40px
+  box-shadow 0 2px 25px -16px rgba(0, 0, 0, 0.1)
+  font-family 'Montserrat', sans-serif
+  font-size 15px
+  background var(--background-front-color)
+  color var(--contrast-color)
+  position relative
+
+.title
+  position absolute
+  left 50%
+  transform translateX(-50%)
+  white-space nowrap
+
+.leftSide
+  display flex
+  align-items center
+  min-width 40px
+
+.rightSide
+  display flex
+  align-items center
+  justify-content flex-end
+  min-width 40px

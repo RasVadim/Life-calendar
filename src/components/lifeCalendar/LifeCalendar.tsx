@@ -1,27 +1,32 @@
-import { FC } from "react";
+import { FC } from 'react';
+import cx from 'classnames';
 
-import { USER_AGE } from "@/constants";
+// import { LIFE_GRID_ZOOM_LEVELS } from '@/constants';
+// import { useLifeGridColumnsCount } from '@/store/atoms';
 
-import { Year } from "./year/Year";
-import type { TYear } from "./types";
+import { Week, ZoomableGrid } from './components';
+import type { TWeek } from './types';
 
-import s from "./s.module.styl";
+import s from './s.module.styl';
 
 type PropsType = {
-  years: TYear[];
+  weeks?: TWeek[];
 };
 
-export const LifeCalendar: FC<PropsType> = ({ years }) => {
+export const LifeCalendar: FC<PropsType> = ({ weeks }) => {
+  // const [columns] = useLifeGridColumnsCount();
+
   return (
-    <div className={s.calendar}>
-      {years.map((year) => (
-        <Year
-          key={year.id}
-          id={year.id}
-          weeks={year.weeks}
-          isLast={year.id === "y" + USER_AGE}
-        />
-      ))}
+    <div
+      className={cx(s.calendar, {
+        [s.yearsPropositions]: true,
+      })}
+    >
+      <ZoomableGrid>
+        {weeks?.map((week) => (
+          <Week key={week.id} id={week.id} />
+        ))}
+      </ZoomableGrid>
     </div>
   );
 };

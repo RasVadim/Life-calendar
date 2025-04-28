@@ -2,7 +2,7 @@ import { FC } from 'react'
 import cx from 'classnames';
 
 import { Week } from '../week/Week'
-import type { TWeek } from '../types'
+import type { TWeek } from '../../types'
 
 import s from './s.module.styl'
 

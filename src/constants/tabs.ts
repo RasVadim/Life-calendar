@@ -1,5 +1,6 @@
 import { TIconName } from '@/ui-kit';
 import { PATHS } from '@/constants';
+import { LIFE_MODES } from '@/constants';
 
 type TTab = { icon: TIconName; label: string; to: string };
 
@@ -10,7 +11,7 @@ export const TABS: TTab[] = [
     to: PATHS.PLANS,
   },
   {
-    icon: 'life',
+    icon: LIFE_MODES.YEARS,
     label: 'life',
     to: PATHS.MAIN,
   },

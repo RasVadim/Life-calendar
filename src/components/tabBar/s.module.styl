@@ -1,16 +1,20 @@
 .container
+  position fixed
+  bottom 20px
+  left 0
   justify-content space-between
   align-items center
   padding 0 15px
   grid-area tabBar
-  z-index 50
+  z-index 100
+  width 100vw
 
 .tabBar
   display flex
   justify-content space-between
   align-items center
-  padding: 10px 13px;
+  padding 10px 13px
   line-height 6px
   box-shadow 0 -1px 25px -16px rgba(0, 0, 0, 0.1)
-  background-color #1E1E1E
-  border-radius: 40px
+  background-color var(--background-front-color)
+  border-radius 40px

@@ -12,12 +12,12 @@ console.log('theme', theme);
 
   const isDarkTheme = theme === EThemeMode.DARK;
   const themeColorMeta = document.querySelector('meta[name="theme-color"]');
-  console.log('isDarkTheme', theme);
+  console.log('isDarkTheme', isDarkTheme);
   if (!themeColorMeta) return;
 
   if (isDarkTheme) {
-    body.classList.remove("dark-theme");
-    body.classList.add("light-theme");
+    body.classList.remove("light-theme");
+    body.classList.add("dark-theme");
     themeColorMeta.setAttribute(
       "content",
       getComputedStyle(document.documentElement).getPropertyValue(
@@ -25,8 +25,8 @@ console.log('theme', theme);
       )
     );
   } else {
-    body.classList.remove("light-theme");
-    body.classList.add("dark-theme");
+    body.classList.remove("dark-theme");
+    body.classList.add("light-theme");
     themeColorMeta.setAttribute(
       "content",
       getComputedStyle(document.documentElement).getPropertyValue(

@@ -1,7 +1,11 @@
 {
   "layout": {
     "lifeCalendar": "Календарь Жизни",
+    "shortLC": "LC",
     "life": "Жизнь",
+    "years": "Года",
+    "seasons": "Сезоны",
+    "months": "Месяцы",
     "settings": "Профиль",
     "events": "События",
     "plans": "Планы",

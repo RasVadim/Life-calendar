@@ -2,11 +2,9 @@ import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { NavigationButton } from '@/ui-kit';
-
-import s from './s.module.styl';
 import { TABS } from '@/constants';
 
-type PropsType = {};
+import s from './s.module.styl';
 
 /**
  * A bottom tab bar with navigation buttons.
@@ -14,7 +12,7 @@ type PropsType = {};
  *
  * @returns A bottom tab bar with navigation buttons.
  */
-export const TabBar: FC<PropsType> = () => {
+export const TabBar: FC = () => {
   const { t } = useTranslation();
 
   return (
