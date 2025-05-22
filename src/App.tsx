@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+
 import i18n from "i18next";
 
 import { Routes } from "@/Routes";
@@ -7,6 +8,7 @@ import {
   useThemeMode,
   useSetSyncPending,
 } from "@/store/atoms";
+
 import { toggleTheme } from "./utils";
 // Function to enter fullscreen
 function enterFullscreen() {

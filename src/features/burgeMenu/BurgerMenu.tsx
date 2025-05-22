@@ -1,9 +1,10 @@
-import { FC, useRef, useState } from "react";
-import cx from "classnames";
+import { FC, useRef, useState } from 'react';
 
-import { Menu } from "./Menu";
+import cx from 'classnames';
 
-import s from "./s.module.styl";
+import { Menu } from './Menu';
+
+import s from './s.module.styl';
 
 export const BurgerMenu: FC = () => {
   // to change burger classes

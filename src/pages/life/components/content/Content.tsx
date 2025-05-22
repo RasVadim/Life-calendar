@@ -1,13 +1,13 @@
-import { FC, useMemo } from 'react';
+import { FC, useMemo, useEffect } from 'react';
 
 import { LifeCalendar } from '@/components';
 import { USER_AGE, WEEKS_PER_YEAR } from '@/constants';
+import { saveWeekList, WeekEntity } from '@/store/clientDB';
+import { TWeek } from '@/types';
 
 import s from './s.module.styl';
 
-type PropsType = {};
-
-export const Content: FC<PropsType> = ({}) => {
+export const Content: FC = () => {
   const { weeks } = useMemo(() => {
     return [...Array(USER_AGE)].reduce(
       (acc, _, index) => {
@@ -28,6 +28,19 @@ export const Content: FC<PropsType> = ({}) => {
       { years: [], weeks: [] }
     );
   }, []);
+
+  useEffect(() => {
+    // Save all generated weeks to IndexedDB
+
+    const generatedWeeks = (weeks as TWeek[]).map((week: TWeek) => ({
+      ...week,
+      dateStart: '', // fill with real data if needed
+      dateEnd: '', // fill with real data if needed
+      type: 'past' as WeekEntity['type'], // or calculate dynamically
+    }));
+
+    saveWeekList(generatedWeeks);
+  }, [weeks]);
 
   return (
     <div className={s.content}>

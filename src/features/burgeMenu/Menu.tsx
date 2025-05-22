@@ -1,10 +1,11 @@
-import { FC, useState } from 'react';
-import {} from '../../styles/colors.styl';
+import { FC } from 'react';
+
 import cx from 'classnames';
 
 import { LanguageSwitcher, ThemeSwitcher } from '@/features';
 import { Button } from '@/ui-kit';
 
+import '../../styles/colors.styl';
 import s from './s.module.styl';
 
 type PropsType = {

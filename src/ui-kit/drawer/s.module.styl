@@ -1,0 +1,73 @@
+.drawerWrap
+  position fixed
+  left 0
+  bottom 0
+  width 100vw
+  height 95dvh
+  background-color var(--background-color)
+  opacity 0.97
+  border-top-left-radius 24px
+  border-top-right-radius 24px
+  box-shadow 0 -4px 24px rgba(0, 0, 0, 0.15)
+  z-index 150
+  display flex
+  flex-direction column
+  animation 0.23s showDrawer cubic-bezier(0.4, 0, 0.2, 1)
+  animation-fill-mode forwards
+  will-change transform, opacity
+
+.drawerWrap--closing
+  animation drawerOut 0.2s cubic-bezier(0.4, 0, 0.2, 1)
+
+.drawerHeader
+  padding 16px
+  text-align center
+
+.drawerContent
+  flex 1
+  overflow auto
+  padding 16px
+
+.drawerBlackout
+  position fixed
+  left 0
+  top 0
+  width 100vw
+  height 100vh
+  background-color var(--blackout-color)
+  opacity 0.5
+  z-index 120
+  transition opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1)
+  will-change opacity
+
+  /* ------------- sliding drawer ------------------ */
+
+.hidden
+  animation 0.2s hideDrawer cubic-bezier(0.4, 0, 0.2, 1)
+  animation-fill-mode forwards
+  pointer-events none
+
+@keyframes showDrawer
+  from
+    transform translateY(100%)
+    opacity 0.3
+  to
+    transform translateY(0)
+    opacity 0.97
+
+@keyframes hideDrawer
+  from
+    opacity 0.5
+    display flex
+  to
+    opacity 0
+    display none
+    z-index 0
+
+@keyframes drawerOut
+  from
+    transform translateY(0)
+    opacity 1
+  to
+    transform translateY(100%)
+    opacity 0

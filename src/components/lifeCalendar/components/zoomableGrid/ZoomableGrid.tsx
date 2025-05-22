@@ -1,16 +1,20 @@
-import { useEffect, useRef, useState } from 'react';
-import cx from 'classnames';
+import { useEffect, useRef } from 'react';
 
 import { LIFE_GRID_ZOOM_LEVELS } from '@/constants';
+import { useDevice } from '@/hooks';
 import { useLifeGridColumnsCount } from '@/store/atoms';
 
 import {
   getNextZoomLevelSetter,
   getTwoTouchesDistance,
   snapToClosestZoom,
+  calculateRowGapSize,
+  calculateTopPadding,
+  
 } from './utils';
+import { GridLabels } from '../gridLabels/GridLabels';
+
 import s from './s.module.styl';
-import { useDevice } from '@/hooks';
 
 const DEBOUNCE_TIMEOUT = 200; // finish user scroll after this delay means the end of scrolling event
 const NORMAL_STEP = 2; // usual value step for normal zoom: every NORMAL_OFFSET points will be called handleZoom
@@ -19,18 +23,18 @@ const TOUCH_ZOOM_STEP = 90; // if more than pause on middle level zoom is longer
 
 export const ZoomableGrid = ({ children }: { children?: React.ReactNode }) => {
   const [columns, setColumns] = useLifeGridColumnsCount();
-  const [isZooming, setIsZooming] = useState(false);
 
-  const { isTouchScreen } = useDevice();
+  const { isMobile } = useDevice();
 
   const debounceTimer = useRef<NodeJS.Timeout | null>(null);
   const animationRef = useRef<NodeJS.Timeout | null>(null);
   const touchesDistance = useRef<number | null>(null);
-  const isExactLevel = Object.values(LIFE_GRID_ZOOM_LEVELS).includes(columns);
+
+  const currentRowGap = isMobile ? calculateRowGapSize(columns) : 1;
+  const currentTopPadding = isMobile ? calculateTopPadding(columns) : 1;
 
   const handleZoom = (delta: number) => {
     const direction = delta > 0 ? 1 : -1; // Scroll direction
-    setIsZooming(true);
 
     const columnsSetter = getNextZoomLevelSetter(direction);
 
@@ -47,7 +51,6 @@ export const ZoomableGrid = ({ children }: { children?: React.ReactNode }) => {
         direction,
         setColumns,
         animationIntervalState: animationRef.current,
-        onAnimationEnd: !isTouchScreen ? () => setIsZooming(false) : undefined,
       }); // columns can be outdated
     }, DEBOUNCE_TIMEOUT);
   };
@@ -96,7 +99,9 @@ export const ZoomableGrid = ({ children }: { children?: React.ReactNode }) => {
       const delta = currentDistance - touchesDistance.current;
 
       const deltaStep =
-        columns === LIFE_GRID_ZOOM_LEVELS.seasons ? TOUCH_ZOOM_STEP : NORMAL_STEP;
+        columns === LIFE_GRID_ZOOM_LEVELS.seasons
+          ? TOUCH_ZOOM_STEP
+          : NORMAL_STEP;
 
       if (Math.abs(delta) > deltaStep) {
         handleZoom(-delta);
@@ -106,7 +111,6 @@ export const ZoomableGrid = ({ children }: { children?: React.ReactNode }) => {
 
     const onTouchEnd = () => {
       touchesDistance.current = null;
-      setIsZooming(false);
     };
 
     window.addEventListener('touchstart', onTouchStart, { passive: false });
@@ -122,12 +126,15 @@ export const ZoomableGrid = ({ children }: { children?: React.ReactNode }) => {
 
   return (
     <div
-      className={cx(s.container, {
-        [s.dashed]: isExactLevel && isZooming,
-      })}
-      style={{ gridTemplateColumns: `repeat(${columns}, 1fr)` }}
+      className={s.container}
+      style={{
+        gridTemplateColumns: `repeat(${columns}, 1fr)`,
+        rowGap: `${currentRowGap}px`,
+        paddingTop: `${currentTopPadding}px`,
+      }}
     >
       {children}
+      <GridLabels />
     </div>
   );
 };

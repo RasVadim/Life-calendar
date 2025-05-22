@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "classnames": "^2.5.1",
+    "dexie": "^4.0.11",
     "framer-motion": "^11.9.0",
     "i18next": "^23.11.2",
     "jotai": "^2.7.2",
@@ -31,6 +32,7 @@
     "@vite-pwa/assets-generator": "^0.2.4",
     "@vitejs/plugin-react": "^4.2.1",
     "eslint": "^8.57.0",
+    "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.6",
     "stylus": "^0.59.0",

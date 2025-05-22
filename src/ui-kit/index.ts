@@ -10,3 +10,5 @@ export * from "./button/buttonIcons";
 export { AccountButton } from "./accountButton/AccountButton";
 
 export { NavigationButton } from "./navigationButton/NavigationButton";
+
+export { Drawer } from './drawer/Drawer';

@@ -1,0 +1,22 @@
+@keyframes fadeIn
+  from
+    opacity 0
+
+  to
+    opacity 1
+
+.label
+  position absolute
+  left 0
+  width 100%
+  text-align left
+  padding 0 5px
+  color var(--text-secondary)
+  font-size 13px
+  pointer-events none // Do not interfere with grid interaction
+  transform translateY(-100%) // Move label into the gap between grid rows
+  opacity 1
+  animation fadeIn 1.4s ease
+
+.monthMode
+  padding 5px

@@ -1,14 +1,16 @@
 import { FC } from 'react';
+
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 
-import { AccountButton, SyncingLine } from '@/ui-kit';
-import { useSyncPending } from '@/store/atoms';
-import { useLifeMode } from '@/hooks';
 import { PATHS } from '@/constants/paths';
+import { BurgerMenu } from '@/features';
+import { useLifeMode } from '@/hooks';
+import { useSyncPending } from '@/store/atoms';
+import { AccountButton, SyncingLine } from '@/ui-kit';
 
-import { BurgerMenu } from '../burgeMenu/BurgerMenu';
 import { LifeActions } from './components/lifeActions';
+
 import s from './s.module.styl';
 
 export const Header: FC = () => {
@@ -26,7 +28,9 @@ export const Header: FC = () => {
         <div className={s.leftSide}>
           <BurgerMenu />
         </div>
-        <span className={s.title}>{`${t('layout.shortLC')} ${t(`layout.${currentMode}`)}`}</span>
+        <span className={s.title}>{`${t('layout.shortLC')} ${t(
+          `layout.${currentMode}`
+        )}`}</span>
         <div className={s.rightSide}>
           {isLifePage ? <LifeActions /> : <AccountButton />}
         </div>
