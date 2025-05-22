@@ -10,6 +10,9 @@
     "events": "Events",
     "plans": "Plans",
     "light": "light",
-    "dark": "dark"
+    "dark": "dark",
+    "login": "Login",
+    "logout": "Logout",
+    "close": "Close"
   }
 }

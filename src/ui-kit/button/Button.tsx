@@ -1,4 +1,5 @@
 import { FC, memo, ReactElement } from 'react';
+
 import cx from 'classnames';
 
 import { BUTTON_ICONS, type TIconName } from './buttonIcons';
@@ -67,12 +68,14 @@ export const Button: FC<PropsType> = memo(
           [s.active]: active,
           [s.disabled]: disabled,
           [s.gost]: gost,
+          [s.customIcon]: icon && typeof icon !== 'string',
           [s.small]: size === 'small',
           [s.large]: size === 'large',
           [s.labelShiftAnimation]: labelShiftAnimation,
           [s.onlyIcon]: onlyIcon,
         })}
         onClick={onClick}
+        disabled={disabled}
       >
         {labelShiftAnimation ? (
           <div

@@ -12,3 +12,5 @@ export { AccountButton } from "./accountButton/AccountButton";
 export { NavigationButton } from "./navigationButton/NavigationButton";
 
 export { Drawer } from './drawer/Drawer';
+
+export { DataPicker } from './dataPicker/DataPicker';
