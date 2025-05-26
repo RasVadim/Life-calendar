@@ -17,6 +17,7 @@ type PropsType = {
   hideNonActiveLabel?: boolean;
   labelShiftAnimation?: 'right-start' | 'left-start';
   onlyIcon?: boolean;
+  className?: string;
 };
 
 /**
@@ -32,6 +33,7 @@ type PropsType = {
  * @prop {boolean} [hideNonActiveLabel=false] - If true, the label will be hidden when the button is not active.
  * @prop {'right-start' | 'left-start'} [labelShiftAnimation] - Determines the animation direction for the label.
  * @prop {boolean} [onlyIcon=false] - If true, the button will be rendered as a circular icon button without label.
+ * @prop {string} [className] - Additional CSS classes to apply to the button.
  *
  * @returns {JSX.Element} A button component with an optional icon, label, and animation.
  */
@@ -47,6 +49,7 @@ export const Button: FC<PropsType> = memo(
     hideNonActiveLabel = false,
     labelShiftAnimation = '',
     onlyIcon = false,
+    className,
   }) => {
     let iconElement: ReactElement | null = null;
 
@@ -64,16 +67,20 @@ export const Button: FC<PropsType> = memo(
 
     return (
       <button
-        className={cx(s.button, {
-          [s.active]: active,
-          [s.disabled]: disabled,
-          [s.gost]: gost,
-          [s.customIcon]: icon && typeof icon !== 'string',
-          [s.small]: size === 'small',
-          [s.large]: size === 'large',
-          [s.labelShiftAnimation]: labelShiftAnimation,
-          [s.onlyIcon]: onlyIcon,
-        })}
+        className={cx(
+          s.button,
+          className,
+          {
+            [s.active]: active,
+            [s.disabled]: disabled,
+            [s.gost]: gost,
+            [s.customIcon]: icon && typeof icon !== 'string',
+            [s.small]: size === 'small',
+            [s.large]: size === 'large',
+            [s.labelShiftAnimation]: labelShiftAnimation,
+            [s.onlyIcon]: onlyIcon,
+          }
+        )}
         onClick={onClick}
         disabled={disabled}
       >

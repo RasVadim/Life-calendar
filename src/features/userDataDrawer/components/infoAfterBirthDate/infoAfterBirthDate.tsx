@@ -32,36 +32,24 @@ const SHOW_FINAL_BLOCK_DELAY = 10000;
 
 interface Props {
   birthDate: string;
+  isFromDB?: boolean;
 }
 
-export const InfoAfterBirthDate: FC<Props> = ({ birthDate }) => {
+export const InfoAfterBirthDate: FC<Props> = ({ birthDate, isFromDB }) => {
   const [showLifeExpectancy, setShowLifeExpectancy] = useState(false);
   const [showFinalBlock, setShowFinalBlock] = useState(false);
 
   const { t, i18n } = useTranslation();
   const setDrawerKey = useSetOpenDrawerKey();
 
-  const isBirthDateFilled = birthDate !== DEFAULT_BIRTH_DATE;
-
-  const now = new Date();
-  const birth = parseISO(birthDate);
-  const age = differenceInYears(now, birth);
-  const locale = i18n.language === 'ru' ? ru : enUS;
-  const weekday = format(birth, 'EEEE', { locale });
-  const weekdayDisplay = getWeekdayPrepositional(weekday, i18n.language);
-  const months = differenceInMonths(now, birth);
-  const weeks = differenceInWeeks(now, birth);
-  const days = differenceInDays(now, birth);
-  const sleepHours = Math.round(days * 8);
-  const sleepHoursInYearsInt = Math.round(sleepHours / 24 / 365.25);
-
-  const showSleepYears = sleepHoursInYearsInt > 0;
-  const yearsWord = getYearsWordDative(age, i18n.language);
-  const sleepYearsWord = showSleepYears
-    ? getYearsWordGenitive(sleepHoursInYearsInt, i18n.language)
-    : '';
+  const isBirthDateFilled = !!birthDate;
 
   useEffect(() => {
+    if (isFromDB) {
+      setShowLifeExpectancy(true);
+      setShowFinalBlock(true);
+      return;
+    }
     if (isBirthDateFilled) {
       const timeout = setTimeout(
         () => setShowLifeExpectancy(true),
@@ -79,7 +67,25 @@ export const InfoAfterBirthDate: FC<Props> = ({ birthDate }) => {
       setShowLifeExpectancy(false);
       setShowFinalBlock(false);
     }
-  }, [isBirthDateFilled]);
+  }, [isBirthDateFilled, isFromDB]);
+
+  const now = new Date();
+  const birth = parseISO(birthDate || DEFAULT_BIRTH_DATE);
+  const age = differenceInYears(now, birth);
+  const locale = i18n.language === 'ru' ? ru : enUS;
+  const weekday = format(birth, 'EEEE', { locale });
+  const weekdayDisplay = getWeekdayPrepositional(weekday, i18n.language);
+  const months = differenceInMonths(now, birth);
+  const weeks = differenceInWeeks(now, birth);
+  const days = differenceInDays(now, birth);
+  const sleepHours = Math.round(days * 8);
+  const sleepHoursInYearsInt = Math.round(sleepHours / 24 / 365.25);
+
+  const showSleepYears = sleepHoursInYearsInt > 0;
+  const yearsWord = getYearsWordDative(age, i18n.language);
+  const sleepYearsWord = showSleepYears
+    ? getYearsWordGenitive(sleepHoursInYearsInt, i18n.language)
+    : '';
 
   return (
     <>
@@ -127,7 +133,7 @@ export const InfoAfterBirthDate: FC<Props> = ({ birthDate }) => {
           [s.visible]: showFinalBlock,
         })}
       >
-        {isBirthDateFilled && (
+        {isBirthDateFilled && !isFromDB && (
           <>
             <div>{t('life.userDataDrawer90YearsSleep')}</div>
             <Button

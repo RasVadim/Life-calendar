@@ -13,4 +13,4 @@ export { NavigationButton } from "./navigationButton/NavigationButton";
 
 export { Drawer } from './drawer/Drawer';
 
-export { DataPicker } from './dataPicker/DataPicker';
+export { DatePicker } from './datePicker/DataPicker';
