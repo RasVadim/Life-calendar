@@ -20,7 +20,6 @@ export const Life: FC<PropsType> = () => {
     const checkBirthDate = async () => {
       try {
         const userData = await lifeCalendarDB.userData.get('main');
-        console.log('userData', userData);
         if (!userData || !userData.birthDate) {
           setDrawerKey(DRAWER_KEYS.userData);
         }

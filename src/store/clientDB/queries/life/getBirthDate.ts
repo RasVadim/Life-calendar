@@ -1,4 +1,4 @@
-import { lifeCalendarDB } from '../lifeCalendarDB';
+import { lifeCalendarDB } from '../../lifeCalendarDB';
 
 /**
  * Get user's birth date from IndexedDB

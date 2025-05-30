@@ -1,16 +1,43 @@
 import Dexie, { Table } from 'dexie';
 
+import { THolidayName, ESeason, EWeekType, TWeekZodiac, EHolidayType } from '@/types';
+
+// Тип праздника
+export interface IHoliday {
+  name: THolidayName;
+  date: string; // ISO string
+  type: EHolidayType;
+}
+
 // Type for a week entity
-export interface WeekEntity {
-  id: string; // unique week id
-  dateStart: string; // week start date (ISO string)
-  dateEnd: string; // week end date (ISO string)
-  type: 'past' | 'current' | 'future';
+export interface IWeek {
+  id: string;
+  dateStart: string;
+  dateEnd: string;
+  type: EWeekType;
+  month: number;
+  year: number;
+  dateYear: string;
+  dateMonth: string;
+  dateSeason: ESeason;
+  numberOfDays: number;
+  isFirst: boolean;
+  isLast: boolean;
+  isFirstInYear: boolean;
+  isLastInYear: boolean;
+  isFirstInMonth: boolean;
+  isLastInMonth: boolean;
+  isExpandedByYear: boolean;
+  isExpandedByDateSeason: boolean;
+  isExpandedByDateMonth: boolean;
+  isPartialByYear: boolean;
+  isPartialByDateSeason: boolean;
+  isPartialByDateMonth: boolean;
+  isLeapYear: boolean;
+  holidays: THolidayName[] | null;
+  yearZodiacLabel: TWeekZodiac;
   photoUrl?: string;
   photoLocal?: string;
-  isFirst?: boolean;
-  isLast?: boolean;
-  // ... other fields as needed
 }
 
 // Type for user settings entity
@@ -23,8 +50,9 @@ export interface UserDataEntity {
 
 // Dexie database class
 export class LifeCalendarDB extends Dexie {
-  weeks!: Table<WeekEntity, string>;
+  weeks!: Table<IWeek, string>;
   userData!: Table<UserDataEntity, string>;
+  holidays!: Table<IHoliday, string>;
   firstVisit: boolean = false; // true if user opens app for the first time
   isProfileCompleted: boolean = false; // true if user completed onboarding/profile
 
@@ -33,6 +61,7 @@ export class LifeCalendarDB extends Dexie {
     this.version(1).stores({
       weeks: 'id, dateStart, dateEnd, type', // Create 'weeks' table with primary key 'id' and indexes on 'dateStart', 'dateEnd', 'type'
       userData: 'id', // Create 'userData' table with primary key 'id'
+      holidays: 'name', // Create 'holidays' table with primary key 'name'
     });
   }
 }

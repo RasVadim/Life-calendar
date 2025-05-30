@@ -13,3 +13,5 @@ export { getWeeksWord } from './getRightWordEnd/getWeeksWord';
 export { getDaysWord } from './getRightWordEnd/getDaysWord';
 
 export { getHoursWord } from './getRightWordEnd/getHoursWord';
+
+export { generateWeeks } from './generateWeeks/generateWeeks';

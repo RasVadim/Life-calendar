@@ -13,7 +13,6 @@ import { enUS, ru } from 'date-fns/locale';
 import { useTranslation } from 'react-i18next';
 
 import { DEFAULT_BIRTH_DATE } from '@/constants';
-import { useSetOpenDrawerKey } from '@/store/atoms';
 import { Button } from '@/ui-kit';
 import {
   getYearsWordGenitive,
@@ -33,14 +32,18 @@ const SHOW_FINAL_BLOCK_DELAY = 10000;
 interface Props {
   birthDate: string;
   isFromDB?: boolean;
+  onButtonClick?: () => void;
 }
 
-export const InfoAfterBirthDate: FC<Props> = ({ birthDate, isFromDB }) => {
+export const InfoAfterBirthDate: FC<Props> = ({
+  birthDate,
+  isFromDB,
+  onButtonClick,
+}) => {
   const [showLifeExpectancy, setShowLifeExpectancy] = useState(false);
   const [showFinalBlock, setShowFinalBlock] = useState(false);
 
   const { t, i18n } = useTranslation();
-  const setDrawerKey = useSetOpenDrawerKey();
 
   const isBirthDateFilled = !!birthDate;
 
@@ -133,13 +136,15 @@ export const InfoAfterBirthDate: FC<Props> = ({ birthDate, isFromDB }) => {
           [s.visible]: showFinalBlock,
         })}
       >
-        {isBirthDateFilled && !isFromDB && (
+        {isBirthDateFilled && (
           <>
             <div>{t('life.userDataDrawer90YearsSleep')}</div>
-            <Button
-              onClick={() => setDrawerKey(null)}
-              label={t('life.userDataDrawerShowButton')}
-            />
+            {!isFromDB && (
+              <Button
+                onClick={onButtonClick}
+                label={t('life.userDataDrawerShowButton')}
+              />
+            )}
           </>
         )}
       </div>

@@ -1,43 +1,42 @@
 .wrap
   position absolute
   top 0
+  left var(--header-radius, 17px)
+  right var(--header-radius, 17px)
+  width auto
   background-color var(--disabled-background-color)
   opacity 0.5
   height 1px
-  width 100%
   animation colored 2s cubic-bezier(0.5, 0.51, 0.69, 0.7) infinite
+  transition opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1)
+  will-change opacity
 
   .bar
     position absolute
-    float left
+    left 0
     width 0
     height 1px
     background-color var(--background-color)
-    box-shadow 0 0 2px 5px var(--background-color)
     animation leftRight 2s cubic-bezier(0.5, 0.51, 0.69, 0.7) infinite
 
 @keyframes leftRight
   0%
-    transform translate(0, 0)
-
+    left 0
+    width 0
   20%
-    transform translate(0, 0)
-    width 40vw
-
+    left 0
+    width 40%
   51%
-    transform translate(40vw, 0)
-    width 60vw
-
+    left 40%
+    width 60%
   100%
-    transform translate(100vw, 0)
+    left 100%
     width 0
 
 @keyframes colored
   0%
     background-color var(--disabled-background-color)
-
   50%
     background-color var(--primary-light-color)
-
   100%
     background-color var(--disabled-background-color)

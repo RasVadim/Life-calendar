@@ -1,6 +1,7 @@
 import { FC } from 'react';
 
-import { TWeek } from '@/types';
+
+import { IWeek } from '@/store/clientDB';
 
 import { Week, ZoomableGrid } from './components';
 
@@ -8,7 +9,7 @@ import s from './s.module.styl';
 
 
 type PropsType = {
-  weeks?: TWeek[];
+  weeks?: IWeek[];
 };
 
 export const LifeCalendar: FC<PropsType> = ({ weeks }) => {
@@ -16,7 +17,7 @@ export const LifeCalendar: FC<PropsType> = ({ weeks }) => {
     <div className={s.calendar}>
       <ZoomableGrid>
         {weeks?.map((week) => (
-          <Week key={week.id} id={week.id} />
+          <Week key={week.id} id={week.id} week={week} />
         ))}
       </ZoomableGrid>
     </div>
