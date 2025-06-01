@@ -1,6 +1,9 @@
 import { FC } from 'react'
 
+import cx from 'classnames'
+
 import { IWeek } from '@/store/clientDB'
+import { EWeekType } from '@/types/life'
 
 import { getBGColor, getBorderColor } from './utils'
 
@@ -12,15 +15,16 @@ type PropsType = {
 }
 
 export const Week: FC<PropsType> = ({id, week}) => {
+  const bGColor = getBGColor(week.holidays);
+  const borderColor = getBorderColor(week.type);
+  const isPresent = week.type === EWeekType.Present;
 
-  const bGColor = getBGColor(week.type);
-  const borderColor = getBorderColor(week.holidays);
-
-    return (
-        <div className={s.week}
-         style={{ backgroundColor: bGColor, borderColor: borderColor }}
-         >
-            {id}
-        </div>
-    )
+  return (
+    <div
+      className={cx(s.week, { [s.present]: isPresent })}
+      style={{ backgroundColor: bGColor, borderColor: borderColor }}
+    >
+      {id}
+    </div>
+  )
 }

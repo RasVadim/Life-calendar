@@ -158,8 +158,14 @@ export const generateWeeks = (
       // Birthday
       const birthDay = getDate(birthDate);
       const birthMonth = getMonth(birthDate) + 1;
+      const birthYear = getYear(birthDate);
+      const currentLifeYear = birthYear + yearOfLife;
       for (let d = weekStart; d <= weekEnd; d = addDays(d, 1)) {
-        if (getDate(d) === birthDay && getMonth(d) + 1 === birthMonth) {
+        if (
+          getDate(d) === birthDay &&
+          getMonth(d) + 1 === birthMonth &&
+          getYear(d) === currentLifeYear
+        ) {
           holidays.push(HOLIDAY_NAMES.birthday);
           break;
         }
