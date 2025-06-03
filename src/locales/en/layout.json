@@ -13,7 +13,6 @@
     "dark": "dark",
     "login": "Login",
     "logout": "Logout",
-    "close": "Close",
-    "confirmDate": "This is my birth date"
+    "close": "Close"
   }
 }

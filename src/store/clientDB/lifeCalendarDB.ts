@@ -1,6 +1,12 @@
 import Dexie, { Table } from 'dexie';
 
-import { THolidayName, ESeason, EWeekType, TWeekZodiac, EHolidayType } from '@/types';
+import {
+  THolidayName,
+  ESeason,
+  EWeekType,
+  TWeekZodiac,
+  EHolidayType,
+} from '@/types';
 
 // Тип праздника
 export interface IHoliday {
@@ -19,7 +25,7 @@ export interface IWeek {
   year: number;
   dateYear: string;
   dateMonth: string;
-  dateSeason: ESeason;
+  dateSeason: ESeason | null;
   numberOfDays: number;
   isFirst: boolean;
   isLast: boolean;
@@ -35,7 +41,7 @@ export interface IWeek {
   isPartialByDateMonth: boolean;
   isLeapYear: boolean;
   holidays: THolidayName[] | null;
-  yearZodiacLabel: TWeekZodiac;
+  yearZodiacLabel: TWeekZodiac | null;
   photoUrl?: string;
   photoLocal?: string;
 }

@@ -7,4 +7,4 @@ import type { IWeek } from '../../lifeCalendarDB';
  */
 export async function getWeeks(): Promise<IWeek[]> {
   return await lifeCalendarDB.weeks.toArray();
-} 
+}

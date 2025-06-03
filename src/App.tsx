@@ -1,23 +1,21 @@
-import { useEffect } from "react";
+import { useEffect } from 'react';
 
-import i18n from "i18next";
+import i18n from 'i18next';
 
-import { Routes } from "@/Routes";
-import {
-  useLanguage,
-  useThemeMode,
-  useSetSyncPending,
-} from "@/store/atoms";
+import { Routes } from '@/Routes';
+import { useLanguage, useThemeMode, useSetSyncPending } from '@/store/atoms';
+import { initDefaultWeeks } from '@/store/clientDB';
 
-import { toggleTheme } from "./utils";
+import { toggleTheme } from './utils';
+
 // Function to enter fullscreen
 function enterFullscreen() {
   document.documentElement.requestFullscreen();
 }
 
 // Event listener for visibilitychange
-document.addEventListener("visibilitychange", () => {
-  if (document.visibilityState === "visible") {
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible') {
     enterFullscreen();
   }
 });
@@ -36,6 +34,11 @@ const App = () => {
       setPending(false);
     });
   }, [language]);
+
+  useEffect(() => {
+    // Initialize default weeks in background
+    initDefaultWeeks();
+  }, []);
 
   return <Routes />;
 };

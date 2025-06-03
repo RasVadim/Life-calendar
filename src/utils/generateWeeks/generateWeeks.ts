@@ -13,8 +13,8 @@ import {
 import { DEFAULT_LIFE_SPAN_YEARS } from '@/constants';
 import { ESeason, EWeekType, HOLIDAY_NAMES } from '@/types/life';
 
-import {getMajorityDate} from './getMajorityDate';
-import {getZodiac} from './getZodiac';
+import { getMajorityDate } from './getMajorityDate';
+import { getZodiac } from './getZodiac';
 
 /**
  * Generates an array of life weeks for a given birth date and lifespan.
@@ -26,15 +26,19 @@ import {getZodiac} from './getZodiac';
  */
 export const generateWeeks = (
   birthDateISO: string,
-  lifeSpanYears = DEFAULT_LIFE_SPAN_YEARS
+  lifeSpanYears = DEFAULT_LIFE_SPAN_YEARS,
 ) => {
   const weeks = [];
   const birthDate = startOfDay(new Date(birthDateISO));
   const deathDate = startOfDay(addYears(birthDate, lifeSpanYears));
 
   for (let yearOfLife = 0; yearOfLife < lifeSpanYears; yearOfLife++) {
-    const yearStart = yearOfLife === 0 ? birthDate : addYears(birthDate, yearOfLife);
-    const yearEnd = yearOfLife === lifeSpanYears - 1 ? deathDate : addYears(birthDate, yearOfLife + 1);
+    const yearStart =
+      yearOfLife === 0 ? birthDate : addYears(birthDate, yearOfLife);
+    const yearEnd =
+      yearOfLife === lifeSpanYears - 1
+        ? deathDate
+        : addYears(birthDate, yearOfLife + 1);
     let weeksInYear = [];
     let weekStart = yearStart;
     let weekIndex = 0;
@@ -49,11 +53,19 @@ export const generateWeeks = (
       // Merge with the next week (first week will be long)
       let nextWeekEnd = addDays(firstWeekEnd, 7);
       if (nextWeekEnd > yearEnd) nextWeekEnd = yearEnd;
-      weeksInYear.push({ weekStart, weekEnd: nextWeekEnd, isExpandedByYear: true });
+      weeksInYear.push({
+        weekStart,
+        weekEnd: nextWeekEnd,
+        isExpandedByYear: true,
+      });
       weekStart = addDays(nextWeekEnd, 1);
       weekIndex++;
     } else {
-      weeksInYear.push({ weekStart, weekEnd: firstWeekEnd, isExpandedByYear: false });
+      weeksInYear.push({
+        weekStart,
+        weekEnd: firstWeekEnd,
+        isExpandedByYear: false,
+      });
       weekStart = addDays(firstWeekEnd, 1);
       weekIndex++;
     }
@@ -70,7 +82,7 @@ export const generateWeeks = (
     // Last week: all remaining days until the end of the life year
     if (weekStart < yearEnd) {
       const weekEnd = yearEnd;
-      const isExpanded = (differenceInDays(weekEnd, weekStart) + 1) > 7;
+      const isExpanded = differenceInDays(weekEnd, weekStart) + 1 > 7;
       weeksInYear.push({ weekStart, weekEnd, isExpandedByYear: isExpanded });
     }
 
@@ -94,11 +106,7 @@ export const generateWeeks = (
     for (let i = 0; i < weeksInYear.length; i++) {
       const { weekStart, weekEnd, isExpandedByYear } = weeksInYear[i];
       const days: Date[] = [];
-      for (
-        let d = weekStart;
-        d <= weekEnd;
-        d = addDays(d, 1)
-      ) {
+      for (let d = weekStart; d <= weekEnd; d = addDays(d, 1)) {
         days.push(d);
       }
       const dateYear = getMajorityDate(days, 'year');
@@ -110,7 +118,8 @@ export const generateWeeks = (
       const isFirstInYear = isFirst;
       const isLastInYear = isLast;
       const isFirstInMonth = getDate(weekStart) === 1;
-      const isLastInMonth = getDate(weekEnd) === getDate(addDays(weekEnd, 1)) - 1;
+      const isLastInMonth =
+        getDate(weekEnd) === getDate(addDays(weekEnd, 1)) - 1;
       const isLeap = isLeapYear(weekStart);
       const zodiac = getZodiac(getYear(weekStart));
 
@@ -124,19 +133,39 @@ export const generateWeeks = (
       }
 
       // isExpandedByDateSeason: first or last week of season and days > 7
-      const isFirstInSeason = i === 0 || dateSeason !== getMajorityDate(Array.from({length: 7}, (_, k) => addDays(weekStart, -k-1)).map(d => d), 'season');
-      const isLastInSeason = i === weeksInYear.length - 1 || dateSeason !== getMajorityDate(Array.from({length: 7}, (_, k) => addDays(weekEnd, k+1)).map(d => d), 'season');
-      const isExpandedByDateSeason = (isFirstInSeason || isLastInSeason) && days.length > 7;
+      const isFirstInSeason =
+        i === 0 ||
+        dateSeason !==
+          getMajorityDate(
+            Array.from({ length: 7 }, (_, k) => addDays(weekStart, -k - 1)).map(
+              (d) => d,
+            ),
+            'season',
+          );
+      const isLastInSeason =
+        i === weeksInYear.length - 1 ||
+        dateSeason !==
+          getMajorityDate(
+            Array.from({ length: 7 }, (_, k) => addDays(weekEnd, k + 1)).map(
+              (d) => d,
+            ),
+            'season',
+          );
+      const isExpandedByDateSeason =
+        (isFirstInSeason || isLastInSeason) && days.length > 7;
 
       // isExpandedByDateMonth: first or last week of month and days > 7
-      const isExpandedByDateMonth = (isFirstInMonth || isLastInMonth) && days.length > 7;
+      const isExpandedByDateMonth =
+        (isFirstInMonth || isLastInMonth) && days.length > 7;
 
       // isPartialByYear: first or last week of life year and days < 7
       const isPartialByYear = (isFirst || isLast) && days.length < 7;
       // isPartialByDateSeason: first or last week of season and days < 7
-      const isPartialByDateSeason = (isFirstInSeason || isLastInSeason) && days.length < 7;
+      const isPartialByDateSeason =
+        (isFirstInSeason || isLastInSeason) && days.length < 7;
       // isPartialByDateMonth: first or last week of month and days < 7
-      const isPartialByDateMonth = (isFirstInMonth || isLastInMonth) && days.length < 7;
+      const isPartialByDateMonth =
+        (isFirstInMonth || isLastInMonth) && days.length < 7;
 
       // Efficient calculation of life month
       const yearsPassed = yearOfLife;
@@ -154,7 +183,7 @@ export const generateWeeks = (
       const lifeMonth = monthsFromBirth + 1;
 
       // Calculate holidays for the week
-      const holidays: typeof HOLIDAY_NAMES[keyof typeof HOLIDAY_NAMES][] = [];
+      const holidays: (typeof HOLIDAY_NAMES)[keyof typeof HOLIDAY_NAMES][] = [];
       // Birthday
       const birthDay = getDate(birthDate);
       const birthMonth = getMonth(birthDate) + 1;
@@ -193,8 +222,13 @@ export const generateWeeks = (
       }
       // Birthday always first if present
       if (holidays.includes(HOLIDAY_NAMES.birthday)) {
-        const filtered = holidays.filter(h => h !== HOLIDAY_NAMES.birthday);
-        holidays.splice(0, holidays.length, HOLIDAY_NAMES.birthday, ...filtered);
+        const filtered = holidays.filter((h) => h !== HOLIDAY_NAMES.birthday);
+        holidays.splice(
+          0,
+          holidays.length,
+          HOLIDAY_NAMES.birthday,
+          ...filtered,
+        );
       }
 
       weeks.push({

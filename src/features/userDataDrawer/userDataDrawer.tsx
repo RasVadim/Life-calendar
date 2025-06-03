@@ -5,13 +5,15 @@ import { useTranslation } from 'react-i18next';
 
 import { DEFAULT_BIRTH_DATE, DEFAULT_LIFE_SPAN_YEARS } from '@/constants';
 import { DRAWER_KEYS } from '@/constants/modal';
-import { OutlineProfile } from '@/icons/OutlineProfile';
+import { OutlineProfile } from '@/icons';
 import { useOpenDrawerKey, useSetSyncPending } from '@/store/atoms';
-import { setBirthDate as setBirthDateToDB } from '@/store/clientDB';
-import { saveWeekList } from '@/store/clientDB';
-import { getBirthDate } from '@/store/clientDB/queries/life/getBirthDate';
+import {
+  setBirthDate as setBirthDateToDB,
+  saveWeeks,
+  getBirthDate,
+} from '@/store/clientDB';
 import { Button, Drawer, WheelDatePicker } from '@/ui-kit';
-import { generateWeeks } from '@/utils/generateWeeks/generateWeeks';
+import { generateWeeksInWorker } from '@/webWorkers';
 
 import { InfoAfterBirthDate } from './components';
 
@@ -71,15 +73,18 @@ export const UserDataDrawer = () => {
       setPending(true);
       try {
         await setBirthDateToDB(birthDate);
-      } catch (err) {
-        // Handle error if needed
-      } finally {
         setBirthDateFromDB(birthDate);
+        // --- Web Worker через хелпер ---
+        const weeks = await generateWeeksInWorker(
+          birthDate,
+          DEFAULT_LIFE_SPAN_YEARS,
+        );
+        await saveWeeks(weeks);
+      } catch (err) {
+        // handle error
+      } finally {
+        setPending(false);
       }
-
-      const weeks = generateWeeks(birthDate, DEFAULT_LIFE_SPAN_YEARS);
-      await saveWeekList(weeks);
-      setPending(false);
     }
   };
 

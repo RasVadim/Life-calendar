@@ -7,4 +7,4 @@ import { lifeCalendarDB } from '../../lifeCalendarDB';
 export async function getBirthDate(): Promise<string | null> {
   const userData = await lifeCalendarDB.userData.get('main');
   return userData?.birthDate ?? null;
-} 
+}

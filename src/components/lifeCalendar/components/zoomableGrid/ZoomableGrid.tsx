@@ -10,7 +10,6 @@ import {
   snapToClosestZoom,
   calculateRowGapSize,
   calculateTopPadding,
-  
 } from './utils';
 import { GridLabels } from '../gridLabels/GridLabels';
 

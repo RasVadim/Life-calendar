@@ -15,3 +15,5 @@ export { HouseIcon } from './houseIcon';
 export { YearsIcon } from './yearsIcon';
 
 export { MonthsIcon } from './monthsIcon';
+
+export { OutlineProfile } from './outlineProfile';
