@@ -13,7 +13,7 @@ import type { Locale } from 'date-fns';
 import { TItem } from './utils/generateYearItems';
 import { WheelPicker } from './WheelPicker';
 
-const DEBOUNCE_TIME = 2200;
+const DEBOUNCE_TIME = 1500;
 
 export type WheelDatePickerProps = {
   value?: string; // 'yyyy-MM-dd'
@@ -36,7 +36,7 @@ export const WheelDatePicker: React.FC<WheelDatePickerProps> = ({
   itemHeight = 32,
   debounced = false,
 }) => {
-  // Парсим value в draft
+  // Parse value into draft
   const parsed = value
     ? parseISO(value)
     : defaultDate
@@ -49,22 +49,22 @@ export const WheelDatePicker: React.FC<WheelDatePickerProps> = ({
     day: getDate(parsed),
   });
 
-  // Синхронизация draft с value
-  useEffect(() => {
-    const parsed = value
-      ? parseISO(value)
-      : defaultDate
-        ? parseISO(defaultDate)
-        : new Date();
-    setDraft({
-      year: getYear(parsed),
-      month: getMonth(parsed) + 1,
-      day: getDate(parsed),
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [value, defaultDate]);
+  // TODO: Sync draft with value
+  // useEffect(() => {
+  //   const parsed = value
+  //     ? parseISO(value)
+  //     : defaultDate
+  //       ? parseISO(defaultDate)
+  //       : new Date();
+  //   setDraft({
+  //     year: getYear(parsed),
+  //     month: getMonth(parsed) + 1,
+  //     day: getDate(parsed),
+  //   });
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [value, defaultDate]);
 
-  // Генерация списков для WheelPicker
+  // Generate lists for WheelPicker
   const currentYear = getYear(new Date());
   const yearsRange = useMemo(
     () => Array.from({ length: yearRange }, (_, i) => currentYear - i),
@@ -95,7 +95,7 @@ export const WheelDatePicker: React.FC<WheelDatePickerProps> = ({
   // Debounce ref
   const debounceRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Хелпер для вызова onChange с debounce
+  // Helper for calling onChange with debounce
   const emitChange = (nextDraft: {
     year: number;
     month: number;
@@ -122,12 +122,11 @@ export const WheelDatePicker: React.FC<WheelDatePickerProps> = ({
     }
   };
 
-  // Обработчики изменений
+  // Change handlers
   const handleYearChange = (val: string | number) => {
     const newYear = Number(val);
     setDraft((prev) => {
       const next = { ...prev, year: newYear };
-      console.log('handleYearChanged!!', next);
       emitChange(next);
       return next;
     });
@@ -149,14 +148,12 @@ export const WheelDatePicker: React.FC<WheelDatePickerProps> = ({
     });
   };
 
-  // Очищаем debounce при размонтировании
+  // Clear debounce on unmount
   useEffect(() => {
     return () => {
       if (debounceRef.current) clearTimeout(debounceRef.current);
     };
   }, []);
-
-  console.log('value', value);
 
   return (
     <WheelPicker

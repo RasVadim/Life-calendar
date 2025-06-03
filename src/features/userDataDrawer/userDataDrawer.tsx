@@ -26,7 +26,6 @@ export const UserDataDrawer = () => {
   const [birthDate, setBirthDate] = useState<string | null>(null);
   const [birthDateFromDB, setBirthDateFromDB] = useState<string | null>(null);
 
-  console.log('birthDateFromDB', birthDateFromDB);
   // On mount, get birth date from DB if exists
   useEffect(() => {
     const fetchBirthDate = async () => {
@@ -39,7 +38,6 @@ export const UserDataDrawer = () => {
 
   // Save birth date to IndexedDB on change
   const handleBirthDateChange = async (newDate: string) => {
-    console.log('handleBirthDateChange', newDate);
     setBirthDate(newDate);
   };
 
@@ -57,8 +55,6 @@ export const UserDataDrawer = () => {
   );
 
   const handleClose = () => {
-    console.log('handleClose', birthDateFromDB);
-
     if (!birthDateFromDB) {
       calculateLifeExpectancy();
       return;
@@ -87,8 +83,6 @@ export const UserDataDrawer = () => {
     }
   };
 
-  console.log('birthDate', birthDate);
-
   return (
     <Drawer
       title={t('life.lifeInWeeks')}
@@ -99,13 +93,13 @@ export const UserDataDrawer = () => {
     >
       <div className={s.introWrap}>
         <div className={s.introText}>{t('life.userDataDrawerIntro')}</div>
-        {birthDate !== null && (
+        {birthDate !== null && drawerKey === DRAWER_KEYS.userData && (
           <WheelDatePicker
             value={birthDate}
             onChange={handleBirthDateChange}
             locale={i18n.language === 'ru' ? ru : undefined}
             defaultDate={birthDateFromDB || DEFAULT_BIRTH_DATE}
-            // debounced={!birthDateFromDB}
+            debounced={!birthDateFromDB}
           />
         )}
         <InfoAfterBirthDate

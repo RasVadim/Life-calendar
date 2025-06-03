@@ -69,10 +69,6 @@ export const WheelColumn: React.FC<WheelColumnProps> = ({
           );
           currentValue.current = selectedElement;
           isScrolling.current = setTimeout(function () {
-            console.log(
-              'isScrolling.current.onChange',
-              items[selectedElement].value,
-            );
             onChange(items[selectedElement].value);
           }, SCROLL_DEBOUNCE_TIME);
           isAnimating = false;

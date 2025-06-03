@@ -1,29 +1,20 @@
-import { useEffect } from "react";
+import { useTranslation } from 'react-i18next';
 
-import { useTranslation } from "react-i18next";
+import { useSetThemeMode, EThemeMode } from '@/store/atoms';
 
-import { useSetThemeMode, EThemeMode } from "@/store/atoms";
+import s from './s.module.styl';
 
-import s from "./s.module.styl";
 export const ThemeSwitcher = () => {
   const { t } = useTranslation();
   const setTheme = useSetThemeMode();
 
-useEffect(() => {
-console.log('mount') //
-
-return () => {
-  console.log('unmount') //
-}
-}, [])
-
   return (
     <div className={s.wrapper}>
       <button onClick={() => setTheme(EThemeMode.LIGHT)} className={s.button}>
-        {t("layout.light")}
+        {t('layout.light')}
       </button>
       <button onClick={() => setTheme(EThemeMode.DARK)} className={s.button}>
-        {t("layout.dark")}
+        {t('layout.dark')}
       </button>
     </div>
   );
