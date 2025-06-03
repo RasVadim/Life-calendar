@@ -1,15 +1,16 @@
 import { useMemo, useState, useEffect } from 'react';
 
+import { ru } from 'date-fns/locale';
 import { useTranslation } from 'react-i18next';
 
-import { DEFAULT_BIRTH_DATE } from '@/constants';
+import { DEFAULT_BIRTH_DATE, DEFAULT_LIFE_SPAN_YEARS } from '@/constants';
 import { DRAWER_KEYS } from '@/constants/modal';
 import { OutlineProfile } from '@/icons/OutlineProfile';
-import { useSetOpenDrawerKey, useSetSyncPending } from '@/store/atoms';
-import { setBirthDate } from '@/store/clientDB';
+import { useOpenDrawerKey, useSetSyncPending } from '@/store/atoms';
+import { setBirthDate as setBirthDateToDB } from '@/store/clientDB';
 import { saveWeekList } from '@/store/clientDB';
 import { getBirthDate } from '@/store/clientDB/queries/life/getBirthDate';
-import { Button, Drawer, DatePicker } from '@/ui-kit';
+import { Button, Drawer, WheelDatePicker } from '@/ui-kit';
 import { generateWeeks } from '@/utils/generateWeeks/generateWeeks';
 
 import { InfoAfterBirthDate } from './components';
@@ -17,33 +18,29 @@ import { InfoAfterBirthDate } from './components';
 import s from './s.module.styl';
 
 export const UserDataDrawer = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
-  const setDrawerKey = useSetOpenDrawerKey();
+  const [drawerKey, setDrawerKey] = useOpenDrawerKey();
   const setPending = useSetSyncPending();
 
-  const [birthDate, setBirthDateState] = useState<string>('');
-  const [isBirthDateFromDB, setIsBirthDateFromDB] = useState(false);
+  const [birthDate, setBirthDate] = useState<string | null>(null);
+  const [birthDateFromDB, setBirthDateFromDB] = useState<string | null>(null);
 
+  console.log('birthDateFromDB', birthDateFromDB);
   // On mount, get birth date from DB if exists
   useEffect(() => {
     const fetchBirthDate = async () => {
       const dbBirthDate = await getBirthDate();
-      setBirthDateState(dbBirthDate || '');
-      setIsBirthDateFromDB(!!dbBirthDate);
+      setBirthDate(dbBirthDate || '');
+      setBirthDateFromDB(dbBirthDate);
     };
     fetchBirthDate();
   }, []);
 
   // Save birth date to IndexedDB on change
   const handleBirthDateChange = async (newDate: string) => {
-    setBirthDateState(newDate);
-    setIsBirthDateFromDB(false); // reset if user changes date
-    try {
-      await setBirthDate(newDate);
-    } catch (err) {
-      // Handle error if needed
-    }
+    console.log('handleBirthDateChange', newDate);
+    setBirthDate(newDate);
   };
 
   const actions = useMemo(
@@ -56,19 +53,41 @@ export const UserDataDrawer = () => {
         />
       </div>
     ),
-    [t]
+    [t],
   );
 
-  const handleClose = async () => {
+  const handleClose = () => {
+    console.log('handleClose', birthDateFromDB);
+
+    if (!birthDateFromDB) {
+      calculateLifeExpectancy();
+      return;
+    }
+
+    setBirthDate(birthDateFromDB);
+    setDrawerKey(null);
+  };
+
+  const calculateLifeExpectancy = async () => {
     setDrawerKey(null);
 
     if (birthDate) {
       setPending(true);
-      const weeks = generateWeeks(birthDate, 90);
+      try {
+        await setBirthDateToDB(birthDate);
+      } catch (err) {
+        // Handle error if needed
+      } finally {
+        setBirthDateFromDB(birthDate);
+      }
+
+      const weeks = generateWeeks(birthDate, DEFAULT_LIFE_SPAN_YEARS);
       await saveWeekList(weeks);
       setPending(false);
     }
   };
+
+  console.log('birthDate', birthDate);
 
   return (
     <Drawer
@@ -80,18 +99,19 @@ export const UserDataDrawer = () => {
     >
       <div className={s.introWrap}>
         <div className={s.introText}>{t('life.userDataDrawerIntro')}</div>
-        <DatePicker
-          value={birthDate}
-          defaultValue={DEFAULT_BIRTH_DATE}
-          onChange={handleBirthDateChange}
-          isDefault={!birthDate}
-          confirmButtonLabel={t('layout.confirmDate')}
-          confirmButtonVisible={!birthDate}
-        />
+        {birthDate !== null && (
+          <WheelDatePicker
+            value={birthDate}
+            onChange={handleBirthDateChange}
+            locale={i18n.language === 'ru' ? ru : undefined}
+            defaultDate={birthDateFromDB || DEFAULT_BIRTH_DATE}
+            // debounced={!birthDateFromDB}
+          />
+        )}
         <InfoAfterBirthDate
-          birthDate={birthDate}
-          isFromDB={isBirthDateFromDB}
-          onButtonClick={handleClose}
+          birthDate={birthDate || ''}
+          birthDateFromDB={birthDateFromDB || ''}
+          onButtonClick={calculateLifeExpectancy}
         />
       </div>
     </Drawer>

@@ -1,0 +1,29 @@
+.items {
+  height: 100%;
+  padding: 50% 0;
+  margin: 0;
+  overflow-y: scroll;
+  scroll-snap-type: y mandatory;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  touch-action: pan-y;
+  overflow-x: hidden;
+}
+
+.items::-webkit-scrollbar {
+  display: none;
+}
+
+.item {
+  margin-right: 10px;
+  margin-left: 2px;
+  list-style-type: none;
+  width: 100%;
+  text-align: center;
+  scroll-snap-align: center;
+  color: var(--secondary-color);
+}
+
+.item div {
+  display: inline-block;
+} 

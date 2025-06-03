@@ -1,1 +1,1 @@
-export { LogsPanel } from './logsPanel/logsPanel';
+export { LogsPanel } from './logsPanel/LogsPanel';

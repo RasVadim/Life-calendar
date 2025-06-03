@@ -31,13 +31,13 @@ const SHOW_FINAL_BLOCK_DELAY = 10000;
 
 interface Props {
   birthDate: string;
-  isFromDB?: boolean;
+  birthDateFromDB?: string;
   onButtonClick?: () => void;
 }
 
 export const InfoAfterBirthDate: FC<Props> = ({
   birthDate,
-  isFromDB,
+  birthDateFromDB,
   onButtonClick,
 }) => {
   const [showLifeExpectancy, setShowLifeExpectancy] = useState(false);
@@ -48,7 +48,7 @@ export const InfoAfterBirthDate: FC<Props> = ({
   const isBirthDateFilled = !!birthDate;
 
   useEffect(() => {
-    if (isFromDB) {
+    if (birthDateFromDB) {
       setShowLifeExpectancy(true);
       setShowFinalBlock(true);
       return;
@@ -56,11 +56,11 @@ export const InfoAfterBirthDate: FC<Props> = ({
     if (isBirthDateFilled) {
       const timeout = setTimeout(
         () => setShowLifeExpectancy(true),
-        SHOW_BLOCK_DELAY
+        SHOW_BLOCK_DELAY,
       );
       const timeout2 = setTimeout(
         () => setShowFinalBlock(true),
-        SHOW_FINAL_BLOCK_DELAY
+        SHOW_FINAL_BLOCK_DELAY,
       );
       return () => {
         clearTimeout(timeout);
@@ -70,7 +70,7 @@ export const InfoAfterBirthDate: FC<Props> = ({
       setShowLifeExpectancy(false);
       setShowFinalBlock(false);
     }
-  }, [isBirthDateFilled, isFromDB]);
+  }, [isBirthDateFilled, birthDateFromDB]);
 
   const now = new Date();
   const birth = parseISO(birthDate || DEFAULT_BIRTH_DATE);
@@ -139,7 +139,7 @@ export const InfoAfterBirthDate: FC<Props> = ({
         {isBirthDateFilled && (
           <>
             <div>{t('life.userDataDrawer90YearsSleep')}</div>
-            {!isFromDB && (
+            {birthDate !== birthDateFromDB && (
               <Button
                 onClick={onButtonClick}
                 label={t('life.userDataDrawerShowButton')}

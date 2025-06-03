@@ -1,9 +1,9 @@
 import { FC } from 'react';
 
+import { useDevice } from '@/hooks';
 import { useConsoleLogger } from '@/hooks/debug';
 
 import s from './s.module.styl';
-import { useDevice } from '@/hooks';
 
 export const LogsPanel: FC = () => {
   const logs = useConsoleLogger();

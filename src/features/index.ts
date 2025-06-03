@@ -1,7 +1,7 @@
-export { LanguageSwitcher } from './languageSwitcher/languageSwitcher';
+export { LanguageSwitcher } from './languageSwitcher/LanguageSwitcher';
 
-export { ThemeSwitcher } from './lthemeSwitcher/lthemeSwitcher';
+export { ThemeSwitcher } from './themeSwitcher/ThemeSwitcher';
 
 export { BurgerMenu } from './burgeMenu/BurgerMenu';
 
-export { UserDataDrawer } from './userDataDrawer/userDataDrawer';
+export { UserDataDrawer } from './userDataDrawer/UserDataDrawer';

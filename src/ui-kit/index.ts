@@ -14,3 +14,7 @@ export { NavigationButton } from "./navigationButton/NavigationButton";
 export { Drawer } from './drawer/Drawer';
 
 export { DatePicker } from './datePicker/DataPicker';
+
+export { WheelPicker } from './wheelDatePicker/WheelPicker';
+
+export { WheelDatePicker } from './wheelDatePicker/WheelDatePicker';
