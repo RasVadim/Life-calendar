@@ -1,9 +1,9 @@
 import { lazy, FC, ReactNode, useEffect } from 'react';
 
-import { DRAWER_KEYS } from '@/constants/modal';
 import { UserDataDrawer } from '@/features';
 import { useSetOpenDrawerKey } from '@/store/atoms';
 import { lifeCalendarDB } from '@/store/clientDB';
+import { EModalKeys } from '@/types';
 import { Page } from '@/ui-kit';
 
 const LazyContent = lazy(() => import('./components/content/Content'));
@@ -21,10 +21,10 @@ export const Life: FC<PropsType> = () => {
       try {
         const userData = await lifeCalendarDB.userData.get('main');
         if (!userData || !userData.birthDate) {
-          setDrawerKey(DRAWER_KEYS.userData);
+          setDrawerKey(EModalKeys.USER_BIRTH_DATE);
         }
       } catch (e) {
-        setDrawerKey(DRAWER_KEYS.userData); // If there is an error, open the drawer
+        setDrawerKey(EModalKeys.USER_BIRTH_DATE); // If there is an error, open the drawer
       }
     };
     checkBirthDate();

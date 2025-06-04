@@ -2,9 +2,9 @@ import { FC } from 'react';
 
 import cx from 'classnames';
 
-import { DRAWER_KEYS } from '@/constants/modal';
 import { LanguageSwitcher, ThemeSwitcher } from '@/features';
 import { useSetOpenDrawerKey } from '@/store/atoms';
+import { EModalKeys } from '@/types';
 import { Button } from '@/ui-kit';
 
 import '../../styles/colors.styl';
@@ -28,7 +28,7 @@ export const Menu: FC<PropsType> = ({ isOpen }) => {
       <br />
       <Button
         label="Open User Data Drawer"
-        onClick={() => setDrawerKey(DRAWER_KEYS.userData)}
+        onClick={() => setDrawerKey(EModalKeys.USER_BIRTH_DATE)}
       />
     </div>
   );

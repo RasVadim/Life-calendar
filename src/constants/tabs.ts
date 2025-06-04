@@ -1,6 +1,6 @@
-import { TIconName } from '@/ui-kit';
 import { PATHS } from '@/constants';
 import { LIFE_MODES } from '@/constants';
+import { TIconName } from '@/ui-kit';
 
 type TTab = { icon: TIconName; label: string; to: string };
 
@@ -18,6 +18,6 @@ export const TABS: TTab[] = [
   {
     icon: 'settings',
     label: 'settings',
-    to: PATHS.EVENTS,
+    to: PATHS.SETTINGS,
   },
 ];

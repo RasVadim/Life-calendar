@@ -1,0 +1,28 @@
+.wrapper
+  padding 10px
+
+.loadingRow
+  display grid
+  grid-template-columns repeat(52, 1fr)
+  gap 1px
+  width 100vw
+  max-width 100vw
+  padding 2px
+
+.week
+  aspect-ratio 1/1
+  width 100%
+  border-radius 2px
+  background-color var(--default-week-bg-color)
+  border 1px solid var(--week-future-color)
+  transition border-color 0.2s, box-shadow 0.2s
+
+.past
+  border-color var(--week-past-color)
+
+.present
+  border-color var(--week-present-color)
+  box-shadow 0 0 6px 2px var(--week-present-color)
+
+.future
+  border-color var(--week-future-color)

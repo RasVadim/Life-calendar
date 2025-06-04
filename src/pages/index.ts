@@ -1,3 +1,5 @@
-export { Life } from "./life/Life";
+export { Life } from './life/Life';
 
-export { LoginPage } from "./login/LoginPage";
+export { Settings } from './settings/Settings';
+
+export { LoginPage } from './login/LoginPage';

@@ -8,7 +8,7 @@ export * from './mutations/life/setBirthDate';
 
 // Queries
 export * from './queries/life/getBirthDate';
-export * from './queries/life/getWeeks';
+export * from './queries/life/getWeekList';
 
 // Hooks
 export * from './hooks/life/useDBWeeks';

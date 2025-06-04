@@ -1,8 +1,9 @@
 import { FC } from 'react';
+
 import { useTranslation } from 'react-i18next';
 
-import { NavigationButton } from '@/ui-kit';
 import { TABS } from '@/constants';
+import { NavigationButton } from '@/ui-kit';
 
 import s from './s.module.styl';
 

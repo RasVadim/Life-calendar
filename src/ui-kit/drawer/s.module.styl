@@ -15,9 +15,7 @@
   animation 0.23s showDrawer cubic-bezier(0.4, 0, 0.2, 1)
   animation-fill-mode forwards
   will-change transform, opacity
-
-.drawerWrap--closing
-  animation drawerOut 0.2s cubic-bezier(0.4, 0, 0.2, 1)
+  transform translateY(100%)
 
 .drawerHeader
   padding 16px 16px 0
@@ -44,10 +42,15 @@
   width 100vw
   height 100vh
   background-color var(--blackout-color)
-  opacity 0.5
+  opacity 0
   z-index 120
+  pointer-events none
   transition opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1)
-  will-change opacity /* ------------- sliding drawer ------------------ */
+  will-change opacity
+
+.drawerBlackout.isOpen
+  opacity 0.5
+  pointer-events auto
 
 .hidden
   animation 0.2s hideDrawer cubic-bezier(0.4, 0, 0.2, 1)
@@ -72,12 +75,3 @@
     opacity 0
     display none
     z-index 0
-
-@keyframes drawerOut
-  from
-    transform translateY(0)
-    opacity 1
-
-  to
-    transform translateY(100%)
-    opacity 0

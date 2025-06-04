@@ -1,9 +1,11 @@
-export { Layout } from "./layout/Layout";
+export { Layout } from './layout/Layout';
 
-export { Header } from "./header/Header";
+export { Header } from './header/Header';
 
-export {} from "./footer/Footer";
+export {} from './footer/Footer';
 
-export { TabBar } from "./tabBar/TabBar";
+export { TabBar } from './tabBar/TabBar';
 
-export { LifeCalendar } from "./lifeCalendar/LifeCalendar";
+export { LifeCalendar } from './lifeCalendar/LifeCalendar';
+
+export { ProfileSettings } from './profileSettings/ProfileSettings';

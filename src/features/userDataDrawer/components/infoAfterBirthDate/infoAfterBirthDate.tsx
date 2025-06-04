@@ -26,8 +26,8 @@ import {
 
 import s from './s.module.styl';
 
-const SHOW_BLOCK_DELAY = 5000;
-const SHOW_FINAL_BLOCK_DELAY = 10000;
+const SHOW_BLOCK_DELAY = 4500;
+const SHOW_FINAL_BLOCK_DELAY = 9000;
 
 interface Props {
   birthDate: string;

@@ -4,14 +4,14 @@ import { ru } from 'date-fns/locale';
 import { useTranslation } from 'react-i18next';
 
 import { DEFAULT_BIRTH_DATE, DEFAULT_LIFE_SPAN_YEARS } from '@/constants';
-import { DRAWER_KEYS } from '@/constants/modal';
 import { OutlineProfile } from '@/icons';
-import { useOpenDrawerKey, useSetSyncPending } from '@/store/atoms';
+import { useSetOpenDrawerKey, useSetSyncPending } from '@/store/atoms';
 import {
   setBirthDate as setBirthDateToDB,
   saveWeeks,
   getBirthDate,
 } from '@/store/clientDB';
+import { EModalKeys } from '@/types';
 import { Button, Drawer, WheelDatePicker } from '@/ui-kit';
 import { generateWeeksInWorker } from '@/webWorkers';
 
@@ -22,7 +22,7 @@ import s from './s.module.styl';
 export const UserDataDrawer = () => {
   const { t, i18n } = useTranslation();
 
-  const [drawerKey, setDrawerKey] = useOpenDrawerKey();
+  const setDrawerKey = useSetOpenDrawerKey();
   const setPending = useSetSyncPending();
 
   const [birthDate, setBirthDate] = useState<string | null>(null);
@@ -91,14 +91,14 @@ export const UserDataDrawer = () => {
   return (
     <Drawer
       title={t('life.lifeInWeeks')}
-      keyProp={DRAWER_KEYS.userData}
+      keyProp={EModalKeys.USER_BIRTH_DATE}
       onClose={handleClose}
       actions={actions}
       disabledClose={!birthDate}
     >
       <div className={s.introWrap}>
         <div className={s.introText}>{t('life.userDataDrawerIntro')}</div>
-        {birthDate !== null && drawerKey === DRAWER_KEYS.userData && (
+        {birthDate !== null && (
           <WheelDatePicker
             value={birthDate}
             onChange={handleBirthDateChange}

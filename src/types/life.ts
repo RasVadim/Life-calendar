@@ -22,7 +22,7 @@ export enum EHolidayType {
   Other = 'other',
 }
 
-export type THolidayName = typeof HOLIDAY_NAMES[keyof typeof HOLIDAY_NAMES];
+export type THolidayName = (typeof HOLIDAY_NAMES)[keyof typeof HOLIDAY_NAMES];
 
 export type TWeekZodiac =
   | 'rat'

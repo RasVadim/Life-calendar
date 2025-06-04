@@ -6,7 +6,7 @@ import { Button } from '../button/Button';
 
 import s from './s.module.styl';
 
-interface DatePickerProps
+interface NativeDatePickerProps
   extends Omit<InputHTMLAttributes<HTMLInputElement>, 'type' | 'onChange'> {
   value?: string;
   onChange?: (date: string) => void;
@@ -19,7 +19,7 @@ interface DatePickerProps
 }
 
 /**
- * Date picker component with customizable label, placeholder, and mobile adaptation.
+ * Native OS Date picker component with customizable label, placeholder, and mobile adaptation.
  *
  * @prop {string} [value] - Selected date value (format YYYY-MM-DD).
  * @prop {function} [onChange] - Callback triggered when the date changes.
@@ -29,7 +29,7 @@ interface DatePickerProps
  * @prop {string} [defaultValue] - Default value for the input field.
  * @returns {JSX.Element} Date picker element with customization.
  */
-export const DatePicker: FC<DatePickerProps> = ({
+export const NativeDatePicker: FC<NativeDatePickerProps> = ({
   value,
   onChange,
   label,

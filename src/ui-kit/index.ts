@@ -1,19 +1,21 @@
-export { Page } from "./page/Page";
+export { Page } from './page/Page';
 
-export { SyncingLine } from "./syncingLine/SyncingLine";
+export { SyncingLine } from './syncingLine/SyncingLine';
 
 //buttons
-export { Button } from "./button/Button";
+export { Button } from './button/Button';
 
-export * from "./button/buttonIcons";
+export * from './button/buttonIcons';
 
-export { AccountButton } from "./accountButton/AccountButton";
+export { AccountButton } from './accountButton/AccountButton';
 
-export { NavigationButton } from "./navigationButton/NavigationButton";
+export { NavigationButton } from './navigationButton/NavigationButton';
 
+// Modals
 export { Drawer } from './drawer/Drawer';
 
-export { DatePicker } from './datePicker/DataPicker';
+// Pickers
+export { NativeDatePicker } from './nativeDatePicker/NativeDataPicker';
 
 export { WheelPicker } from './wheelDatePicker/WheelPicker';
 

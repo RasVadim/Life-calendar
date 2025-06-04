@@ -1,3 +1,5 @@
 import { atom } from 'jotai';
 
-export const openDrawerKeyAtom = atom<string | null>(null); 
+import { EModalKeys } from '@/types';
+
+export const openDrawerKeyAtom = atom<EModalKeys | null>(null);
