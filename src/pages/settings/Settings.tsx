@@ -28,38 +28,26 @@ const pageVariants = {
   }),
 };
 
+const fadeVariants = {
+  initial: { opacity: 0 },
+  animate: { opacity: 1 },
+  exit: { opacity: 0 },
+};
+
 export default function Settings() {
   const location = useLocation();
   const [prevPath] = usePrevRoute();
 
   const isFirstEntry =
     location.pathname === '/settings' &&
-    (!prevPath || !prevPath.startsWith('/settings'));
+    (!prevPath ||
+      (!prevPath.startsWith('/settings') && !prevPath.startsWith('/')));
 
   const prevDepth = getDepth(prevPath || '');
   const currentDepth = getDepth(location.pathname);
   const direction = currentDepth > prevDepth ? 1 : -1;
 
-  if (isFirstEntry) {
-    return (
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.35, ease: 'easeInOut' }}
-        style={{ height: '100%' }}
-      >
-        <Routes location={location} key={location.key || location.pathname}>
-          <Route path="account" element={<Account />} />
-          <Route path="storage" element={<Storage />} />
-          <Route path="appearance" element={<Appearance />} />
-          <Route path="language" element={<Language />} />
-          <Route path="premium" element={<Premium />} />
-          <Route path="about" element={<About />} />
-          <Route path="*" element={<Content />} />
-        </Routes>
-      </motion.div>
-    );
-  }
+  const variants = isFirstEntry ? fadeVariants : pageVariants;
 
   return (
     <AnimatePresence mode="wait" custom={direction}>
@@ -69,7 +57,7 @@ export default function Settings() {
         initial="initial"
         animate="animate"
         exit="exit"
-        variants={pageVariants}
+        variants={variants}
         transition={{ type: 'tween', ease: 'easeInOut', duration: 0.35 }}
         style={{ height: '100%' }}
       >

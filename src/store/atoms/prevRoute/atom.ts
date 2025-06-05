@@ -1,5 +1,3 @@
-import { atomWithStorage, createJSONStorage } from 'jotai/utils';
+import { atom } from 'jotai';
 
-const storage = createJSONStorage<string>(() => sessionStorage);
-
-export const PrevRoute = atomWithStorage<string>('prevRoute', '', storage);
+export const PrevRoute = atom<string>('');
