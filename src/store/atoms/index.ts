@@ -17,3 +17,5 @@ export {
   useOpenDrawerKey,
   useSetOpenDrawerKey,
 } from './openDrawer/useOpenDrawerKey';
+
+export { usePrevRoute, useSetPrevRoute } from './prevRoute/usePrevRoute';

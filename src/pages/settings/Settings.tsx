@@ -1,17 +1,88 @@
-import { lazy, FC, ReactNode } from 'react';
+import React from 'react';
 
-import { Page } from '@/ui-kit';
+import { AnimatePresence, motion } from 'framer-motion';
+import { Routes, Route, useLocation } from 'react-router-dom';
 
-const LazyContent = lazy(() => import('./components/content/Content'));
+import { usePrevRoute } from '@/store/atoms';
 
-type PropsType = {
-  children?: ReactNode;
+import About from './About';
+import Account from './Account';
+import Appearance from './Appearance';
+import Content from './components/content/Content';
+import Language from './Language';
+import Premium from './Premium';
+import Storage from './Storage';
+
+const getDepth = (pathname: string) =>
+  pathname.split('/').filter(Boolean).length;
+
+const pageVariants = {
+  initial: (direction: number) => ({
+    x: direction > 0 ? '100%' : '-100%',
+    opacity: 0,
+  }),
+  animate: { x: 0, opacity: 1 },
+  exit: (direction: number) => ({
+    x: direction > 0 ? '-100%' : '100%',
+    opacity: 0,
+  }),
 };
 
-export const Settings: FC<PropsType> = () => {
+export default function Settings() {
+  const location = useLocation();
+  const [prevPath] = usePrevRoute();
+
+  const isFirstEntry =
+    location.pathname === '/settings' &&
+    (!prevPath || !prevPath.startsWith('/settings'));
+
+  const prevDepth = getDepth(prevPath || '');
+  const currentDepth = getDepth(location.pathname);
+  const direction = currentDepth > prevDepth ? 1 : -1;
+
+  if (isFirstEntry) {
+    return (
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.35, ease: 'easeInOut' }}
+        style={{ height: '100%' }}
+      >
+        <Routes location={location} key={location.key || location.pathname}>
+          <Route path="account" element={<Account />} />
+          <Route path="storage" element={<Storage />} />
+          <Route path="appearance" element={<Appearance />} />
+          <Route path="language" element={<Language />} />
+          <Route path="premium" element={<Premium />} />
+          <Route path="about" element={<About />} />
+          <Route path="*" element={<Content />} />
+        </Routes>
+      </motion.div>
+    );
+  }
+
   return (
-    <Page name="Settings">
-      <LazyContent />
-    </Page>
+    <AnimatePresence mode="wait" custom={direction}>
+      <motion.div
+        key={location.key || location.pathname}
+        custom={direction}
+        initial="initial"
+        animate="animate"
+        exit="exit"
+        variants={pageVariants}
+        transition={{ type: 'tween', ease: 'easeInOut', duration: 0.35 }}
+        style={{ height: '100%' }}
+      >
+        <Routes location={location} key={location.key || location.pathname}>
+          <Route path="account" element={<Account />} />
+          <Route path="storage" element={<Storage />} />
+          <Route path="appearance" element={<Appearance />} />
+          <Route path="language" element={<Language />} />
+          <Route path="premium" element={<Premium />} />
+          <Route path="about" element={<About />} />
+          <Route path="*" element={<Content />} />
+        </Routes>
+      </motion.div>
+    </AnimatePresence>
   );
-};
+}

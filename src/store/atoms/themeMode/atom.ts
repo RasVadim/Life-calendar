@@ -1,11 +1,11 @@
-import { atomWithStorage } from "jotai/utils";
+import { atomWithStorage } from 'jotai/utils';
 
 export enum EThemeMode {
-  LIGHT = "light",
-  DARK = "dark",
+  LIGHT = 'light',
+  DARK = 'dark',
 }
 
 export const ThemeMode = atomWithStorage<EThemeMode>(
-  "darkMode",
-  EThemeMode.DARK
+  'themeMode',
+  EThemeMode.DARK,
 );

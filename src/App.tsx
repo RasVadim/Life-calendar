@@ -1,9 +1,15 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 import i18n from 'i18next';
+import { useLocation } from 'react-router-dom';
 
 import { Routes } from '@/Routes';
-import { useLanguage, useThemeMode, useSetSyncPending } from '@/store/atoms';
+import {
+  useLanguage,
+  useThemeMode,
+  useSetSyncPending,
+  useSetPrevRoute,
+} from '@/store/atoms';
 import { initDefaultWeeks } from '@/store/clientDB';
 
 import { toggleTheme } from './utils';
@@ -23,6 +29,15 @@ const App = () => {
   const [language] = useLanguage();
   const [theme] = useThemeMode();
   const setPending = useSetSyncPending();
+
+  const location = useLocation();
+  const setPrevRoute = useSetPrevRoute();
+  const prevPathRef = useRef(location.pathname);
+
+  useEffect(() => {
+    setPrevRoute(prevPathRef.current);
+    prevPathRef.current = location.pathname;
+  }, [location.pathname, setPrevRoute]);
 
   useEffect(() => {
     toggleTheme(theme);

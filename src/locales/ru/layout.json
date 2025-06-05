@@ -13,6 +13,12 @@
     "dark": "темная",
     "login": "Войти",
     "logout": "Выйти",
-    "close": "Закрыть"
+    "close": "Закрыть",
+    "myProfile": "Аккаунт",
+    "dataAndStorage": "Хранилище данных",
+    "appearance": "Оформление",
+    "language": "Язык",
+    "lcPremium": "LC Premium",
+    "lcAbout": "О приложении"
   }
 }

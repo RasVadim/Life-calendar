@@ -1,10 +1,15 @@
 import React from 'react';
 
+import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
+
 import { Avatar, SettingBlock, SettingsGroup } from './components';
 
 import s from './s.module.styl';
 
 export const ProfileSettings: React.FC = () => {
+  const { t } = useTranslation();
+  const navigate = useNavigate();
   return (
     <div className={s.wrapper}>
       <Avatar />
@@ -12,46 +17,46 @@ export const ProfileSettings: React.FC = () => {
         <SettingsGroup>
           <SettingBlock
             icon="👤"
-            title="My Profile"
+            title={t('layout.myProfile')}
             circleColor="var(--profile-icon-color)"
-            onClick={() => {}}
+            onClick={() => navigate('account')}
           />
         </SettingsGroup>
         <SettingsGroup>
           <SettingBlock
             icon="💾"
-            title="Data and Storage"
+            title={t('layout.dataAndStorage')}
             circleColor="var(--storage-icon-color)"
-            onClick={() => {}}
+            onClick={() => navigate('storage')}
           />
           <SettingBlock
             icon="🎨"
-            title="Appearance"
+            title={t('layout.appearance')}
             circleColor="var(--appearance-icon-color)"
-            onClick={() => {}}
+            onClick={() => navigate('appearance')}
           />
           <SettingBlock
             icon="🌐"
-            title="Language"
+            title={t('layout.language')}
             circleColor="var(--language-icon-color)"
             rightText="English"
-            onClick={() => {}}
+            onClick={() => navigate('language')}
           />
         </SettingsGroup>
         <SettingsGroup>
           <SettingBlock
             icon="⭐"
-            title="LC Premium"
+            title={t('layout.lcPremium')}
             circleColor="var(--premium-icon-color)"
-            onClick={() => {}}
+            onClick={() => navigate('premium')}
           />
         </SettingsGroup>
         <SettingsGroup>
           <SettingBlock
             icon="ℹ️"
-            title="LC About"
+            title={t('layout.lcAbout')}
             circleColor="var(--about-icon-color)"
-            onClick={() => {}}
+            onClick={() => navigate('about')}
           />
         </SettingsGroup>
       </div>

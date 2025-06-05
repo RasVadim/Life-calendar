@@ -13,6 +13,12 @@
     "dark": "dark",
     "login": "Login",
     "logout": "Logout",
-    "close": "Close"
+    "close": "Close",
+    "myProfile": "My Profile",
+    "dataAndStorage": "Data and Storage",
+    "appearance": "Appearance",
+    "language": "Language",
+    "lcPremium": "LC Premium",
+    "lcAbout": "About"
   }
 }
