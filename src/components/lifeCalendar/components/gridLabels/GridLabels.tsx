@@ -2,7 +2,7 @@ import { FC } from 'react';
 
 import cx from 'classnames';
 
-import { LIFE_GRID_ZOOM_LEVELS } from '@/constants'
+import { LIFE_GRID_ZOOM_LEVELS } from '@/constants';
 import { useLifeGridColumnsCount } from '@/store/atoms';
 
 import s from './s.module.styl';

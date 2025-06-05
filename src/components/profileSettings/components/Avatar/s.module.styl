@@ -1,18 +1,20 @@
 .avatarWrap
   display flex
+  flex-direction column
   align-items center
-  gap 16px
-  margin-bottom 24px
+  margin-bottom 20px
+  margin-top 12px
 
 .avatarCircle
-  width 64px
-  height 64px
+  width 100px
+  height 100px
   border-radius 50%
-  background #444
+  background var(--avatar-bg-color)
   display flex
   align-items center
   justify-content center
   overflow hidden
+  margin-bottom 8px
 
 .avatarImg
   width 100%
@@ -22,17 +24,20 @@
 
 .avatarStub
   font-size 32px
-  color #fff
+  color var(--contrast-color)
 
 .avatarInfo
   display flex
   flex-direction column
+  align-items center
 
 .avatarName
-  font-size 20px
+  font-size 18px
   font-weight 600
-  color #fff
+  color var(--contrast-color)
+  margin-bottom 0
 
 .avatarEmail
-  font-size 14px
-  color #aaa 
+  font-size 13px
+  color var(--secondary-color)
+  margin-bottom 6px

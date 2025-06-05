@@ -1,5 +1,5 @@
-export { Avatar } from './Avatar/Avatar';
+export { Avatar } from './avatar/Avatar';
 
-export { Divider } from './Divider/Divider';
+export { SettingBlock } from './settingBlock/SettingBlock';
 
-export { SettingBlock } from './SettingBlock/SettingBlock';
+export { SettingsGroup } from './settingsGroup/SettingsGroup';

@@ -3,26 +3,69 @@
   align-items center
   gap 14px
   width 100%
-  padding 16px 0
-  background none
+  padding: 8px 10px;
+  background var(--background-front-color)
+  border-radius 40px
+  font-size 15px
+  color var(--text-color)
+  margin-bottom 0
   border none
   outline none
   cursor pointer
-  font-size 16px
-  color #fff
   transition background 0.15s
-  border-radius 12px
-  text-align left
+  min-height 48px
+  box-shadow none
+  margin 0
+  border-radius 0
+  border-bottom 1px solid var(--group-divider-color)
 
   &:hover
-    background rgba(255,255,255,0.04)
+    background var(--block-hover-bg)
+
+.first
+  border-top-left-radius 28px
+  border-top-right-radius 28px
+
+.last
+  border-bottom-left-radius 28px
+  border-bottom-right-radius 28px
+  border-bottom none
+
+.first.last
+  border-radius 40px
+
+.iconCircle
+  width 32px
+  height 32px
+  border-radius 50%
+  display flex
+  align-items center
+  justify-content center
+  margin-right 10px
+  flex-shrink 0
 
 .icon
-  font-size 22px
-  width 28px
+  font-size 18px
+  width 18px
+  height 18px
   display flex
   align-items center
   justify-content center
 
 .title
-  flex 1 
+  flex 1
+  font-weight 500
+  color var(--text-color)
+  text-align left
+
+.rightText
+  color var(--secondary-color)
+  font-size 14px
+  margin-right 8px
+
+.chevron
+  display flex
+  align-items center
+  justify-content center
+  margin-left 4px
+  flex-shrink 0 

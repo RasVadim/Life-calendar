@@ -21,6 +21,8 @@ export const Header: FC = () => {
   const [currentMode] = useLifeMode();
   const isLifePage = pathname === PATHS.MAIN;
 
+  const pageName = pathname.split('/')[1];
+
   return (
     <div className={s.container}>
       <div className={s.header}>
@@ -29,7 +31,7 @@ export const Header: FC = () => {
           <BurgerMenu />
         </div>
         <span className={s.title}>{`${t('layout.shortLC')} ${t(
-          `layout.${currentMode}`
+          isLifePage ? `layout.${currentMode}` : `layout.${pageName}`,
         )}`}</span>
         <div className={s.rightSide}>
           {isLifePage ? <LifeActions /> : <AccountButton />}
