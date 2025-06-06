@@ -3,13 +3,17 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
+import { LANGUAGE_LABELS } from '@/constants';
+
 import { Avatar, SettingBlock, SettingsGroup } from './components';
 
 import s from './s.module.styl';
 
 export const ProfileSettings: React.FC = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
+  const languageLabel = LANGUAGE_LABELS[i18n.language] || i18n.language;
+
   return (
     <div className={s.wrapper}>
       <Avatar />
@@ -39,7 +43,7 @@ export const ProfileSettings: React.FC = () => {
             icon="🌐"
             title={t('layout.language')}
             circleColor="var(--language-icon-color)"
-            rightText="English"
+            rightText={languageLabel}
             onClick={() => navigate('language')}
           />
         </SettingsGroup>

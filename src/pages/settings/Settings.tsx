@@ -1,11 +1,15 @@
-import { AnimatePresence, motion } from 'framer-motion';
-import { Routes, Route, useLocation } from 'react-router-dom';
 import React, { useRef, useEffect } from 'react';
 
-import { About, Account, Appearance, Language, Premium, Storage } from './screens';
-import { PAGE_ANIMATION_VARIANTS } from './constants/animation';
-import { MainSettingsScreen  } from './components';
+import { AnimatePresence, motion } from 'framer-motion';
+import { Routes, Route, useLocation } from 'react-router-dom';
+
 import { getDepth } from '@/utils';
+
+import { MainSettingsScreen } from './components';
+import { PAGE_ANIMATION_VARIANTS } from './constants/animation';
+import { About, Account, Appearance, Language, Premium, Storage } from './screens';
+
+import s from './s.module.styl';
 
 interface SettingsProps {
   prevPath: string;
@@ -37,7 +41,7 @@ export const Settings: React.FC<SettingsProps> = ({ prevPath }) => {
         exit="exit"
         variants={variants}
         transition={{ type: 'tween', ease: 'easeInOut', duration: 0.35 }}
-        style={{ height: '100%', position: 'absolute', width: '100%', top: 50, left: 0 }}
+        className={s.motionWrap}
       >
         <Routes location={location} key={location.key || location.pathname}>
           <Route path="account" element={<Account />} />
@@ -51,4 +55,4 @@ export const Settings: React.FC<SettingsProps> = ({ prevPath }) => {
       </motion.div>
     </AnimatePresence>
   );
-}
+};

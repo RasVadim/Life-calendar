@@ -27,8 +27,6 @@ export const BurgerMenu: FC<BurgerMenuProps> = ({ backButton = false, onBack }) 
     }
   }, [backButton]);
 
-  console.log('backButton', backButton);
-
   // toggle burger menu change
   const updateMenu = () => {
     if (firstOpen.current !== true) {

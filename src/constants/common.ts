@@ -5,3 +5,8 @@ export const DEVICE_SCREEN_WIDTH = {
   tablet: 1366,
   desktop: 1600,
 };
+
+export const LANGUAGE_LABELS: Record<string, string> = {
+  en: 'English',
+  ru: 'Русский',
+};

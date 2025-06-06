@@ -9,3 +9,15 @@ export { TabBar } from './tabBar/TabBar';
 export { LifeCalendar } from './lifeCalendar/LifeCalendar';
 
 export { ProfileSettings } from './profileSettings/ProfileSettings';
+
+export { AccountContent } from './accountContent/AccountContent';
+
+export { AboutContent } from './aboutContent/AboutContent';
+
+export { AppearanceContent } from './appearanceContent/AppearanceContent';
+
+export { LanguageContent } from './languageContent/LanguageContent';
+
+export { PremiumContent } from './premiumContent/PremiumContent';
+
+export { StorageContent } from './storageContent/StorageContent';

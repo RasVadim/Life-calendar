@@ -15,6 +15,7 @@ export const Page: FC<PropsType> = ({ children, name = 'page' }) => {
   return (
     <KeepAlive name={name} cacheKey={name} id={name} autoFreeze>
       <Suspense fallback={<PageLoadingHolder />}>
+        {/* <PageLoadingHolder /> */}
         <div className={s.page}>{children}</div>
       </Suspense>
     </KeepAlive>

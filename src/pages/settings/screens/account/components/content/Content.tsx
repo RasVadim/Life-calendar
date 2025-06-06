@@ -1,14 +1,12 @@
 import { FC } from 'react';
 
-import { useTranslation } from 'react-i18next';
-
+import { AccountContent } from '@/components';
 import { SettingsSubScreenWrap } from '@/pages/settings/components';
 
 export const Content: FC = () => {
-  const { t } = useTranslation();
   return (
     <SettingsSubScreenWrap>
-     {t('layout.myProfile')}
+      <AccountContent />
     </SettingsSubScreenWrap>
   );
 };

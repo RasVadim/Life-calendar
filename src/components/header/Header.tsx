@@ -33,8 +33,6 @@ export const Header: FC = () => {
     isLifePage ? `layout.${currentMode}` : `layout.${pageName}`,
   )}`;
 
-  console.log('currentDepth', currentDepth);
-
   return (
     <div className={s.container}>
       <div className={s.header}>
