@@ -54,7 +54,7 @@ export const ProfileSettings: React.FC = () => {
         <SettingsGroup>
           <SettingBlock
             icon="ℹ️"
-            title={t('layout.lcAbout')}
+            title={t('layout.about')}
             circleColor="var(--about-icon-color)"
             onClick={() => navigate('about')}
           />

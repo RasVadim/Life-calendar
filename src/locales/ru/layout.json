@@ -15,10 +15,13 @@
     "logout": "Выйти",
     "close": "Закрыть",
     "myProfile": "Аккаунт",
+    "account": "Аккаунт",
     "dataAndStorage": "Хранилище данных",
+    "storage": "Хранилище данных",
     "appearance": "Оформление",
     "language": "Язык",
     "lcPremium": "LC Premium",
-    "lcAbout": "О приложении"
+    "premium": "Premium",
+    "about": "О приложении"
   }
 }

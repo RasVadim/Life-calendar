@@ -15,10 +15,13 @@
     "logout": "Logout",
     "close": "Close",
     "myProfile": "My Profile",
+    "account": "Profile",
     "dataAndStorage": "Data and Storage",
+    "storage": "Data and Storage",
     "appearance": "Appearance",
     "language": "Language",
     "lcPremium": "LC Premium",
-    "lcAbout": "About"
+    "premium": "Premium",
+    "about": "About"
   }
 }

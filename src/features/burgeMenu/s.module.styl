@@ -18,8 +18,9 @@
   align-items flex-start
   justify-content space-between
   cursor pointer
-  padding-left 15px
+  padding-left 8px
   z-index 100
+  position relative
 
 .buttonStick
   width 25px
@@ -27,6 +28,43 @@
   background-color var(--primary-color)
   border-radius 20%
   transition cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.5s
+
+  &.back
+    position absolute
+    left 6px
+    top 50%
+    transform-origin left center
+    &:nth-child(1)
+      transform rotate(-40deg)
+      width 18px
+      margin-left 0
+      margin-top 0
+      transition cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.3s
+
+    &:nth-child(2)
+      transform scale(0)
+      opacity 0
+      transition cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.2s
+
+    &:nth-child(3)
+      transform rotate(40deg)
+      width 18px
+      margin-left 0
+      margin-top 0
+      transition cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.3s
+
+  &.open
+    &:nth-child(1)
+      transform scale(0.01)
+      transition ease-in 0.3s
+
+    &:nth-child(2)
+      transform scale(0.01)
+      transition ease-out 0.3s
+
+    &:nth-child(3)
+      transform scale(0.01)
+      transition ease 0.3s
 
 .menuBackground
   width 100%

@@ -8,7 +8,7 @@ export const Content: FC = () => {
   const { t } = useTranslation();
   return (
     <SettingsSubScreenWrap>
-      {t('layout.lcAbout')}
+      {t('layout.about')}
     </SettingsSubScreenWrap>
   );
 };

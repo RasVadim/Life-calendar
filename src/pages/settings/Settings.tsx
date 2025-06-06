@@ -3,9 +3,9 @@ import { Routes, Route, useLocation } from 'react-router-dom';
 import React, { useRef, useEffect } from 'react';
 
 import { About, Account, Appearance, Language, Premium, Storage } from './screens';
-import { getDepth } from './utils';
 import { PAGE_ANIMATION_VARIANTS } from './constants/animation';
 import { MainSettingsScreen  } from './components';
+import { getDepth } from '@/utils';
 
 interface SettingsProps {
   prevPath: string;

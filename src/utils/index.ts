@@ -1,3 +1,5 @@
+export { getDepth } from './common/getDepth';
+
 export { toggleTheme } from './toggleTheme/toggleTheme';
 
 export { getYearsWordGenitive } from './getRightWordEnd/getYearsWordGenitive';

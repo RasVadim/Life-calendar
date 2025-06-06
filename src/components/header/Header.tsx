@@ -8,6 +8,7 @@ import { BurgerMenu } from '@/features';
 import { useLifeMode } from '@/hooks';
 import { useSyncPending } from '@/store/atoms';
 import { AccountButton, SyncingLine } from '@/ui-kit';
+import { getDepth } from '@/utils';
 
 import { LifeActions } from './components/lifeActions';
 
@@ -21,21 +22,28 @@ export const Header: FC = () => {
   const [currentMode] = useLifeMode();
   const isLifePage = pathname === PATHS.MAIN;
 
-  const pageName = pathname.split('/')[1];
+  const pathSegments = pathname.split('/').filter(Boolean);
+  const pageName = pathSegments[pathSegments.length - 1] || '';
+
+  const showLC = isLifePage || !pageName;
+
+  const currentDepth = getDepth(location.pathname);
+
+  const title = `${showLC ? t('layout.shortLC') : ''} ${t(
+    isLifePage ? `layout.${currentMode}` : `layout.${pageName}`,
+  )}`;
+
+  console.log('currentDepth', currentDepth);
 
   return (
     <div className={s.container}>
       <div className={s.header}>
         {pending && <SyncingLine />}
         <div className={s.leftSide}>
-          <BurgerMenu />
+          <BurgerMenu backButton={currentDepth > 1} />
         </div>
-        <span className={s.title}>{`${t('layout.shortLC')} ${t(
-          isLifePage ? `layout.${currentMode}` : `layout.${pageName}`,
-        )}`}</span>
-        <div className={s.rightSide}>
-          {isLifePage ? <LifeActions /> : <AccountButton />}
-        </div>
+        <span className={s.title}>{title}</span>
+        <div className={s.rightSide}>{isLifePage ? <LifeActions /> : <AccountButton />}</div>
       </div>
     </div>
   );
