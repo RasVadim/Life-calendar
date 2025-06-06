@@ -1,17 +1,13 @@
-import React from 'react';
-
 import { AnimatePresence, motion } from 'framer-motion';
 import { Routes, Route, useLocation } from 'react-router-dom';
 
-import { usePrevRoute } from '@/store/atoms';
-
-import About from './About';
-import Account from './Account';
-import Appearance from './Appearance';
+import About from './screens/about/About';
+import Account from './screens/account/Account';
+import Appearance from './screens/appearance/Appearance';
 import Content from './components/content/Content';
-import Language from './Language';
-import Premium from './Premium';
-import Storage from './Storage';
+import Language from './screens/language/Language';
+import Premium from './screens/premium/Premium';
+import Storage from './screens/storage/Storage';
 
 const getDepth = (pathname: string) =>
   pathname.split('/').filter(Boolean).length;
@@ -34,9 +30,12 @@ const fadeVariants = {
   exit: { opacity: 0 },
 };
 
-export default function Settings() {
+interface SettingsProps {
+  prevPath: string;
+}
+
+export default function Settings({ prevPath }: SettingsProps) {
   const location = useLocation();
-  const [prevPath] = usePrevRoute();
 
   const isFirstEntry =
     location.pathname === '/settings' &&
@@ -49,8 +48,9 @@ export default function Settings() {
 
   const variants = isFirstEntry ? fadeVariants : pageVariants;
 
+
   return (
-    <AnimatePresence mode="wait" custom={direction}>
+    <AnimatePresence mode="sync" custom={direction}>
       <motion.div
         key={location.key || location.pathname}
         custom={direction}
@@ -59,7 +59,7 @@ export default function Settings() {
         exit="exit"
         variants={variants}
         transition={{ type: 'tween', ease: 'easeInOut', duration: 0.35 }}
-        style={{ height: '100%' }}
+        style={{ height: '100%', position: 'absolute', width: '100%', top: 50, left: 0 }}
       >
         <Routes location={location} key={location.key || location.pathname}>
           <Route path="account" element={<Account />} />

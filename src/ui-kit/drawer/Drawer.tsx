@@ -34,12 +34,7 @@ export const Drawer: FC<DrawerProps> = ({
 
   const { t } = useTranslation();
 
-  console.log('drawerKey', drawerKey);
-  console.log('keyProp', keyProp);
-
   const isOpen = drawerKey === keyProp;
-
-  console.log('isOpen', isOpen);
 
   const showContent = isOpen || forceReRender;
 

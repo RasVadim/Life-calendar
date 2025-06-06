@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useLayoutEffect } from 'react';
 
 import i18n from 'i18next';
 import { useLocation } from 'react-router-dom';
@@ -31,13 +31,14 @@ const App = () => {
   const setPending = useSetSyncPending();
 
   const location = useLocation();
+
   const setPrevRoute = useSetPrevRoute();
   const prevPathRef = useRef(location.pathname);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     setPrevRoute(prevPathRef.current);
     prevPathRef.current = location.pathname;
-  }, [location.pathname, setPrevRoute]);
+  }, [location.pathname]);
 
   useEffect(() => {
     toggleTheme(theme);
@@ -55,7 +56,7 @@ const App = () => {
     initDefaultWeeks();
   }, []);
 
-  return <Routes />;
+  return <Routes prevPath={prevPathRef.current} />;
 };
 
 export default App;

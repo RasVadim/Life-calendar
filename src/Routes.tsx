@@ -15,12 +15,16 @@ import {
 } from './pages';
 import Content from './pages/settings/components/content/Content';
 
-export const Routes = memo(() => {
+export interface RoutesProps {
+  prevPath: string;
+}
+
+export const Routes = memo(({ prevPath }: RoutesProps) => {
   return (
     <OriginalRoutes>
       <Route path="/" element={<Layout />}>
         <Route index element={<Life />} />
-        <Route path="settings" element={<Settings />}>
+        <Route path="settings" element={<Settings prevPath={prevPath} />}>
           <Route index element={<Content />} />
           <Route path="account" element={<Account />} />
           <Route path="storage" element={<Storage />} />
