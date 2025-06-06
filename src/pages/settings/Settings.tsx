@@ -1,59 +1,37 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { Routes, Route, useLocation } from 'react-router-dom';
+import React, { useRef, useEffect } from 'react';
 
-import About from './screens/about/About';
-import Account from './screens/account/Account';
-import Appearance from './screens/appearance/Appearance';
-import Content from './components/content/Content';
-import Language from './screens/language/Language';
-import Premium from './screens/premium/Premium';
-import Storage from './screens/storage/Storage';
-
-const getDepth = (pathname: string) =>
-  pathname.split('/').filter(Boolean).length;
-
-const pageVariants = {
-  initial: (direction: number) => ({
-    x: direction > 0 ? '100%' : '-100%',
-    opacity: 0,
-  }),
-  animate: { x: 0, opacity: 1 },
-  exit: (direction: number) => ({
-    x: direction > 0 ? '-100%' : '100%',
-    opacity: 0,
-  }),
-};
-
-const fadeVariants = {
-  initial: { opacity: 0 },
-  animate: { opacity: 1 },
-  exit: { opacity: 0 },
-};
+import { About, Account, Appearance, Language, Premium, Storage } from './screens';
+import { getDepth } from './utils';
+import { PAGE_ANIMATION_VARIANTS } from './constants/animation';
+import { MainSettingsScreen  } from './components';
 
 interface SettingsProps {
   prevPath: string;
 }
 
-export default function Settings({ prevPath }: SettingsProps) {
+export const Settings: React.FC<SettingsProps> = ({ prevPath }) => {
   const location = useLocation();
 
-  const isFirstEntry =
-    location.pathname === '/settings' &&
-    (!prevPath ||
-      (!prevPath.startsWith('/settings') && !prevPath.startsWith('/')));
+  const isFirstMountRef = useRef(true);
+  useEffect(() => {
+    isFirstMountRef.current = false;
+  }, []);
+
+  const isFirstEntry = isFirstMountRef.current || !prevPath || !prevPath.startsWith('/settings');
 
   const prevDepth = getDepth(prevPath || '');
   const currentDepth = getDepth(location.pathname);
   const direction = currentDepth > prevDepth ? 1 : -1;
 
-  const variants = isFirstEntry ? fadeVariants : pageVariants;
-
+  const variants = PAGE_ANIMATION_VARIANTS;
 
   return (
-    <AnimatePresence mode="sync" custom={direction}>
+    <AnimatePresence mode="sync" custom={{ direction, isFirstEntry }}>
       <motion.div
         key={location.key || location.pathname}
-        custom={direction}
+        custom={{ direction, isFirstEntry }}
         initial="initial"
         animate="animate"
         exit="exit"
@@ -68,7 +46,7 @@ export default function Settings({ prevPath }: SettingsProps) {
           <Route path="language" element={<Language />} />
           <Route path="premium" element={<Premium />} />
           <Route path="about" element={<About />} />
-          <Route path="*" element={<Content />} />
+          <Route path="*" element={<MainSettingsScreen />} />
         </Routes>
       </motion.div>
     </AnimatePresence>

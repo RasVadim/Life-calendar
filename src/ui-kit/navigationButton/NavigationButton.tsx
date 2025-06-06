@@ -36,7 +36,7 @@ export const NavigationButton: FC<PropsType> = ({
 }) => {
   const { pathname } = useLocation();
   const [currentMode] = useLifeMode();
-  const isActive = pathname === to;
+  const isActive = to === '/' ? pathname === to : pathname.startsWith(to);
 
   const lastTabIndex = TABS.length - 1;
   const isFirstTab = position === 0;

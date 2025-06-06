@@ -6,6 +6,7 @@ import { Layout } from './components';
 import {
   Life,
   Settings,
+  MainSettingsScreen,
   Account,
   Storage,
   Appearance,
@@ -13,7 +14,6 @@ import {
   Premium,
   About,
 } from './pages';
-import Content from './pages/settings/components/content/Content';
 
 export interface RoutesProps {
   prevPath: string;
@@ -25,7 +25,7 @@ export const Routes = memo(({ prevPath }: RoutesProps) => {
       <Route path="/" element={<Layout />}>
         <Route index element={<Life />} />
         <Route path="settings" element={<Settings prevPath={prevPath} />}>
-          <Route index element={<Content />} />
+          <Route index element={<MainSettingsScreen />} />
           <Route path="account" element={<Account />} />
           <Route path="storage" element={<Storage />} />
           <Route path="appearance" element={<Appearance />} />

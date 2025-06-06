@@ -2,15 +2,13 @@ import { FC } from 'react';
 
 import { useTranslation } from 'react-i18next';
 
-import s from './s.module.styl';
+import { SettingsSubScreenWrap } from '@/pages/settings/components';
 
 export const Content: FC = () => {
   const { t } = useTranslation();
   return (
-    <div className={s.content}>
+    <SettingsSubScreenWrap>
      {t('layout.language')}
-    </div>
+    </SettingsSubScreenWrap>
   );
 };
-
-export default Content;

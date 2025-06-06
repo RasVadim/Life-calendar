@@ -4,12 +4,10 @@ import { ProfileSettings } from '@/components';
 
 import s from './s.module.styl';
 
-export const Content: FC = () => {
+export const MainSettingsScreen: FC = () => {
   return (
     <div className={s.content}>
       <ProfileSettings />
     </div>
   );
 };
-
-export default Content;
