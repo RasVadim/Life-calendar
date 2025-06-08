@@ -22,6 +22,12 @@
     "language": "Language",
     "lcPremium": "LC Premium",
     "premium": "Premium",
-    "about": "About"
+    "about": "About",
+    "birthDate": "Birth date",
+    "setBirthDate": "Set birth date",
+    "lifeSpan": "Life span",
+    "setLifeSpan": "Set life span",
+    "deathDate": "Last day",
+    "setDeathDate": "Unknown"
   }
 }

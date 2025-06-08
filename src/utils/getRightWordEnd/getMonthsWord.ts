@@ -13,4 +13,4 @@ export function getMonthsWord(n: number, lng: string): string {
     return 'месяцев';
   }
   return '';
-} 
+}

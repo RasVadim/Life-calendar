@@ -22,12 +22,9 @@ export const Menu: FC<PropsType> = ({ isOpen }) => {
       <LanguageSwitcher />
       <ThemeSwitcher />
       <br />
-      <Button label="button" icon="settings" />
-      <br />
-      <Button label="button" icon="settings" active />
-      <br />
       <Button
         label="Open User Data Drawer"
+        icon="settings"
         onClick={() => setDrawerKey(EModalKeys.USER_BIRTH_DATE)}
       />
     </div>

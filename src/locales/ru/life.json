@@ -7,7 +7,7 @@
     "userDataDrawerStats": "Это произошло {{months}} {{monthsWord}} назад, это примерно {{weeks}} {{weeksWord}} или {{days}} {{daysWord}}. Вы, вероятно, уже проспали около {{sleepHours}} {{hoursWord}}!",
     "userDataDrawerSleepYears": "Это больше {{sleepHoursInYears}} {{sleepYearsWord}}.",
     "userDataDrawerLifeExpectancy": "В среднем люди живут около 60 лет. Некоторые доживают до 90, но это редкость.",
-    "userDataDrawer90YearsSleep": "30 лет из 90 вы проведете в сне, и как же выглядят эти 90 лет — 4696 недель? Вроде бы много — а возможно и нет.",
+    "userDataDrawer90YearsSleep": "30 лет из 90 вы проведете во сне, и как же выглядят эти 90 лет — 4696 недель? Вроде бы много — а возможно и нет.",
     "userDataDrawerShowButton": "Давайте посмотрим"
   }
 }

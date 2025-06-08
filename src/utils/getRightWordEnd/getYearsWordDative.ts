@@ -9,8 +9,7 @@ export function getYearsWordDative(n: number, lng: string): string {
   if (lng === 'en') return n === 1 ? 'year' : 'years';
   if (lng === 'ru') {
     if (n % 10 === 1 && n % 100 !== 11) return 'год';
-    if ([2, 3, 4].includes(n % 10) && ![12, 13, 14].includes(n % 100))
-      return 'года';
+    if ([2, 3, 4].includes(n % 10) && ![12, 13, 14].includes(n % 100)) return 'года';
     return 'лет';
   }
   return '';

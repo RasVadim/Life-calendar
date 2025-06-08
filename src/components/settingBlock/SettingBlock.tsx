@@ -7,7 +7,7 @@ import { ChevronIcon, CheckIcon } from '@/icons';
 import s from './s.module.styl';
 
 interface SettingBlockProps {
-  icon: React.ReactNode;
+  icon?: React.ReactNode;
   title: string;
   onClick?: () => void;
   to?: string;
@@ -18,8 +18,8 @@ interface SettingBlockProps {
   disabled?: boolean;
   active?: boolean;
   arrow?: boolean;
-  hideIcon?: boolean;
   thinText?: boolean;
+  lessPadding?: boolean;
 }
 
 export const SettingBlock: React.FC<SettingBlockProps> = ({
@@ -27,15 +27,15 @@ export const SettingBlock: React.FC<SettingBlockProps> = ({
   title,
   onClick,
   to,
-  circleColor = '#3A6BEA', // default blue
+  circleColor = 'var(--primary-color)', // default from theme
   rightText,
   isFirst = false,
   isLast = false,
   disabled = false,
   active = false,
   arrow = true,
-  hideIcon = false,
   thinText = false,
+  lessPadding = false,
 }) => {
   const blockClass = cx(s.settingBlock, {
     [s.first]: isFirst,
@@ -43,13 +43,14 @@ export const SettingBlock: React.FC<SettingBlockProps> = ({
     [s.disabled]: disabled,
     [s.active]: active,
     [s.noArrow]: !arrow,
-    [s.noIcon]: hideIcon,
+    [s.noIcon]: !icon,
     [s.thinText]: thinText,
+    [s.lessPadding]: lessPadding,
   });
 
   const content = (
     <>
-      {!hideIcon && (
+      {!!icon && (
         <span className={s.iconCircle} style={{ background: circleColor }}>
           <span className={s.icon}>{icon}</span>
         </span>

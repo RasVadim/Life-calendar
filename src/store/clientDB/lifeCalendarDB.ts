@@ -1,12 +1,6 @@
 import Dexie, { Table } from 'dexie';
 
-import {
-  THolidayName,
-  ESeason,
-  EWeekType,
-  TWeekZodiac,
-  EHolidayType,
-} from '@/types';
+import { THolidayName, ESeason, EWeekType, TWeekZodiac, EHolidayType } from '@/types';
 
 // Тип праздника
 export interface IHoliday {

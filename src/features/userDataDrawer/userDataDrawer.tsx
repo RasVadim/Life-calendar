@@ -6,7 +6,8 @@ import { useTranslation } from 'react-i18next';
 import { DEFAULT_BIRTH_DATE, DEFAULT_LIFE_SPAN_YEARS } from '@/constants';
 import { OutlineProfile } from '@/icons';
 import { useSetOpenDrawerKey, useSetSyncPending } from '@/store/atoms';
-import { setBirthDate as setBirthDateToDB, saveWeeks, getBirthDate } from '@/store/clientDB';
+import { saveWeeks, updateUserData } from '@/store/clientDB';
+import { useDBUserData } from '@/store/clientDB';
 import { EModalKeys } from '@/types';
 import { Button, Drawer, WheelDatePicker } from '@/ui-kit';
 import { generateWeeksInWorker } from '@/webWorkers';
@@ -22,17 +23,16 @@ export const UserDataDrawer = () => {
   const setPending = useSetSyncPending();
 
   const [birthDate, setBirthDate] = useState<string | null>(null);
-  const [birthDateFromDB, setBirthDateFromDB] = useState<string | null>(null);
+
+  const userData = useDBUserData();
 
   // On mount, get birth date from DB if exists
   useEffect(() => {
     const fetchBirthDate = async () => {
-      const dbBirthDate = await getBirthDate();
-      setBirthDate(dbBirthDate || '');
-      setBirthDateFromDB(dbBirthDate);
+      setBirthDate(userData?.birthDate || '');
     };
     fetchBirthDate();
-  }, []);
+  }, [userData?.birthDate]);
 
   // Save birth date to IndexedDB on change
   const handleBirthDateChange = async (newDate: string) => {
@@ -53,12 +53,12 @@ export const UserDataDrawer = () => {
   );
 
   const handleClose = () => {
-    if (!birthDateFromDB) {
+    if (!userData?.birthDate) {
       calculateLifeExpectancy();
       return;
     }
 
-    setBirthDate(birthDateFromDB);
+    setBirthDate(userData?.birthDate);
     setDrawerKey(null);
   };
 
@@ -68,8 +68,7 @@ export const UserDataDrawer = () => {
     if (birthDate) {
       setPending(true);
       try {
-        await setBirthDateToDB(birthDate);
-        setBirthDateFromDB(birthDate);
+        await updateUserData({ birthDate, lifeExpectancy: DEFAULT_LIFE_SPAN_YEARS });
         // --- Web Worker через хелпер ---
         const weeks = await generateWeeksInWorker(birthDate, DEFAULT_LIFE_SPAN_YEARS);
         await saveWeeks(weeks);
@@ -96,13 +95,13 @@ export const UserDataDrawer = () => {
             value={birthDate}
             onChange={handleBirthDateChange}
             locale={i18n.language === 'ru' ? ru : undefined}
-            defaultDate={birthDateFromDB || DEFAULT_BIRTH_DATE}
-            debounced={!birthDateFromDB}
+            defaultDate={userData?.birthDate || DEFAULT_BIRTH_DATE}
+            debounced={!userData?.birthDate}
           />
         )}
         <InfoAfterBirthDate
           birthDate={birthDate || ''}
-          birthDateFromDB={birthDateFromDB || ''}
+          birthDateFromDB={userData?.birthDate || ''}
           onButtonClick={calculateLifeExpectancy}
         />
       </div>

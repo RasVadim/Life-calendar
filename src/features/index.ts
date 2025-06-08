@@ -1,4 +1,4 @@
-export { LanguageSwitcher } from './languageSwitcher/LanguageSwitcher';
+export { LanguageSwitcher } from './languageSwitcher/languageSwitcher';
 
 export { ThemeSwitcher } from './themeSwitcher/ThemeSwitcher';
 

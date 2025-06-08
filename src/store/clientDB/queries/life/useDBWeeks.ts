@@ -7,7 +7,5 @@ import { lifeCalendarDB, IWeek } from '@/store/clientDB';
  * @returns {IWeek[]} Array of weeks
  */
 export function useDBWeeks(): IWeek[] {
-  return (
-    (useLiveQuery(() => lifeCalendarDB.weeks.toArray(), []) as IWeek[]) || []
-  );
+  return (useLiveQuery(() => lifeCalendarDB.weeks.toArray(), []) as IWeek[]) || [];
 }

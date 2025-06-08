@@ -24,14 +24,12 @@ export const LanguageContent: React.FC = () => {
         {LANGUAGES.map((lang) => (
           <SettingBlock
             key={lang.code}
-            icon={lang.label.slice(0, 2).toUpperCase()}
             title={lang.label}
             rightText={lang.native}
             onClick={lang.enabled ? () => handleChange(lang.code) : undefined}
             disabled={!lang.enabled}
             active={lang.code === currentLang}
             arrow={false}
-            hideIcon
             thinText
           />
         ))}

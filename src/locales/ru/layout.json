@@ -22,6 +22,12 @@
     "language": "Язык",
     "lcPremium": "LC Premium",
     "premium": "Premium",
-    "about": "О приложении"
+    "about": "О приложении",
+    "birthDate": "Дата рождения",
+    "setBirthDate": "Не указана",
+    "lifeSpan": "Продолжительность жизни",
+    "setLifeSpan": "Не указана",
+    "deathDate": "Последний день",
+    "setDeathDate": "Не известен"
   }
 }
