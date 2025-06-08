@@ -8,7 +8,11 @@ export { TabBar } from './tabBar/TabBar';
 
 export { LifeCalendar } from './lifeCalendar/LifeCalendar';
 
-export { ProfileSettings } from './profileSettings/ProfileSettings';
+export { Settings } from './settings/Settings';
+
+export { SettingBlock } from './settingBlock/SettingBlock';
+
+export { SettingsGroup } from './settingsGroup/SettingsGroup';
 
 export { AccountContent } from './accountContent/AccountContent';
 

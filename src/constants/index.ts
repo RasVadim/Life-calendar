@@ -7,3 +7,5 @@ export * from './life';
 export * from './paths';
 
 export * from './tabs';
+
+export * from './language';

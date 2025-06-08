@@ -3,7 +3,7 @@
   align-items center
   gap 14px
   width 100%
-  padding: 8px 10px;
+  padding 8px 10px
   background var(--background-front-color)
   border-radius 40px
   font-size 15px
@@ -21,6 +21,25 @@
 
   &:hover
     background var(--block-hover-bg)
+
+  &.noIcon
+    .title
+      padding-left 20px
+
+  &.noArrow
+    .rightText
+      margin-right 3px !important
+
+  &.thinText
+    .title
+      font-weight 300
+
+  &.disabled
+    opacity 0.3
+
+  &.active
+    font-weight bold
+    color var(--primary-color)
 
 .first
   border-top-left-radius 28px
@@ -61,18 +80,18 @@
 .rightText
   color var(--secondary-color)
   font-size 14px
-  margin-right 8px
+  margin-right 10px
   margin-left auto
-
-.chevron
-  display flex
-  align-items center
-  justify-content center
-  margin-left 4px
-  flex-shrink 0
 
 .rightBlock
   display flex
   align-items center
   margin-left auto
-  gap 4px 
+  gap 4px
+  min-width 60px
+  justify-content flex-end
+
+.emptyIcon
+  width 22px
+  height 22px
+  border-radius 50%

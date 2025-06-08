@@ -3,13 +3,15 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
+import { SettingBlock, SettingsGroup } from '@/components';
 import { LANGUAGE_LABELS } from '@/constants';
+import { UserDataDrawer } from '@/features';
 
-import { Avatar, SettingBlock, SettingsGroup } from './components';
+import { Avatar } from './components';
 
 import s from './s.module.styl';
 
-export const ProfileSettings: React.FC = () => {
+export const Settings: React.FC = () => {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const languageLabel = LANGUAGE_LABELS[i18n.language] || i18n.language;
@@ -64,8 +66,7 @@ export const ProfileSettings: React.FC = () => {
           />
         </SettingsGroup>
       </div>
+      <UserDataDrawer />
     </div>
   );
 };
-
-SettingBlock.displayName = 'SettingBlock';

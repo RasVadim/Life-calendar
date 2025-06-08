@@ -6,14 +6,14 @@ import { WEEKS_PER_YEAR } from '@/constants';
 
 import s from './s.module.styl';
 
-const WEEKS_COUNT = 24;
+const WEEKS_COUNT = 24; // animation weeks count
 const ANIMATION_INTERVAL = 20; // ms
-const INITIAL_INDEX = 26; // 25 past, 1 present, остальные future
+const INITIAL_INDEX = WEEKS_COUNT / 2; // animation start index
 
 export const PageLoadingHolder: React.FC = () => {
-  const [presentIndex, setPresentIndex] = useState(INITIAL_INDEX);
-
   const offset = WEEKS_PER_YEAR / 2 - WEEKS_COUNT / 2;
+
+  const [presentIndex, setPresentIndex] = useState(INITIAL_INDEX + offset);
 
   const calculatedWeekCount = offset + WEEKS_COUNT;
 

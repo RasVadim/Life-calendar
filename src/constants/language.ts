@@ -1,0 +1,15 @@
+export const LANGUAGES = [
+  { code: 'en', label: 'English', native: 'English', enabled: true },
+  { code: 'ru', label: 'Russian', native: 'Русский', enabled: true },
+  { code: 'es', label: 'Spanish', native: 'Español', enabled: false },
+  { code: 'it', label: 'Italian', native: 'Italiano', enabled: false },
+  { code: 'pt', label: 'Portuguese', native: 'Português', enabled: false },
+  { code: 'hi', label: 'Hindi', native: 'हिन्दी', enabled: false },
+  { code: 'zh', label: 'Chinese', native: '中文', enabled: false },
+  { code: 'ja', label: 'Japanese', native: '日本語', enabled: false },
+  { code: 'ko', label: 'Korean', native: '한국어', enabled: false },
+  { code: 'fr', label: 'French', native: 'Français', enabled: false },
+  { code: 'de', label: 'German', native: 'Deutsch', enabled: false },
+  { code: 'pl', label: 'Polish', native: 'Polski', enabled: false },
+  { code: 'sr', label: 'Serbian', native: 'Српски', enabled: false },
+];

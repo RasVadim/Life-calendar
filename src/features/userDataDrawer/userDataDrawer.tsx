@@ -6,11 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { DEFAULT_BIRTH_DATE, DEFAULT_LIFE_SPAN_YEARS } from '@/constants';
 import { OutlineProfile } from '@/icons';
 import { useSetOpenDrawerKey, useSetSyncPending } from '@/store/atoms';
-import {
-  setBirthDate as setBirthDateToDB,
-  saveWeeks,
-  getBirthDate,
-} from '@/store/clientDB';
+import { setBirthDate as setBirthDateToDB, saveWeeks, getBirthDate } from '@/store/clientDB';
 import { EModalKeys } from '@/types';
 import { Button, Drawer, WheelDatePicker } from '@/ui-kit';
 import { generateWeeksInWorker } from '@/webWorkers';
@@ -75,10 +71,7 @@ export const UserDataDrawer = () => {
         await setBirthDateToDB(birthDate);
         setBirthDateFromDB(birthDate);
         // --- Web Worker через хелпер ---
-        const weeks = await generateWeeksInWorker(
-          birthDate,
-          DEFAULT_LIFE_SPAN_YEARS,
-        );
+        const weeks = await generateWeeksInWorker(birthDate, DEFAULT_LIFE_SPAN_YEARS);
         await saveWeeks(weeks);
       } catch (err) {
         // handle error

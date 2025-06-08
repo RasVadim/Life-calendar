@@ -2,6 +2,8 @@ import React from 'react';
 
 import cx from 'classnames';
 
+import { ChevronIcon, CheckIcon } from '@/icons';
+
 import s from './s.module.styl';
 
 interface SettingBlockProps {
@@ -13,6 +15,11 @@ interface SettingBlockProps {
   rightText?: string; // text on the right (e.g. language)
   isFirst?: boolean; // is first in group
   isLast?: boolean; // is last in group
+  disabled?: boolean;
+  active?: boolean;
+  arrow?: boolean;
+  hideIcon?: boolean;
+  thinText?: boolean;
 }
 
 export const SettingBlock: React.FC<SettingBlockProps> = ({
@@ -24,38 +31,39 @@ export const SettingBlock: React.FC<SettingBlockProps> = ({
   rightText,
   isFirst = false,
   isLast = false,
+  disabled = false,
+  active = false,
+  arrow = true,
+  hideIcon = false,
+  thinText = false,
 }) => {
   const blockClass = cx(s.settingBlock, {
     [s.first]: isFirst,
     [s.last]: isLast,
+    [s.disabled]: disabled,
+    [s.active]: active,
+    [s.noArrow]: !arrow,
+    [s.noIcon]: hideIcon,
+    [s.thinText]: thinText,
   });
 
   const content = (
     <>
-      <span className={s.iconCircle} style={{ background: circleColor }}>
-        <span className={s.icon}>{icon}</span>
-      </span>
+      {!hideIcon && (
+        <span className={s.iconCircle} style={{ background: circleColor }}>
+          <span className={s.icon}>{icon}</span>
+        </span>
+      )}
       <span className={s.title}>{title}</span>
       <span className={s.rightBlock}>
         {rightText && <span className={s.rightText}>{rightText}</span>}
-        <span className={s.chevron}>
-          {/* SVG chevron icon */}
-          <svg
-            width="22"
-            height="22"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M9 6L15 12L9 18"
-              stroke="#888"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-        </span>
+        {arrow ? (
+          <ChevronIcon isActive={active} />
+        ) : active ? (
+          <CheckIcon isActive />
+        ) : (
+          <div className={s.emptyIcon} />
+        )}
       </span>
     </>
   );
@@ -68,8 +76,10 @@ export const SettingBlock: React.FC<SettingBlockProps> = ({
     );
   }
   return (
-    <button className={blockClass} onClick={onClick} type="button">
+    <button className={blockClass} onClick={onClick} type="button" disabled={disabled}>
       {content}
     </button>
   );
 };
+
+SettingBlock.displayName = 'SettingBlock';

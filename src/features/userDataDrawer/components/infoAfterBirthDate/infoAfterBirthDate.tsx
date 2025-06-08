@@ -35,11 +35,7 @@ interface Props {
   onButtonClick?: () => void;
 }
 
-export const InfoAfterBirthDate: FC<Props> = ({
-  birthDate,
-  birthDateFromDB,
-  onButtonClick,
-}) => {
+export const InfoAfterBirthDate: FC<Props> = ({ birthDate, birthDateFromDB, onButtonClick }) => {
   const [showLifeExpectancy, setShowLifeExpectancy] = useState(false);
   const [showFinalBlock, setShowFinalBlock] = useState(false);
 
@@ -54,14 +50,8 @@ export const InfoAfterBirthDate: FC<Props> = ({
       return;
     }
     if (isBirthDateFilled) {
-      const timeout = setTimeout(
-        () => setShowLifeExpectancy(true),
-        SHOW_BLOCK_DELAY,
-      );
-      const timeout2 = setTimeout(
-        () => setShowFinalBlock(true),
-        SHOW_FINAL_BLOCK_DELAY,
-      );
+      const timeout = setTimeout(() => setShowLifeExpectancy(true), SHOW_BLOCK_DELAY);
+      const timeout2 = setTimeout(() => setShowFinalBlock(true), SHOW_FINAL_BLOCK_DELAY);
       return () => {
         clearTimeout(timeout);
         clearTimeout(timeout2);
@@ -127,6 +117,7 @@ export const InfoAfterBirthDate: FC<Props> = ({
       <div
         className={cx(s.statsText, s.lifeExpectancy, {
           [s.visible]: showLifeExpectancy,
+          [s.noAnimation]: !!birthDateFromDB,
         })}
       >
         {isBirthDateFilled && t('life.userDataDrawerLifeExpectancy')}
@@ -134,16 +125,14 @@ export const InfoAfterBirthDate: FC<Props> = ({
       <div
         className={cx(s.statsText, s.finalBlock, {
           [s.visible]: showFinalBlock,
+          [s.noAnimation]: !!birthDateFromDB,
         })}
       >
         {isBirthDateFilled && (
           <>
             <div>{t('life.userDataDrawer90YearsSleep')}</div>
             {birthDate !== birthDateFromDB && (
-              <Button
-                onClick={onButtonClick}
-                label={t('life.userDataDrawerShowButton')}
-              />
+              <Button onClick={onButtonClick} label={t('life.userDataDrawerShowButton')} />
             )}
           </>
         )}
