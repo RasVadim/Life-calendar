@@ -16,7 +16,7 @@ import { GridLabels } from '../gridLabels/GridLabels';
 import s from './s.module.styl';
 
 const DEBOUNCE_TIMEOUT = 200; // finish user scroll after this delay means the end of scrolling event
-const NORMAL_STEP = 2; // usual value step for normal zoom: every NORMAL_OFFSET points will be called handleZoom
+const NORMAL_STEP = 1; // usual value step for normal zoom: every NORMAL_STEP points will be called handleZoom
 const SCROLL_STEP = 5; // if more then pause on middle level zoom is longer for desktop
 const TOUCH_ZOOM_STEP = 90; // if more than pause on middle level zoom is longer for touch screens
 
@@ -26,7 +26,6 @@ export const ZoomableGrid = ({ children }: { children?: React.ReactNode }) => {
   const { isMobile } = useDevice();
 
   const debounceTimer = useRef<NodeJS.Timeout | null>(null);
-  const animationRef = useRef<NodeJS.Timeout | null>(null);
   const touchesDistance = useRef<number | null>(null);
 
   const currentRowGap = isMobile ? calculateRowGapSize(columns) : 1;
@@ -49,7 +48,6 @@ export const ZoomableGrid = ({ children }: { children?: React.ReactNode }) => {
         currentCount: columns,
         direction,
         setColumns,
-        animationIntervalState: animationRef.current,
       }); // columns can be outdated
     }, DEBOUNCE_TIMEOUT);
   };
@@ -69,8 +67,7 @@ export const ZoomableGrid = ({ children }: { children?: React.ReactNode }) => {
       if (e.ctrlKey) {
         e.preventDefault();
 
-        const deltaStep =
-          columns === LIFE_GRID_ZOOM_LEVELS.seasons ? SCROLL_STEP : NORMAL_STEP;
+        const deltaStep = columns === LIFE_GRID_ZOOM_LEVELS.seasons ? SCROLL_STEP : NORMAL_STEP;
         if (Math.abs(e.deltaY) > deltaStep) {
           handleZoom(e.deltaY);
         }
@@ -97,10 +94,7 @@ export const ZoomableGrid = ({ children }: { children?: React.ReactNode }) => {
       const currentDistance = getTwoTouchesDistance(e.touches);
       const delta = currentDistance - touchesDistance.current;
 
-      const deltaStep =
-        columns === LIFE_GRID_ZOOM_LEVELS.seasons
-          ? TOUCH_ZOOM_STEP
-          : NORMAL_STEP;
+      const deltaStep = columns === LIFE_GRID_ZOOM_LEVELS.seasons ? TOUCH_ZOOM_STEP : NORMAL_STEP;
 
       if (Math.abs(delta) > deltaStep) {
         handleZoom(-delta);

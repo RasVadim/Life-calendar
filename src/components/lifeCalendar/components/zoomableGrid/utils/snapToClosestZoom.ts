@@ -1,12 +1,12 @@
 import { LIFE_GRID_ZOOM_LEVELS } from '@/constants';
 
-export const SCROLL_THRESHOLD = 4; // minimum steps to advance to a new level
+export const SCROLL_THRESHOLD = 3; // minimum steps to advance to a new level
+export const ANIMATION_STEP = 1; // minimal quantity of columns for one step of animation
 
 type TSnapToClosestZoomOptions = {
   currentCount: number;
   direction: 1 | -1;
   setColumns: React.Dispatch<React.SetStateAction<number>>;
-  animationIntervalState: ReturnType<typeof setInterval> | null;
   onAnimationEnd?: () => void;
 };
 
@@ -14,11 +14,10 @@ export const snapToClosestZoom = ({
   currentCount,
   direction,
   setColumns,
-  animationIntervalState,
   onAnimationEnd,
 }: TSnapToClosestZoomOptions) => {
   let closest = currentCount;
-  let animationStep = 2;
+  let animationStep = ANIMATION_STEP;
 
   const zoomLevels = Object.values(LIFE_GRID_ZOOM_LEVELS);
 
@@ -33,40 +32,34 @@ export const snapToClosestZoom = ({
 
       if (direction < 0) {
         // zoom +
-        closest =
-          rightLevel - SCROLL_THRESHOLD < currentCount ? rightLevel : leftLevel;
+        closest = rightLevel - SCROLL_THRESHOLD < currentCount ? rightLevel : leftLevel;
       } else {
         // zoom -
-        closest =
-          leftLevel + SCROLL_THRESHOLD > currentCount ? leftLevel : rightLevel;
+        closest = leftLevel + SCROLL_THRESHOLD > currentCount ? leftLevel : rightLevel;
       }
 
       break;
     }
   }
 
-  if (animationIntervalState) {
-    clearInterval(animationIntervalState);
-  }
-
-  animationIntervalState = setInterval(() => {
+  let frameId: number | null = null;
+  function animate() {
     setColumns((prev: number) => {
       if (prev === closest) {
-        clearInterval(animationIntervalState!);
+        if (frameId) cancelAnimationFrame(frameId);
         onAnimationEnd?.();
         return prev;
       }
-      const next = prev + (prev < closest ? animationStep : -animationStep);
-
-      // borders
-      if (
-        (prev < closest && next > closest) ||
-        (prev > closest && next < closest)
-      ) {
-        return closest;
+      let next: number;
+      if (Math.abs(prev - closest) < animationStep) {
+        next = closest;
+      } else {
+        next = prev + (prev < closest ? animationStep : -animationStep);
       }
-
+      frameId = requestAnimationFrame(animate);
       return next;
     });
-  }, 5); // animation speed — 5ms step
+  }
+
+  frameId = requestAnimationFrame(animate);
 };
