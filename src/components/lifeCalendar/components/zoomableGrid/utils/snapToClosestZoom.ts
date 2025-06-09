@@ -1,6 +1,6 @@
 import { LIFE_GRID_ZOOM_LEVELS } from '@/constants';
 
-export const SCROLL_THRESHOLD = 3; // minimum steps to advance to a new level
+export const SCROLL_THRESHOLD = 2; // minimum steps to advance to a new level
 export const ANIMATION_STEP = 1; // minimal quantity of columns for one step of animation
 
 type TSnapToClosestZoomOptions = {
