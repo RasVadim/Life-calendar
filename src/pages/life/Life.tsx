@@ -1,6 +1,5 @@
 import { lazy, FC, ReactNode, useEffect } from 'react';
 
-import { UserDataDrawer } from '@/features';
 import { useSetOpenDrawerKey } from '@/store/atoms';
 import { lifeCalendarDB } from '@/store/clientDB';
 import { EModalKeys } from '@/types';
@@ -33,7 +32,6 @@ export const Life: FC<PropsType> = () => {
   return (
     <Page name="life">
       <LazyContent />
-      <UserDataDrawer />
     </Page>
   );
 };

@@ -2,12 +2,13 @@
   "life": {
     "exampe": "Exampe",
     "lifeInWeeks": "Life in Weeks",
-    "userDataDrawerIntro": "Hello there! Please enter your birth date.",
-    "userDataDrawerResult": "You are {{age}} {{yearsWord}} old. You were born on a {{weekday}}.",
-    "userDataDrawerStats": "It happened {{months}} {{monthsWord}} ago, that's about {{weeks}} {{weeksWord}} or {{days}} {{daysWord}}. You have probably slept about {{sleepHours}} {{hoursWord}}!",
-    "userDataDrawerSleepYears": "That's about {{sleepHoursInYears}} {{sleepYearsWord}}.",
-    "userDataDrawerLifeExpectancy": "Most people live about 60 years. Some live longer, but most don't reach 90.",
-    "userDataDrawer90YearsSleep": "You will spend 30 out of 90 years sleeping. So what do these 90 years look like — 4696 weeks? It seems like a lot — or maybe not.",
-    "userDataDrawerShowButton": "Let's take a look"
+    "birthDateDrawerIntro": "Hello there! Please enter your birth date.",
+    "birthDateDrawerResult": "You are {{age}} {{yearsWord}} old. You were born on a {{weekday}}.",
+    "birthDateDrawerStats": "It happened {{months}} {{monthsWord}} ago, that's about {{weeks}} {{weeksWord}} or {{days}} {{daysWord}}. You have probably slept about {{sleepHours}} {{hoursWord}}!",
+    "birthDateDrawerSleepYears": "That's about {{sleepHoursInYears}} {{sleepYearsWord}}.",
+    "birthDateDrawerLifeExpectancy": "Most people live about 60 years. Some live longer, but most don't reach 90.",
+    "birthDateDrawer90YearsSleep": "You will spend 30 out of 90 years sleeping. So what do these 90 years look like — 4696 weeks? It seems like a lot — or maybe not.",
+    "birthDateDrawerShowButton": "Let's take a look",
+    "lifeExpectancyDrawerIntro": "Please enter your life expectancy."
   }
 }

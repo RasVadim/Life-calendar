@@ -2,6 +2,7 @@ import { useMemo, useState, useEffect } from 'react';
 
 import { ru } from 'date-fns/locale';
 import { useTranslation } from 'react-i18next';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 import { DEFAULT_BIRTH_DATE, DEFAULT_LIFE_SPAN_YEARS } from '@/constants';
 import { OutlineProfile } from '@/icons';
@@ -16,8 +17,10 @@ import { InfoAfterBirthDate } from './components';
 
 import s from './s.module.styl';
 
-export const UserDataDrawer = () => {
+export const BirthDateDrawer = () => {
   const { t, i18n } = useTranslation();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const setDrawerKey = useSetOpenDrawerKey();
   const setPending = useSetSyncPending();
@@ -28,10 +31,7 @@ export const UserDataDrawer = () => {
 
   // On mount, get birth date from DB if exists
   useEffect(() => {
-    const fetchBirthDate = async () => {
-      setBirthDate(userData?.birthDate || '');
-    };
-    fetchBirthDate();
+    setBirthDate(userData?.birthDate || '');
   }, [userData?.birthDate]);
 
   // Save birth date to IndexedDB on change
@@ -68,9 +68,14 @@ export const UserDataDrawer = () => {
     if (birthDate) {
       setPending(true);
       try {
+        if (location.pathname !== '/') {
+          navigate('/');
+        }
+
         await updateUserData({ birthDate, lifeExpectancy: DEFAULT_LIFE_SPAN_YEARS });
-        // --- Web Worker через хелпер ---
+        // --- Web Worker helper ---
         const weeks = await generateWeeksInWorker(birthDate, DEFAULT_LIFE_SPAN_YEARS);
+
         await saveWeeks(weeks);
       } catch (err) {
         // handle error
@@ -89,7 +94,7 @@ export const UserDataDrawer = () => {
       disabledClose={!birthDate}
     >
       <div className={s.introWrap}>
-        <div className={s.introText}>{t('life.userDataDrawerIntro')}</div>
+        <div className={s.introText}>{t('life.birthDateDrawerIntro')}</div>
         {birthDate !== null && (
           <WheelDatePicker
             value={birthDate}

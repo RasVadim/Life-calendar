@@ -3,7 +3,7 @@ import React, { FC } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { SettingBlock, SettingsGroup } from '@/components';
-import { UserDataDrawer } from '@/features';
+import { LifeExpectancyDrawer } from '@/features';
 import { useSetOpenDrawerKey } from '@/store/atoms';
 import { useDBUserData } from '@/store/clientDB';
 import { EModalKeys } from '@/types';
@@ -22,10 +22,10 @@ export const AccountContent: FC = () => {
     setDrawerKey(EModalKeys.USER_BIRTH_DATE);
   };
   const handleLifeSpanClick = () => {
-    // Open modal/drawer to set life span
+    setDrawerKey(EModalKeys.USER_LIFE_EXPECTANCY);
   };
   const handleDeathDateClick = () => {
-    // Open modal/drawer to set death date
+    setDrawerKey(EModalKeys.USER_LIFE_EXPECTANCY);
   };
 
   return (
@@ -59,7 +59,7 @@ export const AccountContent: FC = () => {
           lessPadding
         />
       </SettingsGroup>
-      <UserDataDrawer />
+      <LifeExpectancyDrawer />
     </div>
   );
 };

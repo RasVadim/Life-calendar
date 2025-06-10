@@ -28,6 +28,7 @@
     "lifeSpan": "Life span",
     "setLifeSpan": "Set life span",
     "deathDate": "Last day",
-    "setDeathDate": "Unknown"
+    "setDeathDate": "Unknown",
+    "selectLifeExpectancy": "Life expectancy"
   }
 }

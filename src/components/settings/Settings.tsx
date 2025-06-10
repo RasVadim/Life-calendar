@@ -5,7 +5,6 @@ import { useNavigate } from 'react-router-dom';
 
 import { SettingBlock, SettingsGroup } from '@/components';
 import { LANGUAGE_LABELS } from '@/constants';
-import { UserDataDrawer } from '@/features';
 
 import { Avatar } from './components';
 
@@ -66,7 +65,6 @@ export const Settings: React.FC = () => {
           />
         </SettingsGroup>
       </div>
-      <UserDataDrawer />
     </div>
   );
 };

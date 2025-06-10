@@ -20,3 +20,7 @@ export { NativeDatePicker } from './nativeDatePicker/NativeDataPicker';
 export { WheelPicker } from './wheelDatePicker/WheelPicker';
 
 export { WheelDatePicker } from './wheelDatePicker/WheelDatePicker';
+
+// Data input components
+export { Select } from './select/Select';
+export type { TOption } from './select/Select';

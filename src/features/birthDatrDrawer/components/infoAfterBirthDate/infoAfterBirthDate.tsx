@@ -84,7 +84,7 @@ export const InfoAfterBirthDate: FC<Props> = ({ birthDate, birthDateFromDB, onBu
     <>
       <div className={cx(s.resultText, { [s.visible]: isBirthDateFilled })}>
         {isBirthDateFilled &&
-          t('life.userDataDrawerResult', {
+          t('life.birthDateDrawerResult', {
             age,
             weekday: weekdayDisplay,
             yearsWord,
@@ -93,7 +93,7 @@ export const InfoAfterBirthDate: FC<Props> = ({ birthDate, birthDateFromDB, onBu
       <div className={cx(s.statsText, { [s.visible]: isBirthDateFilled })}>
         {isBirthDateFilled && (
           <>
-            {t('life.userDataDrawerStats', {
+            {t('life.birthDateDrawerStats', {
               months,
               monthsWord: getMonthsWord(months, i18n.language),
               weeks,
@@ -105,7 +105,7 @@ export const InfoAfterBirthDate: FC<Props> = ({ birthDate, birthDateFromDB, onBu
             })}
             {showSleepYears && (
               <div style={{ marginTop: 8 }}>
-                {t('life.userDataDrawerSleepYears', {
+                {t('life.birthDateDrawerSleepYears', {
                   sleepHoursInYears: sleepHoursInYearsInt,
                   sleepYearsWord,
                 })}
@@ -120,7 +120,7 @@ export const InfoAfterBirthDate: FC<Props> = ({ birthDate, birthDateFromDB, onBu
           [s.noAnimation]: !!birthDateFromDB,
         })}
       >
-        {isBirthDateFilled && t('life.userDataDrawerLifeExpectancy')}
+        {isBirthDateFilled && t('life.birthDateDrawerLifeExpectancy')}
       </div>
       <div
         className={cx(s.statsText, s.finalBlock, {
@@ -130,9 +130,9 @@ export const InfoAfterBirthDate: FC<Props> = ({ birthDate, birthDateFromDB, onBu
       >
         {isBirthDateFilled && (
           <>
-            <div>{t('life.userDataDrawer90YearsSleep')}</div>
+            <div>{t('life.birthDateDrawer90YearsSleep')}</div>
             {birthDate !== birthDateFromDB && (
-              <Button onClick={onButtonClick} label={t('life.userDataDrawerShowButton')} />
+              <Button onClick={onButtonClick} label={t('life.birthDateDrawerShowButton')} />
             )}
           </>
         )}

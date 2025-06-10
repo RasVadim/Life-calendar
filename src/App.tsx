@@ -4,14 +4,10 @@ import i18n from 'i18next';
 import { useLocation } from 'react-router-dom';
 
 import { Routes } from '@/Routes';
-import {
-  useLanguage,
-  useThemeMode,
-  useSetSyncPending,
-  useSetPrevRoute,
-} from '@/store/atoms';
+import { useLanguage, useThemeMode, useSetSyncPending, useSetPrevRoute } from '@/store/atoms';
 import { initDefaultWeeks } from '@/store/clientDB';
 
+import { BirthDateDrawer } from './features';
 import { toggleTheme } from './utils';
 
 // Function to enter fullscreen
@@ -56,7 +52,12 @@ const App = () => {
     initDefaultWeeks();
   }, []);
 
-  return <Routes prevPath={prevPathRef.current} />;
+  return (
+    <>
+      <Routes prevPath={prevPathRef.current} />
+      <BirthDateDrawer />
+    </>
+  );
 };
 
 export default App;

@@ -4,4 +4,6 @@ export { ThemeSwitcher } from './themeSwitcher/ThemeSwitcher';
 
 export { BurgerMenu } from './burgeMenu/BurgerMenu';
 
-export { UserDataDrawer } from './userDataDrawer/UserDataDrawer';
+export { BirthDateDrawer } from './birthDatrDrawer/BirthDateDrawer';
+
+export { LifeExpectancyDrawer } from './lifeExpectancyDrawer/LifeExpectancyDrawer';

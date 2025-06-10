@@ -1,0 +1,97 @@
+.wrapper
+  position relative
+  display inline-block
+  min-width 200px
+  user-select none
+  width 80%
+  max-width 300px
+
+.selected
+  display flex
+  align-items center
+  justify-content space-between
+  padding 8px 16px
+  border 1px solid var(--border-color)
+  border-radius 40px
+  background-color var(--background-front-color)
+  font-size 14px
+  line-height 1.5
+  color var(--text-color)
+  cursor pointer
+  transition all 0.2s ease
+
+  &:hover
+    border-color var(--primary-light-color)
+    background-color var(--block-hover-bg)
+
+.wrapper.open .selected
+  border-color var(--primary-color)
+
+.wrapper.disabled .selected
+  background-color var(--disabled-background-color)
+  cursor not-allowed
+  opacity 0.7
+  color var(--disabled-color)
+
+.arrow
+  width 0
+  height 0
+  margin-left 8px
+  border-left 1px solid transparent
+  border-right 1px solid transparent
+  border-top 1px solid var(--primary-color)
+  transition transform 0.2s ease
+
+.wrapper.open .arrow
+  transform rotate(180deg)
+
+.options
+  position absolute
+  top 100%
+  left 0
+  right 0
+  margin-top 4px
+  padding 4px 0
+  background var(--background-front-color)
+  border-radius 20px
+  box-shadow 0 1px 4px var(--background-front-color, 0.15)
+  z-index 1000
+  max-height 240px
+  overflow-y auto
+
+  // Scrollbar styles
+  &::-webkit-scrollbar
+    width 2px !important
+
+  &::-webkit-scrollbar-track
+    background transparent
+    border-radius 4px
+    width 2px !important
+
+  &::-webkit-scrollbar-thumb
+    background var(--scrollbar-color)
+    border-radius 4px
+    width 2px !important
+
+    &:hover
+      background var(--primary-color)
+
+  // Firefox
+  scrollbar-width thin
+  scrollbar-color var(--scrollbar-color) transparent
+
+.option
+  padding 8px 12px
+  cursor pointer
+  transition background-color 0.2s ease
+  color var(--text-color)
+
+  &:hover
+    background-color var(--block-hover-bg)
+
+  &.selected
+    background-color var(--primary-light-color)
+    color var(--opposite-contrast-color)
+    border none
+    box-shadow none
+    border-radius 0
