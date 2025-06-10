@@ -1,10 +1,11 @@
 import { useMemo, useState, useEffect } from 'react';
 
+import { addYears, format } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useLocation } from 'react-router-dom';
 
-import { DEFAULT_BIRTH_DATE, DEFAULT_LIFE_SPAN_YEARS } from '@/constants';
+import { ISO_DATE_FORMAT, DEFAULT_BIRTH_DATE, DEFAULT_LIFE_SPAN_YEARS } from '@/constants';
 import { OutlineProfile } from '@/icons';
 import { useSetOpenDrawerKey, useSetSyncPending } from '@/store/atoms';
 import { saveWeeks, updateUserData } from '@/store/clientDB';
@@ -72,7 +73,16 @@ export const BirthDateDrawer = () => {
           navigate('/');
         }
 
-        await updateUserData({ birthDate, lifeExpectancy: DEFAULT_LIFE_SPAN_YEARS });
+        const deathDate = format(
+          addYears(new Date(birthDate), DEFAULT_LIFE_SPAN_YEARS),
+          ISO_DATE_FORMAT,
+        );
+
+        await updateUserData({
+          birthDate,
+          lifeExpectancy: DEFAULT_LIFE_SPAN_YEARS,
+          deathDate,
+        });
         // --- Web Worker helper ---
         const weeks = await generateWeeksInWorker(birthDate, DEFAULT_LIFE_SPAN_YEARS);
 

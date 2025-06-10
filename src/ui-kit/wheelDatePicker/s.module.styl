@@ -1,33 +1,43 @@
-.container {
-  display: flex;
-  width: 180px;
-  -webkit-mask-image: linear-gradient(
+.container
+  display flex
+  justify-content space-between
+  position relative
+  width 180px
+  overflow hidden
+  -webkit-mask-image linear-gradient(
     to bottom,
     transparent 0%,
     black 50%,
     transparent 100%
-  );
-  mask-image: linear-gradient(
+  )
+  mask-image linear-gradient(
     to bottom,
     transparent 0%,
     black 50%,
     transparent 100%
-  );
-  position: relative;
-}
+  )
 
-.container::after {
-  position: absolute;
-  content: "";
-  top: 50%;
-  transform: translateY(-50%);
-  left: 0;
-  right: 0;
-  width: 100%;
-  height: 32px;
+  &.appear
+    animation appear 0.3s ease-out
 
-  background: var(--wheel-picker-bg-color);
-  border-radius: 5px;
-  pointer-events: none;
-  z-index: -1;
-}
+  &::after
+    position absolute
+    content ""
+    top 50%
+    transform translateY(-50%)
+    left 0
+    right 0
+    width 100%
+    height 32px
+    background var(--wheel-picker-bg-color)
+    border-radius 5px
+    pointer-events none
+    z-index -1
+
+@keyframes appear
+  from
+    opacity 0
+    transform translateY(10px)
+  to
+    opacity 1
+    transform translateY(0)

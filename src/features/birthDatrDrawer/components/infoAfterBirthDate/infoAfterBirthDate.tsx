@@ -132,7 +132,7 @@ export const InfoAfterBirthDate: FC<Props> = ({ birthDate, birthDateFromDB, onBu
           <>
             <div>{t('life.birthDateDrawer90YearsSleep')}</div>
             {birthDate !== birthDateFromDB && (
-              <Button onClick={onButtonClick} label={t('life.birthDateDrawerShowButton')} />
+              <Button onClick={onButtonClick} label={t('life.letsSee')} />
             )}
           </>
         )}

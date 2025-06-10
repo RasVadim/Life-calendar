@@ -1,1 +1,1 @@
-export { InfoAfterBirthDate } from './infoAfterBirthDate/infoAfterBirthDate';
+export { InfoAfterChangeDeathDate } from './infoAfterChangeDeathDate/InfoAfterChangeDeathDate';

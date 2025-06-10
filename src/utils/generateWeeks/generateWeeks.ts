@@ -10,7 +10,7 @@ import {
   startOfDay,
 } from 'date-fns';
 
-import { DEFAULT_LIFE_SPAN_YEARS } from '@/constants';
+import { DEFAULT_LIFE_SPAN_YEARS, ISO_DATE_FORMAT } from '@/constants';
 import { ESeason, EWeekType, HOLIDAY_NAMES } from '@/types/life';
 
 import { getMajorityDate } from './getMajorityDate';
@@ -24,21 +24,15 @@ import { getZodiac } from './getZodiac';
  * @param {number} [lifeSpanYears=DEFAULT_LIFE_SPAN_YEARS] - Expected lifespan in years
  * @returns {IWeek[]} Array of week objects for the entire life
  */
-export const generateWeeks = (
-  birthDateISO: string,
-  lifeSpanYears = DEFAULT_LIFE_SPAN_YEARS,
-) => {
+export const generateWeeks = (birthDateISO: string, lifeSpanYears = DEFAULT_LIFE_SPAN_YEARS) => {
   const weeks = [];
   const birthDate = startOfDay(new Date(birthDateISO));
   const deathDate = startOfDay(addYears(birthDate, lifeSpanYears));
 
   for (let yearOfLife = 0; yearOfLife < lifeSpanYears; yearOfLife++) {
-    const yearStart =
-      yearOfLife === 0 ? birthDate : addYears(birthDate, yearOfLife);
+    const yearStart = yearOfLife === 0 ? birthDate : addYears(birthDate, yearOfLife);
     const yearEnd =
-      yearOfLife === lifeSpanYears - 1
-        ? deathDate
-        : addYears(birthDate, yearOfLife + 1);
+      yearOfLife === lifeSpanYears - 1 ? deathDate : addYears(birthDate, yearOfLife + 1);
     let weeksInYear = [];
     let weekStart = yearStart;
     let weekIndex = 0;
@@ -118,8 +112,7 @@ export const generateWeeks = (
       const isFirstInYear = isFirst;
       const isLastInYear = isLast;
       const isFirstInMonth = getDate(weekStart) === 1;
-      const isLastInMonth =
-        getDate(weekEnd) === getDate(addDays(weekEnd, 1)) - 1;
+      const isLastInMonth = getDate(weekEnd) === getDate(addDays(weekEnd, 1)) - 1;
       const isLeap = isLeapYear(weekStart);
       const zodiac = getZodiac(getYear(weekStart));
 
@@ -137,35 +130,27 @@ export const generateWeeks = (
         i === 0 ||
         dateSeason !==
           getMajorityDate(
-            Array.from({ length: 7 }, (_, k) => addDays(weekStart, -k - 1)).map(
-              (d) => d,
-            ),
+            Array.from({ length: 7 }, (_, k) => addDays(weekStart, -k - 1)).map((d) => d),
             'season',
           );
       const isLastInSeason =
         i === weeksInYear.length - 1 ||
         dateSeason !==
           getMajorityDate(
-            Array.from({ length: 7 }, (_, k) => addDays(weekEnd, k + 1)).map(
-              (d) => d,
-            ),
+            Array.from({ length: 7 }, (_, k) => addDays(weekEnd, k + 1)).map((d) => d),
             'season',
           );
-      const isExpandedByDateSeason =
-        (isFirstInSeason || isLastInSeason) && days.length > 7;
+      const isExpandedByDateSeason = (isFirstInSeason || isLastInSeason) && days.length > 7;
 
       // isExpandedByDateMonth: first or last week of month and days > 7
-      const isExpandedByDateMonth =
-        (isFirstInMonth || isLastInMonth) && days.length > 7;
+      const isExpandedByDateMonth = (isFirstInMonth || isLastInMonth) && days.length > 7;
 
       // isPartialByYear: first or last week of life year and days < 7
       const isPartialByYear = (isFirst || isLast) && days.length < 7;
       // isPartialByDateSeason: first or last week of season and days < 7
-      const isPartialByDateSeason =
-        (isFirstInSeason || isLastInSeason) && days.length < 7;
+      const isPartialByDateSeason = (isFirstInSeason || isLastInSeason) && days.length < 7;
       // isPartialByDateMonth: first or last week of month and days < 7
-      const isPartialByDateMonth =
-        (isFirstInMonth || isLastInMonth) && days.length < 7;
+      const isPartialByDateMonth = (isFirstInMonth || isLastInMonth) && days.length < 7;
 
       // Efficient calculation of life month
       const yearsPassed = yearOfLife;
@@ -223,18 +208,13 @@ export const generateWeeks = (
       // Birthday always first if present
       if (holidays.includes(HOLIDAY_NAMES.birthday)) {
         const filtered = holidays.filter((h) => h !== HOLIDAY_NAMES.birthday);
-        holidays.splice(
-          0,
-          holidays.length,
-          HOLIDAY_NAMES.birthday,
-          ...filtered,
-        );
+        holidays.splice(0, holidays.length, HOLIDAY_NAMES.birthday, ...filtered);
       }
 
       weeks.push({
         id: `w${String(year).padStart(2, '0')}_${String(i + 1).padStart(2, '0')}`,
-        dateStart: format(weekStart, 'yyyy-MM-dd'),
-        dateEnd: format(weekEnd, 'yyyy-MM-dd'),
+        dateStart: format(weekStart, ISO_DATE_FORMAT),
+        dateEnd: format(weekEnd, ISO_DATE_FORMAT),
         type,
         month: lifeMonth,
         year,

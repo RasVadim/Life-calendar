@@ -1,5 +1,7 @@
 import React, { memo } from 'react';
 
+import cx from 'classnames';
+
 import { WheelColumn } from './components';
 import { TItem } from './utils/generateYearItems';
 
@@ -17,6 +19,7 @@ export type TProps = {
   onDayChange: (value: string | number) => void;
   containerHeight?: number;
   itemHeight?: number;
+  appearAnimation?: boolean;
 };
 
 export const WheelPicker = memo(
@@ -32,10 +35,11 @@ export const WheelPicker = memo(
     onDayChange,
     containerHeight = 210,
     itemHeight = 32,
+    appearAnimation = false,
   }: TProps) => {
     return (
       <div
-        className={s.container}
+        className={cx(s.container, { [s.appear]: appearAnimation })}
         style={{
           height: `${containerHeight}px`,
         }}

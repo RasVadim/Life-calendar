@@ -8,7 +8,8 @@
     "birthDateDrawerSleepYears": "Это больше {{sleepHoursInYears}} {{sleepYearsWord}}.",
     "birthDateDrawerLifeExpectancy": "В среднем люди живут около 60 лет. Некоторые доживают до 90, но это редкость.",
     "birthDateDrawer90YearsSleep": "30 лет из 90 вы проведете во сне, и как же выглядят эти 90 лет — 4696 недель? Вроде бы много — а возможно и нет.",
-    "birthDateDrawerShowButton": "Давайте посмотрим",
-    "lifeExpectancyDrawerIntro": "Укажите предполагаемую продолжительность вашей жизни."
+    "letsSee": "Давайте посмотрим",
+    "lifeExpectancyDrawerIntro": "Укажите предполагаемую продолжительность вашей жизни.",
+    "setExactDeathDate": "Указать предполагаемую дату окончания жизни."
   }
 }

@@ -29,6 +29,7 @@
     "setLifeSpan": "Не указана",
     "deathDate": "Последний день",
     "setDeathDate": "Не известен",
-    "selectLifeExpectancy": "Продолжительность жизни"
+    "selectLifeExpectancy": "Продолжительность жизни",
+    "p-years": "лет"
   }
 }

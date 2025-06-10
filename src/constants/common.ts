@@ -10,3 +10,6 @@ export const LANGUAGE_LABELS: Record<string, string> = {
   en: 'English',
   ru: 'Русский',
 };
+
+export const ISO_DATE_FORMAT = 'yyyy-MM-dd';
+export const UI_DATE_FORMAT = 'yyyy.MM.dd';

@@ -1,14 +1,9 @@
 import React, { useEffect, useState, useRef, useMemo } from 'react';
 
-import {
-  getYear,
-  getMonth,
-  getDate,
-  format,
-  parseISO,
-  getDaysInMonth,
-} from 'date-fns';
+import { getYear, getMonth, getDate, format, parseISO, getDaysInMonth } from 'date-fns';
 import type { Locale } from 'date-fns';
+
+import { ISO_DATE_FORMAT } from '@/constants';
 
 import { TItem } from './utils/generateYearItems';
 import { WheelPicker } from './WheelPicker';
@@ -16,14 +11,15 @@ import { WheelPicker } from './WheelPicker';
 const DEBOUNCE_TIME = 1500;
 
 export type WheelDatePickerProps = {
-  value?: string; // 'yyyy-MM-dd'
-  defaultDate?: string; // 'yyyy-MM-dd'
+  value?: string; // ISO_DATE_FORMAT
+  defaultDate?: string; // ISO_DATE_FORMAT
   onChange?: (date: string) => void;
   locale?: Locale;
   yearRange?: number;
   containerHeight?: number;
   itemHeight?: number;
   debounced?: boolean;
+  appearAnimation?: boolean;
 };
 
 export const WheelDatePicker: React.FC<WheelDatePickerProps> = ({
@@ -35,34 +31,16 @@ export const WheelDatePicker: React.FC<WheelDatePickerProps> = ({
   containerHeight = 180,
   itemHeight = 32,
   debounced = false,
+  appearAnimation = false,
 }) => {
   // Parse value into draft
-  const parsed = value
-    ? parseISO(value)
-    : defaultDate
-      ? parseISO(defaultDate)
-      : new Date();
+  const parsed = value ? parseISO(value) : defaultDate ? parseISO(defaultDate) : new Date();
 
   const [draft, setDraft] = useState({
     year: getYear(parsed),
     month: getMonth(parsed) + 1,
     day: getDate(parsed),
   });
-
-  // TODO: Sync draft with value
-  // useEffect(() => {
-  //   const parsed = value
-  //     ? parseISO(value)
-  //     : defaultDate
-  //       ? parseISO(defaultDate)
-  //       : new Date();
-  //   setDraft({
-  //     year: getYear(parsed),
-  //     month: getMonth(parsed) + 1,
-  //     day: getDate(parsed),
-  //   });
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [value, defaultDate]);
 
   // Generate lists for WheelPicker
   const currentYear = getYear(new Date());
@@ -96,20 +74,10 @@ export const WheelDatePicker: React.FC<WheelDatePickerProps> = ({
   const debounceRef = useRef<NodeJS.Timeout | null>(null);
 
   // Helper for calling onChange with debounce
-  const emitChange = (nextDraft: {
-    year: number;
-    month: number;
-    day: number;
-  }) => {
-    const daysInTargetMonth = getDaysInMonth(
-      new Date(nextDraft.year, nextDraft.month - 1, 1),
-    );
-    const safeDay =
-      nextDraft.day > daysInTargetMonth ? daysInTargetMonth : nextDraft.day;
-    const newDate = format(
-      new Date(nextDraft.year, nextDraft.month - 1, safeDay),
-      'yyyy-MM-dd',
-    );
+  const emitChange = (nextDraft: { year: number; month: number; day: number }) => {
+    const daysInTargetMonth = getDaysInMonth(new Date(nextDraft.year, nextDraft.month - 1, 1));
+    const safeDay = nextDraft.day > daysInTargetMonth ? daysInTargetMonth : nextDraft.day;
+    const newDate = format(new Date(nextDraft.year, nextDraft.month - 1, safeDay), ISO_DATE_FORMAT);
     if (onChange) {
       if (debounced) {
         if (debounceRef.current) clearTimeout(debounceRef.current);
@@ -168,6 +136,7 @@ export const WheelDatePicker: React.FC<WheelDatePickerProps> = ({
       onDayChange={handleDayChange}
       containerHeight={containerHeight}
       itemHeight={itemHeight}
+      appearAnimation={appearAnimation}
     />
   );
 };

@@ -7,7 +7,7 @@ import { LifeExpectancyDrawer } from '@/features';
 import { useSetOpenDrawerKey } from '@/store/atoms';
 import { useDBUserData } from '@/store/clientDB';
 import { EModalKeys } from '@/types';
-import { getYearsWordDative } from '@/utils';
+import { formatDateToUI, getYearsWordDative } from '@/utils';
 
 import s from './s.module.styl';
 
@@ -34,7 +34,7 @@ export const AccountContent: FC = () => {
         <SettingBlock
           title={t('layout.birthDate')}
           onClick={handleBirthDateClick}
-          rightText={userData?.birthDate || t('layout.setBirthDate')}
+          rightText={formatDateToUI(userData?.birthDate, t('layout.setBirthDate'))}
           arrow={false}
           lessPadding
         />
@@ -54,7 +54,7 @@ export const AccountContent: FC = () => {
         <SettingBlock
           title={t('layout.deathDate')}
           onClick={handleDeathDateClick}
-          rightText={t('layout.setDeathDate')}
+          rightText={formatDateToUI(userData?.deathDate, t('layout.setDeathDate'))}
           arrow={false}
           lessPadding
         />

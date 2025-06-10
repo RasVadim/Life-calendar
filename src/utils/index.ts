@@ -1,5 +1,7 @@
 export { getDepth } from './common/getDepth';
 
+export { formatDateToUI } from './common/formatDateToUI';
+
 export { toggleTheme } from './toggleTheme/toggleTheme';
 
 export { getYearsWordGenitive } from './getRightWordEnd/getYearsWordGenitive';

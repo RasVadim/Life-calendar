@@ -18,6 +18,7 @@ type PropsType = {
   labelShiftAnimation?: 'right-start' | 'left-start';
   onlyIcon?: boolean;
   className?: string;
+  link?: boolean;
 };
 
 /**
@@ -50,6 +51,7 @@ export const Button: FC<PropsType> = memo(
     labelShiftAnimation = '',
     onlyIcon = false,
     className,
+    link,
   }) => {
     let iconElement: ReactElement | null = null;
 
@@ -67,28 +69,24 @@ export const Button: FC<PropsType> = memo(
 
     return (
       <button
-        className={cx(
-          s.button,
-          className,
-          {
-            [s.active]: active,
-            [s.disabled]: disabled,
-            [s.gost]: gost,
-            [s.customIcon]: icon && typeof icon !== 'string',
-            [s.small]: size === 'small',
-            [s.large]: size === 'large',
-            [s.labelShiftAnimation]: labelShiftAnimation,
-            [s.onlyIcon]: onlyIcon,
-          }
-        )}
+        className={cx(s.button, className, {
+          [s.active]: active,
+          [s.disabled]: disabled,
+          [s.gost]: gost,
+          [s.customIcon]: icon && typeof icon !== 'string',
+          [s.small]: size === 'small',
+          [s.large]: size === 'large',
+          [s.labelShiftAnimation]: labelShiftAnimation,
+          [s.onlyIcon]: onlyIcon,
+          [s.link]: link,
+        })}
         onClick={onClick}
         disabled={disabled}
       >
         {labelShiftAnimation ? (
           <div
             className={cx(s.contentWrapper, {
-              [s.rightWrapper]:
-                labelShiftAnimation === 'right-start' && !active,
+              [s.rightWrapper]: labelShiftAnimation === 'right-start' && !active,
               [s.leftWrapper]: labelShiftAnimation === 'right-start' && active,
             })}
           >
@@ -108,5 +106,5 @@ export const Button: FC<PropsType> = memo(
         )}
       </button>
     );
-  }
+  },
 );

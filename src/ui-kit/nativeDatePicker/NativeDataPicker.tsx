@@ -2,6 +2,8 @@ import { FC, InputHTMLAttributes } from 'react';
 
 import cx from 'classnames';
 
+import { ISO_DATE_FORMAT } from '@/constants';
+
 import { Button } from '../button/Button';
 
 import s from './s.module.styl';
@@ -21,10 +23,10 @@ interface NativeDatePickerProps
 /**
  * Native OS Date picker component with customizable label, placeholder, and mobile adaptation.
  *
- * @prop {string} [value] - Selected date value (format YYYY-MM-DD).
+ * @prop {string} [value] - Selected date value (format ISO_DATE_FORMAT).
  * @prop {function} [onChange] - Callback triggered when the date changes.
  * @prop {string} [label] - Label text above the field.
- * @prop {string} [placeholder='YYYY-MM-DD'] - Placeholder for the input field.
+ * @prop {string} [placeholder=ISO_DATE_FORMAT] - Placeholder for the input field.
  * @prop {boolean} [isDefault=false] - Flag for applying default styles.
  * @prop {string} [defaultValue] - Default value for the input field.
  * @returns {JSX.Element} Date picker element with customization.
@@ -33,7 +35,7 @@ export const NativeDatePicker: FC<NativeDatePickerProps> = ({
   value,
   onChange,
   label,
-  placeholder = 'YYYY-MM-DD',
+  placeholder = ISO_DATE_FORMAT,
   isDefault = false,
   defaultValue,
   confirmButtonLabel,
