@@ -1,0 +1,47 @@
+.menu
+  display flex
+  flex-direction column
+  width 100vw
+  min-height 300px
+  height calc(100vh - 65%)
+  padding 15px
+  background-color var(--background-color)
+  position fixed
+  top 0
+  left 0
+  z-index 90
+  box-shadow 0 0 25px 20px rgba(0, 0, 0, 0.1)
+  opacity 97%
+  animation 0.23s showMenu ease
+  animation-fill-mode forwards
+  border-radius 0 0 24px 24px
+
+  @keyframes showMenu
+    from
+      transform translateY(-100%)
+      opacity 30%
+
+    to
+      transform translateY(0)
+      opacity 97%
+
+.menu__content
+  display flex
+  justify-content space-around
+  gap 10px
+
+/* ------------- sliding menu ------------------ */
+.hidden
+  animation 0.5s hide ease
+  animation-fill-mode forwards
+  pointer-events none
+
+  @keyframes hide
+    from
+      display flex
+      opacity 50%
+
+    to
+      opacity 0
+      display none
+      z-index 0

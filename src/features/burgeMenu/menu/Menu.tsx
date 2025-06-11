@@ -7,8 +7,6 @@ import { useSetOpenDrawerKey } from '@/store/atoms';
 import { EModalKeys } from '@/types';
 import { Button } from '@/ui-kit';
 
-import '../../styles/colors.styl';
-
 import s from './s.module.styl';
 
 type PropsType = {
@@ -19,11 +17,15 @@ export const Menu: FC<PropsType> = ({ isOpen }) => {
   const setDrawerKey = useSetOpenDrawerKey();
   return (
     <div className={cx(s.menu, { [s.hidden]: !isOpen })}>
-      <LanguageSwitcher />
-      <ThemeSwitcher />
+      <div className={s.menu__content}>
+        <ThemeSwitcher />
+        <LanguageSwitcher />
+      </div>
+      <br />
       <br />
       <Button
         label="Open User Data Drawer"
+        active
         icon="settings"
         onClick={() => setDrawerKey(EModalKeys.USER_BIRTH_DATE)}
       />

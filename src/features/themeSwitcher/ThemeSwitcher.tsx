@@ -1,21 +1,25 @@
 import { useTranslation } from 'react-i18next';
 
-import { useSetThemeMode, EThemeMode } from '@/store/atoms';
+import { EThemeMode, useThemeMode } from '@/store/atoms';
+import { Button } from '@/ui-kit';
 
 import s from './s.module.styl';
 
 export const ThemeSwitcher = () => {
   const { t } = useTranslation();
-  const setTheme = useSetThemeMode();
+  const [theme, setTheme] = useThemeMode();
 
   return (
     <div className={s.wrapper}>
-      <button onClick={() => setTheme(EThemeMode.LIGHT)} className={s.button}>
-        {t('layout.light')}
-      </button>
-      <button onClick={() => setTheme(EThemeMode.DARK)} className={s.button}>
-        {t('layout.dark')}
-      </button>
+      {Object.values(EThemeMode).map((mode) => (
+        <Button
+          key={mode}
+          onClick={() => setTheme(mode)}
+          size="small"
+          label={t(`layout.${mode}`)}
+          selected={theme === mode}
+        />
+      ))}
     </div>
   );
 };

@@ -1,38 +1,27 @@
 import { EThemeMode } from '@/store/atoms';
 
 /**
- * Toggles the theme of the App between light and dark.
+ * Toggles the theme of the App between available themes.
  *
- * @param {EThemeMode} theme - The theme to toggle between.
+ * @param {EThemeMode} theme - The theme to toggle to.
  * @return {void} This function does not return a value.
  */
 export function toggleTheme(theme: EThemeMode) {
   const body = document.querySelector('body');
-  console.log('theme', theme);
   if (!body) return;
 
-  const isDarkTheme = theme === EThemeMode.DARK;
   const themeColorMeta = document.querySelector('meta[name="theme-color"]');
-
   if (!themeColorMeta) return;
 
-  if (isDarkTheme) {
-    body.classList.remove('light-theme');
-    body.classList.add('dark-theme');
-    themeColorMeta.setAttribute(
-      'content',
-      getComputedStyle(document.documentElement).getPropertyValue(
-        '--background-color-light',
-      ),
-    );
-  } else {
-    body.classList.remove('dark-theme');
-    body.classList.add('light-theme');
-    themeColorMeta.setAttribute(
-      'content',
-      getComputedStyle(document.documentElement).getPropertyValue(
-        '--background-color-dark',
-      ),
-    );
-  }
+  // Удаляем все возможные классы тем
+  Object.values(EThemeMode).forEach((mode) => {
+    body.classList.remove(`${mode}-theme`);
+  });
+
+  // Добавляем нужный класс
+  body.classList.add(`${theme}-theme`);
+
+  // Берём цвет из переменной на body
+  const bgColor = getComputedStyle(body).getPropertyValue('--background-color').trim();
+  themeColorMeta.setAttribute('content', bgColor);
 }
