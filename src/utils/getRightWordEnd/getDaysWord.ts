@@ -5,7 +5,7 @@
  * @param {string} lng - The language code ('ru' or 'en').
  * @returns {string} The correct word form for 'day'.
  */
-export function getDaysWord(n: number, lng: string): string {
+export const getDaysWord = (n: number, lng: string): string => {
   if (lng === 'en') return n === 1 ? 'day' : 'days';
   if (lng === 'ru') {
     if (n % 10 === 1 && n % 100 !== 11) return 'день';
@@ -13,4 +13,4 @@ export function getDaysWord(n: number, lng: string): string {
     return 'дней';
   }
   return '';
-} 
+};

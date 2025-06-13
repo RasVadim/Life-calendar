@@ -15,7 +15,9 @@ type TProps = {
   onChange: (value: string) => void;
   placeholder?: string;
   disabled?: boolean;
+  isDisabledStyle?: boolean;
   className?: string;
+  onFocus?: () => void;
 };
 
 export const Select: FC<TProps> = ({
@@ -24,7 +26,9 @@ export const Select: FC<TProps> = ({
   onChange,
   placeholder,
   disabled,
+  isDisabledStyle,
   className,
+  onFocus,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -82,7 +86,7 @@ export const Select: FC<TProps> = ({
       ref={wrapperRef}
       className={cx(s.wrapper, className, {
         [s.open]: isOpen,
-        [s.disabled]: disabled,
+        [s.disabled]: disabled || isDisabledStyle,
       })}
       role="combobox"
       aria-expanded={isOpen}
@@ -90,6 +94,7 @@ export const Select: FC<TProps> = ({
       aria-controls="select-options"
       tabIndex={disabled ? -1 : 0}
       onKeyDown={handleKeyDown}
+      onFocus={onFocus}
     >
       <div className={s.selected} onClick={() => !disabled && setIsOpen(!isOpen)}>
         <span>{selectedOption.label}</span>

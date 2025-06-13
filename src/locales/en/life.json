@@ -10,6 +10,9 @@
     "birthDateDrawer90YearsSleep": "You will spend 30 out of 90 years sleeping. So what do these 90 years look like — 4696 weeks? It seems like a lot — or maybe not.",
     "letsSee": "Let's take a look",
     "lifeExpectancyDrawerIntro": "Please enter your life expectancy.",
-    "setExactDeathDate": "Set exact death date"
+    "setExactDeathDate": "Set exact death date",
+    "lifeExpectancyDrawerYearsResult": "{{lifeExpectancyYears}} {{lifeExpectancyYearsWord}} contain {{weeks}} {{weeksWord}}.",
+    "lifeExpectancyDrawerDateResult": "The expected life span is {{lifeExpectancyYears}} {{lifeExpectancyYearsWord}} {{lifeExpectancyMonths}} {{lifeExpectancyMonthsWord}}{{lifeExpectancyDaysString}}, which contains {{weeks}} {{weeksWord}}.",
+    "newLifeExpectancy": "With a new life expectancy, your calendar will also change"
   }
 }

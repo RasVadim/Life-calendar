@@ -24,4 +24,4 @@ export const getMajorityDate = (dates: Date[], type: 'year' | 'month' | 'season'
     }
   }
   return maxKey;
-}; 
+};

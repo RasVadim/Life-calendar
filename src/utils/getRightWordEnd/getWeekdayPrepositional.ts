@@ -6,7 +6,7 @@
  * @param {string} lng - The language code ('ru' or 'en').
  * @returns {string} The correct prepositional form for the weekday.
  */
-export function getWeekdayPrepositional(weekday: string, lng: string): string {
+export const getWeekdayPrepositional = (weekday: string, lng: string): string => {
   if (lng !== 'ru') return weekday;
   switch (weekday.toLowerCase()) {
     case 'понедельник':
@@ -26,4 +26,4 @@ export function getWeekdayPrepositional(weekday: string, lng: string): string {
     default:
       return `в ${weekday}`;
   }
-}
+};

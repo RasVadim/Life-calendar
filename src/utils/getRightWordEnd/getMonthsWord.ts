@@ -5,7 +5,7 @@
  * @param {string} lng - The language code ('ru' or 'en').
  * @returns {string} The correct word form for 'month'.
  */
-export function getMonthsWord(n: number, lng: string): string {
+export const getMonthsWord = (n: number, lng: string): string => {
   if (lng === 'en') return n === 1 ? 'month' : 'months';
   if (lng === 'ru') {
     if (n % 10 === 1 && n % 100 !== 11) return 'месяц';
@@ -13,4 +13,4 @@ export function getMonthsWord(n: number, lng: string): string {
     return 'месяцев';
   }
   return '';
-}
+};

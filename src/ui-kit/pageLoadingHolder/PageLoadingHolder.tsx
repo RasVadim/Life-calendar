@@ -28,7 +28,7 @@ export const PageLoadingHolder: React.FC = () => {
     <div className={s.loadingRow}>
       {Array.from({ length: calculatedWeekCount }).map((_, i) => {
         if (i < offset) {
-          return <div></div>;
+          return <div key={i}></div>;
         }
 
         return (

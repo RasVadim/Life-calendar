@@ -21,4 +21,4 @@ export const getZodiac = (year: number): TWeekZodiac => {
     'pig',
   ];
   return zodiacs[(year - 4) % 12];
-}; 
+};

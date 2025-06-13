@@ -10,6 +10,9 @@
     "birthDateDrawer90YearsSleep": "30 лет из 90 вы проведете во сне, и как же выглядят эти 90 лет — 4696 недель? Вроде бы много — а возможно и нет.",
     "letsSee": "Давайте посмотрим",
     "lifeExpectancyDrawerIntro": "Укажите предполагаемую продолжительность вашей жизни.",
-    "setExactDeathDate": "Указать предполагаемую дату окончания жизни."
+    "setExactDeathDate": "Указать предполагаемую дату окончания жизни.",
+    "lifeExpectancyDrawerYearsResult": "{{lifeExpectancyYears}} {{lifeExpectancyYearsWord}} содеражат в себе {{weeks}} {{weeksWord}}.",
+    "lifeExpectancyDrawerDateResult": "Ожидаемая продолжительность жизни сосставляет {{lifeExpectancyYears}} {{lifeExpectancyYearsWord}} {{lifeExpectancyMonths}} {{lifeExpectancyMonthsWord}}{{lifeExpectancyDaysString}}, которые содеражат в себе {{weeks}} {{weeksWord}}.",
+    "newLifeExpectancy": "С новой продолжительностью жизни изменится и ваш календарь"
   }
 }

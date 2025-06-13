@@ -10,4 +10,4 @@ export const getSeason = (month: number): ESeason => {
   if (month >= 2 && month <= 4) return ESeason.Spring;
   if (month >= 5 && month <= 7) return ESeason.Summer;
   return ESeason.Autumn;
-}; 
+};

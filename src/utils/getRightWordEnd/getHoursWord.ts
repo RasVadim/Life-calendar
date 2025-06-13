@@ -5,7 +5,7 @@
  * @param {string} lng - The language code ('ru' or 'en').
  * @returns {string} The correct word form for 'hour'.
  */
-export function getHoursWord(n: number, lng: string): string {
+export const getHoursWord = (n: number, lng: string): string => {
   if (lng === 'en') return n === 1 ? 'hour' : 'hours';
   if (lng === 'ru') {
     if (n % 10 === 1 && n % 100 !== 11) return 'час';
@@ -13,4 +13,4 @@ export function getHoursWord(n: number, lng: string): string {
     return 'часов';
   }
   return '';
-} 
+};

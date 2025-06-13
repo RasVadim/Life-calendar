@@ -1,6 +1,6 @@
-import { useAtom, useSetAtom } from "jotai";
+import { useAtom, useSetAtom } from 'jotai';
 
-import { Language } from "./atom";
+import { Language } from './atom';
 
 export const useLanguage = () => useAtom(Language);
 

@@ -3,12 +3,13 @@ export { LifeCalendarDB, lifeCalendarDB } from './lifeCalendarDB';
 export type { IWeek } from './lifeCalendarDB';
 
 // Mutations
-export * from './mutations/life/saveWeeks';
-export * from './mutations/life/updateUserData';
+export { saveWeeks } from './mutations/life/saveWeeks';
+export { resetDBWeeks } from './mutations/life/resetDBWeeks';
+export { updateUserData } from './mutations/life/updateUserData';
 
 // Queries
-export * from './queries/life/useDBWeeks';
-export * from './queries/life/useDBUserData';
+export { useDBWeeks } from './queries/life/useDBWeeks';
+export { useDBUserData } from './queries/life/useDBUserData';
 
 // initializers
-export * from './initializers/initDefaultWeeks';
+export { initDefaultWeeks } from './initializers/initDefaultWeeks';

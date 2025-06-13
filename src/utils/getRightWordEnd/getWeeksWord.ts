@@ -5,7 +5,7 @@
  * @param {string} lng - The language code ('ru' or 'en').
  * @returns {string} The correct word form for 'week'.
  */
-export function getWeeksWord(n: number, lng: string): string {
+export const getWeeksWord = (n: number, lng: string): string => {
   if (lng === 'en') return n === 1 ? 'week' : 'weeks';
   if (lng === 'ru') {
     if (n % 10 === 1 && n % 100 !== 11) return 'неделя';
@@ -13,4 +13,4 @@ export function getWeeksWord(n: number, lng: string): string {
     return 'недель';
   }
   return '';
-} 
+};

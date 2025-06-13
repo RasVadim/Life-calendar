@@ -20,6 +20,7 @@ export type WheelDatePickerProps = {
   itemHeight?: number;
   debounced?: boolean;
   appearAnimation?: boolean;
+  direction?: 'past' | 'future' | 'present';
 };
 
 export const WheelDatePicker: React.FC<WheelDatePickerProps> = ({
@@ -32,7 +33,9 @@ export const WheelDatePicker: React.FC<WheelDatePickerProps> = ({
   itemHeight = 32,
   debounced = false,
   appearAnimation = false,
+  direction = 'past',
 }) => {
+  console.log('value', value);
   // Parse value into draft
   const parsed = value ? parseISO(value) : defaultDate ? parseISO(defaultDate) : new Date();
 
@@ -44,10 +47,18 @@ export const WheelDatePicker: React.FC<WheelDatePickerProps> = ({
 
   // Generate lists for WheelPicker
   const currentYear = getYear(new Date());
-  const yearsRange = useMemo(
-    () => Array.from({ length: yearRange }, (_, i) => currentYear - i),
-    [currentYear, yearRange],
-  );
+  const yearsRange = useMemo(() => {
+    if (direction === 'future') {
+      return Array.from({ length: yearRange }, (_, i) => currentYear + i);
+    }
+    if (direction === 'present') {
+      const half = Math.floor(yearRange / 2);
+      return Array.from({ length: yearRange }, (_, i) => currentYear - half + i);
+    }
+    // 'past' (default)
+    return Array.from({ length: yearRange }, (_, i) => currentYear - i);
+  }, [currentYear, yearRange, direction]);
+
   const yearItems: TItem[] = useMemo(
     () => yearsRange.map((y) => ({ value: y, label: y.toString() })),
     [yearsRange],

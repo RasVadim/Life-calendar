@@ -20,6 +20,7 @@ export { getMonthsWord } from './getRightWordEnd/getMonthsWord';
 export { getWeeksWord } from './getRightWordEnd/getWeeksWord';
 export { getDaysWord } from './getRightWordEnd/getDaysWord';
 export { getHoursWord } from './getRightWordEnd/getHoursWord';
+export { getRestDaysSentence } from './getRightWordEnd/getRestDaysSentence';
 
 // generateWeeks
 export { generateWeeks } from './generateWeeks/generateWeeks';

@@ -5,7 +5,7 @@
  * @param {string} lng - The language code ('ru' or 'en').
  * @returns {string} The correct word form for 'year' in dative case.
  */
-export function getYearsWordDative(n: number, lng: string): string {
+export const getYearsWordDative = (n: number, lng: string): string => {
   if (lng === 'en') return n === 1 ? 'year' : 'years';
   if (lng === 'ru') {
     if (n % 10 === 1 && n % 100 !== 11) return 'год';
@@ -13,4 +13,4 @@ export function getYearsWordDative(n: number, lng: string): string {
     return 'лет';
   }
   return '';
-}
+};

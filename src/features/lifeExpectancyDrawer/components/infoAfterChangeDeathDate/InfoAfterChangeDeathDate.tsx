@@ -1,28 +1,20 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useState, useEffect } from 'react';
 
 import cx from 'classnames';
 import {
-  format,
   differenceInYears,
-  parseISO,
-  differenceInMonths,
   differenceInWeeks,
+  parseISO,
+  addYears,
   differenceInDays,
+  differenceInMonths,
+  addMonths,
 } from 'date-fns';
-import { enUS, ru } from 'date-fns/locale';
 import { useTranslation } from 'react-i18next';
 
 import { DEFAULT_BIRTH_DATE } from '@/constants';
 import { Button } from '@/ui-kit';
-import {
-  getYearsWordGenitive,
-  getYearsWordDative,
-  getWeekdayPrepositional,
-  getMonthsWord,
-  getWeeksWord,
-  getDaysWord,
-  getHoursWord,
-} from '@/utils';
+import { getYearsWordDative, getWeeksWord, getMonthsWord, getRestDaysSentence } from '@/utils';
 
 import s from './s.module.styl';
 
@@ -31,6 +23,7 @@ interface Props {
   deathDate: string;
   lifeExpectancy: number;
   isDeathDateChanged: boolean;
+  isLifeExpectancyRounded: boolean;
   onButtonClick?: () => void;
 }
 
@@ -40,73 +33,65 @@ export const InfoAfterChangeDeathDate: FC<Props> = ({
   lifeExpectancy,
   onButtonClick,
   isDeathDateChanged,
+  isLifeExpectancyRounded,
 }) => {
   const { t, i18n } = useTranslation();
 
-  const now = new Date();
-  const birth = parseISO(birthDate || DEFAULT_BIRTH_DATE);
-  const age = differenceInYears(now, birth);
-  const locale = i18n.language === 'ru' ? ru : enUS;
-  const weekday = format(birth, 'EEEE', { locale });
-  const weekdayDisplay = getWeekdayPrepositional(weekday, i18n.language);
-  const months = differenceInMonths(now, birth);
-  const weeks = differenceInWeeks(now, birth);
-  const days = differenceInDays(now, birth);
-  const sleepHours = Math.round(days * 8);
-  const sleepHoursInYearsInt = Math.round(sleepHours / 24 / 365.25);
+  // Parse birth date
+  const birth = birthDate ? parseISO(birthDate) : parseISO(DEFAULT_BIRTH_DATE);
 
-  const showSleepYears = sleepHoursInYearsInt > 0;
-  const yearsWord = getYearsWordDative(age, i18n.language);
-  const sleepYearsWord = showSleepYears
-    ? getYearsWordGenitive(sleepHoursInYearsInt, i18n.language)
-    : '';
+  // Determine death date
+  let death;
+  if (deathDate) {
+    death = parseISO(deathDate);
+  } else {
+    death = addYears(birth, lifeExpectancy);
+  }
+
+  // Calculate difference
+  const years = differenceInYears(death, birth);
+  const afterYears = addYears(birth, years);
+  const months = differenceInMonths(death, afterYears);
+  const afterMonths = addMonths(afterYears, months);
+  const days = differenceInDays(death, afterMonths);
+  const weeks = differenceInWeeks(death, birth);
+
+  const [show, setShow] = useState(true);
+  const [contentKey, setContentKey] = useState(isLifeExpectancyRounded ? 'years' : 'date');
+
+  useEffect(() => {
+    setShow(false);
+    const timeout = setTimeout(() => {
+      setContentKey(isLifeExpectancyRounded ? 'years' : 'date');
+      setShow(true);
+    }, 300);
+    return () => clearTimeout(timeout);
+  }, [isLifeExpectancyRounded]);
 
   return (
-    <>
-      <div className={cx(s.resultText, { [s.visible]: true })}>
-        {t('life.birthDateDrawerResult', {
-          age,
-          weekday: weekdayDisplay,
-          yearsWord,
-        })}
-      </div>
-      <div className={cx(s.statsText, { [s.visible]: true })}>
-        {t('life.birthDateDrawerStats', {
-          months,
-          monthsWord: getMonthsWord(months, i18n.language),
-          weeks,
-          weeksWord: getWeeksWord(weeks, i18n.language),
-          days,
-          daysWord: getDaysWord(days, i18n.language),
-          sleepHours,
-          hoursWord: getHoursWord(sleepHours, i18n.language),
-        })}
-        {showSleepYears && (
-          <div style={{ marginTop: 8 }}>
-            {t('life.birthDateDrawerSleepYears', {
-              sleepHoursInYears: sleepHoursInYearsInt,
-              sleepYearsWord,
+    <div className={s.container}>
+      <div className={cx(s.resultText, { [s.visible]: show })}>
+        {contentKey === 'years'
+          ? t('life.lifeExpectancyDrawerYearsResult', {
+              lifeExpectancyYears: years,
+              lifeExpectancyYearsWord: getYearsWordDative(years, i18n.language),
+              weeks,
+              weeksWord: getWeeksWord(weeks, i18n.language),
+            })
+          : t('life.lifeExpectancyDrawerDateResult', {
+              lifeExpectancyYears: years,
+              lifeExpectancyYearsWord: getYearsWordDative(years, i18n.language),
+              lifeExpectancyMonths: months,
+              lifeExpectancyMonthsWord: getMonthsWord(months, i18n.language),
+              lifeExpectancyDaysString: getRestDaysSentence(days, i18n.language),
+              weeks,
+              weeksWord: getWeeksWord(weeks, i18n.language),
             })}
-          </div>
-        )}
       </div>
-      <div
-        className={cx(s.statsText, s.lifeExpectancy, {
-          [s.visible]: true,
-        })}
-      >
-        {t('life.birthDateDrawerLifeExpectancy')}
+      <div className={cx(s.finalBlock, { [s.visible]: isDeathDateChanged })}>
+        {t('life.newLifeExpectancy')}
+        {isDeathDateChanged && <Button onClick={onButtonClick} label={t('life.letsSee')} />}
       </div>
-      <div
-        className={cx(s.statsText, s.finalBlock, {
-          [s.visible]: true,
-        })}
-      >
-        <>
-          <div>{t('life.birthDateDrawer90YearsSleep')}</div>
-          {isDeathDateChanged && <Button onClick={onButtonClick} label={t('life.letsSee')} />}
-        </>
-      </div>
-    </>
+    </div>
   );
 };

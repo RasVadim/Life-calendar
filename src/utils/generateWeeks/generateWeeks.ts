@@ -5,34 +5,65 @@ import {
   getYear,
   getMonth,
   getDate,
-  isLeapYear,
   format,
   startOfDay,
 } from 'date-fns';
 
 import { DEFAULT_LIFE_SPAN_YEARS, ISO_DATE_FORMAT } from '@/constants';
-import { ESeason, EWeekType, HOLIDAY_NAMES } from '@/types/life';
 
-import { getMajorityDate } from './getMajorityDate';
+import { getWeekHolidays } from './getWeekHolidays';
+import { getWeekMeta } from './getWeekMeta';
+import { getWeekType } from './getWeekType';
 import { getZodiac } from './getZodiac';
 
 /**
- * Generates an array of life weeks for a given birth date and lifespan.
+ * Generates an array of life weeks for a given birth date and lifespan or death date.
  * Each year of life will always have exactly 52 weeks (with possible expanded first/last week).
  *
  * @param {string} birthDateISO - User's birth date in ISO format (e.g. '1990-03-07')
  * @param {number} [lifeSpanYears=DEFAULT_LIFE_SPAN_YEARS] - Expected lifespan in years
+ * @param {string} [deathDateISO] - Optional death date in ISO format (e.g. '2080-03-07')
  * @returns {IWeek[]} Array of week objects for the entire life
  */
-export const generateWeeks = (birthDateISO: string, lifeSpanYears = DEFAULT_LIFE_SPAN_YEARS) => {
+export const generateWeeks = (
+  birthDateISO: string,
+  lifeSpanYears: number = DEFAULT_LIFE_SPAN_YEARS,
+  deathDateISO?: string,
+) => {
   const weeks = [];
   const birthDate = startOfDay(new Date(birthDateISO));
-  const deathDate = startOfDay(addYears(birthDate, lifeSpanYears));
+  let deathDate: Date;
+  let yearsToGenerate: number;
 
-  for (let yearOfLife = 0; yearOfLife < lifeSpanYears; yearOfLife++) {
+  if (deathDateISO) {
+    const parsedDeath = new Date(deathDateISO);
+    if (!isNaN(parsedDeath.getTime()) && parsedDeath > birthDate) {
+      deathDate = startOfDay(parsedDeath);
+      // Number of full years between dates
+      yearsToGenerate = getYear(deathDate) - getYear(birthDate);
+      // If death date is after the birthday in the year, add one more year
+      if (
+        getMonth(deathDate) > getMonth(birthDate) ||
+        (getMonth(deathDate) === getMonth(birthDate) && getDate(deathDate) > getDate(birthDate))
+      ) {
+        yearsToGenerate += 1;
+      }
+      // If death date is exactly on the birthday, do not add an extra year
+    } else {
+      // Invalid death date — fallback to lifeSpanYears
+      deathDate = startOfDay(addYears(birthDate, lifeSpanYears));
+      yearsToGenerate = lifeSpanYears;
+    }
+  } else {
+    deathDate = startOfDay(addYears(birthDate, lifeSpanYears));
+    yearsToGenerate = lifeSpanYears;
+  }
+
+  for (let yearOfLife = 0; yearOfLife < yearsToGenerate; yearOfLife++) {
     const yearStart = yearOfLife === 0 ? birthDate : addYears(birthDate, yearOfLife);
+    if (yearStart >= deathDate) break;
     const yearEnd =
-      yearOfLife === lifeSpanYears - 1 ? deathDate : addYears(birthDate, yearOfLife + 1);
+      yearOfLife === yearsToGenerate - 1 ? deathDate : addYears(birthDate, yearOfLife + 1);
     let weeksInYear = [];
     let weekStart = yearStart;
     let weekIndex = 0;
@@ -99,144 +130,51 @@ export const generateWeeks = (birthDateISO: string, lifeSpanYears = DEFAULT_LIFE
     // Calculate additional fields for each week
     for (let i = 0; i < weeksInYear.length; i++) {
       const { weekStart, weekEnd, isExpandedByYear } = weeksInYear[i];
-      const days: Date[] = [];
-      for (let d = weekStart; d <= weekEnd; d = addDays(d, 1)) {
-        days.push(d);
-      }
-      const dateYear = getMajorityDate(days, 'year');
-      const dateMonth = String(getMonth(weekStart) + 1).padStart(2, '0');
-      const dateSeason = getMajorityDate(days, 'season') as ESeason;
-      const year = yearOfLife + 1; // life year number: 1 — from birth to 1 year, 2 — from 1 to 2 years, etc.
-      const isFirst = i === 0;
-      const isLast = i === weeksInYear.length - 1;
-      const isFirstInYear = isFirst;
-      const isLastInYear = isLast;
-      const isFirstInMonth = getDate(weekStart) === 1;
-      const isLastInMonth = getDate(weekEnd) === getDate(addDays(weekEnd, 1)) - 1;
-      const isLeap = isLeapYear(weekStart);
-      const zodiac = getZodiac(getYear(weekStart));
-
-      // Определяем текущую дату для расчёта type
-      const today = startOfDay(new Date());
-      let type: EWeekType = EWeekType.Past;
-      if (today >= weekStart && today <= weekEnd) {
-        type = EWeekType.Present;
-      } else if (today < weekStart) {
-        type = EWeekType.Future;
-      }
-
-      // isExpandedByDateSeason: first or last week of season and days > 7
-      const isFirstInSeason =
-        i === 0 ||
-        dateSeason !==
-          getMajorityDate(
-            Array.from({ length: 7 }, (_, k) => addDays(weekStart, -k - 1)).map((d) => d),
-            'season',
-          );
-      const isLastInSeason =
-        i === weeksInYear.length - 1 ||
-        dateSeason !==
-          getMajorityDate(
-            Array.from({ length: 7 }, (_, k) => addDays(weekEnd, k + 1)).map((d) => d),
-            'season',
-          );
-      const isExpandedByDateSeason = (isFirstInSeason || isLastInSeason) && days.length > 7;
-
-      // isExpandedByDateMonth: first or last week of month and days > 7
-      const isExpandedByDateMonth = (isFirstInMonth || isLastInMonth) && days.length > 7;
-
-      // isPartialByYear: first or last week of life year and days < 7
-      const isPartialByYear = (isFirst || isLast) && days.length < 7;
-      // isPartialByDateSeason: first or last week of season and days < 7
-      const isPartialByDateSeason = (isFirstInSeason || isLastInSeason) && days.length < 7;
-      // isPartialByDateMonth: first or last week of month and days < 7
-      const isPartialByDateMonth = (isFirstInMonth || isLastInMonth) && days.length < 7;
-
+      const meta = getWeekMeta(weekStart, weekEnd, yearOfLife, i, weeksInYear.length);
+      const type = getWeekType(weekStart, weekEnd);
+      const holidays = getWeekHolidays(weekStart, weekEnd, birthDate, yearOfLife);
       // Efficient calculation of life month
       const yearsPassed = yearOfLife;
-      const monthOfWeek = getMonth(weekStart); // 0-11
-      const monthOfBirth = getMonth(birthDate); // 0-11
+      const monthOfWeek = weekStart.getMonth(); // 0-11
+      const monthOfBirth = birthDate.getMonth(); // 0-11
       let monthsFromBirth = yearsPassed * 12 + (monthOfWeek - monthOfBirth);
       if (monthOfWeek < monthOfBirth) {
         monthsFromBirth += 12;
       }
-      const dayOfWeek = getDate(weekStart);
-      const dayOfBirth = getDate(birthDate);
+      const dayOfWeek = weekStart.getDate();
+      const dayOfBirth = birthDate.getDate();
       if (dayOfWeek < dayOfBirth) {
         monthsFromBirth -= 1;
       }
       const lifeMonth = monthsFromBirth + 1;
-
-      // Calculate holidays for the week
-      const holidays: (typeof HOLIDAY_NAMES)[keyof typeof HOLIDAY_NAMES][] = [];
-      // Birthday
-      const birthDay = getDate(birthDate);
-      const birthMonth = getMonth(birthDate) + 1;
-      const birthYear = getYear(birthDate);
-      const currentLifeYear = birthYear + yearOfLife;
-      for (let d = weekStart; d <= weekEnd; d = addDays(d, 1)) {
-        if (
-          getDate(d) === birthDay &&
-          getMonth(d) + 1 === birthMonth &&
-          getYear(d) === currentLifeYear
-        ) {
-          holidays.push(HOLIDAY_NAMES.birthday);
-          break;
-        }
-      }
-      // New Year
-      for (let d = weekStart; d <= weekEnd; d = addDays(d, 1)) {
-        if (getDate(d) === 1 && getMonth(d) + 1 === 1) {
-          holidays.push(HOLIDAY_NAMES.newYear);
-          break;
-        }
-      }
-      // 23 February
-      for (let d = weekStart; d <= weekEnd; d = addDays(d, 1)) {
-        if (getDate(d) === 23 && getMonth(d) + 1 === 2) {
-          holidays.push(HOLIDAY_NAMES.Feb23);
-          break;
-        }
-      }
-      // 8 March
-      for (let d = weekStart; d <= weekEnd; d = addDays(d, 1)) {
-        if (getDate(d) === 8 && getMonth(d) + 1 === 3) {
-          holidays.push(HOLIDAY_NAMES.Mar8);
-          break;
-        }
-      }
-      // Birthday always first if present
-      if (holidays.includes(HOLIDAY_NAMES.birthday)) {
-        const filtered = holidays.filter((h) => h !== HOLIDAY_NAMES.birthday);
-        holidays.splice(0, holidays.length, HOLIDAY_NAMES.birthday, ...filtered);
-      }
-
       weeks.push({
-        id: `w${String(year).padStart(2, '0')}_${String(i + 1).padStart(2, '0')}`,
+        id: `w${String(meta.year).padStart(3, '0')}_${String(i + 1).padStart(2, '0')}`,
         dateStart: format(weekStart, ISO_DATE_FORMAT),
         dateEnd: format(weekEnd, ISO_DATE_FORMAT),
         type,
         month: lifeMonth,
-        year,
-        dateYear,
-        dateMonth,
-        dateSeason,
-        numberOfDays: days.length,
-        isFirst,
-        isLast,
-        isFirstInYear,
-        isLastInYear,
-        isFirstInMonth,
-        isLastInMonth,
+        year: meta.year,
+        dateYear: meta.dateYear,
+        dateMonth: meta.dateMonth,
+        dateSeason: meta.dateSeason,
+        numberOfDays: meta.days.length,
+        isFirst: meta.isFirst,
+        isLast: meta.isLast,
+        isFirstInYear: meta.isFirstInYear,
+        isLastInYear: meta.isLastInYear,
+        isFirstInMonth: meta.isFirstInMonth,
+        isLastInMonth: meta.isLastInMonth,
         isExpandedByYear,
-        isExpandedByDateSeason,
-        isExpandedByDateMonth,
-        isPartialByYear,
-        isPartialByDateSeason,
-        isPartialByDateMonth,
-        isLeapYear: isLeap,
-        holidays: holidays.length ? holidays : null,
-        yearZodiacLabel: zodiac,
+        isExpandedByDateSeason:
+          (meta.isFirstInSeason || meta.isLastInSeason) && meta.days.length > 7,
+        isExpandedByDateMonth: (meta.isFirstInMonth || meta.isLastInMonth) && meta.days.length > 7,
+        isPartialByYear: (meta.isFirst || meta.isLast) && meta.days.length < 7,
+        isPartialByDateSeason:
+          (meta.isFirstInSeason || meta.isLastInSeason) && meta.days.length < 7,
+        isPartialByDateMonth: (meta.isFirstInMonth || meta.isLastInMonth) && meta.days.length < 7,
+        isLeapYear: meta.isLeap,
+        holidays,
+        yearZodiacLabel: getZodiac(getYear(weekStart)),
       });
     }
   }

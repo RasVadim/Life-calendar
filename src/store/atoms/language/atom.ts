@@ -1,5 +1,5 @@
-import { atomWithStorage } from "jotai/utils";
+import { atomWithStorage } from 'jotai/utils';
 
-export type TLanguage = "en" | "ru";
+export type TLanguage = 'en' | 'ru';
 
-export const Language = atomWithStorage<TLanguage>("language", "en");
+export const Language = atomWithStorage<TLanguage>('language', 'en');
