@@ -6,22 +6,22 @@ import { EThemeMode } from '@/store/atoms';
  * @param {EThemeMode} theme - The theme to toggle to.
  * @return {void} This function does not return a value.
  */
-export function toggleTheme(theme: EThemeMode) {
+export const toggleTheme = (theme: EThemeMode) => {
   const body = document.querySelector('body');
   if (!body) return;
 
   const themeColorMeta = document.querySelector('meta[name="theme-color"]');
   if (!themeColorMeta) return;
 
-  // Удаляем все возможные классы тем
+  // Remove all possible theme classes from body
   Object.values(EThemeMode).forEach((mode) => {
     body.classList.remove(`${mode}-theme`);
   });
 
-  // Добавляем нужный класс
+  // Add the selected theme class
   body.classList.add(`${theme}-theme`);
 
-  // Берём цвет из переменной на body
+  // Get the background color from the CSS variable on body
   const bgColor = getComputedStyle(body).getPropertyValue('--background-color').trim();
   themeColorMeta.setAttribute('content', bgColor);
-}
+};

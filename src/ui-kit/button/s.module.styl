@@ -2,6 +2,8 @@
   color white
   height 34px
   border none
+  outline none
+  box-shadow none
   display flex
   align-items center
   background-color var(--primary-color)
@@ -9,6 +11,12 @@
   border-radius 22px
   will-change transform, background-color
   transition background-color 0.1s ease
+
+  &:focus, &:active
+    outline none
+    box-shadow none
+    border none
+    border-radius 22px
 
   &.onlyIcon
     width 28px

@@ -1,4 +1,4 @@
-import { FC, ReactNode } from 'react';
+import { FC, ReactNode, useEffect } from 'react';
 
 import cx from 'classnames';
 import { useTranslation } from 'react-i18next';
@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { useOpenDrawerKey } from '@/store/atoms';
 import { EModalKeys } from '@/types';
 import { Button } from '@/ui-kit';
+import { changeByDrawerStatusBarColor, setStatusBarColor } from '@/utils';
 
 import s from './s.module.styl';
 
@@ -34,6 +35,14 @@ export const Drawer: FC<DrawerProps> = ({
 
   const { t } = useTranslation();
 
+  useEffect(() => {
+    if (drawerKey) {
+      changeByDrawerStatusBarColor();
+    } else {
+      setStatusBarColor();
+    }
+  }, [drawerKey]);
+
   const isOpen = drawerKey === keyProp;
 
   const showContent = isOpen || forceReRender;
@@ -47,11 +56,7 @@ export const Drawer: FC<DrawerProps> = ({
       <div className={cx(s.drawerWrap, { [s.hidden]: !isOpen })}>
         <div className={s.drawerHeader}>
           {closeButton && (
-            <Button
-              onClick={onClose}
-              label={t('layout.close')}
-              disabled={disabledClose}
-            />
+            <Button onClick={onClose} label={t('layout.close')} disabled={disabledClose} />
           )}
           {actions ?? actions}
         </div>
