@@ -8,6 +8,7 @@ import { BrowserRouter } from 'react-router-dom';
 
 import App from './App.tsx';
 import i18n from './i18n';
+import './styles/common.styl';
 import './index.css';
 
 // Функция для входа в полноэкранный режим

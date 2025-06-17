@@ -5,7 +5,6 @@ import { Outlet } from 'react-router-dom';
 import { Header, TabBar } from '@/components';
 // import { LogsPanel } from '@/components/debug';
 
-import '../../styles/colors.styl';
 import s from './s.module.styl';
 
 export const Layout: FC = () => {
