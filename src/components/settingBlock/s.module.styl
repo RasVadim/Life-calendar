@@ -64,6 +64,9 @@
   border-bottom-right-radius 28px
   border-bottom none
 
+.expanded
+  border-radius 28px
+
 .first.last
   border-radius 40px
 
@@ -109,3 +112,43 @@
   width 22px
   height 22px
   border-radius 50%
+
+.settingBlockWrap
+  width 100%
+
+.expandedPreview
+  margin-top 8px
+  margin-bottom 8px
+  padding 8px 0
+  width 100%
+
+.carousel
+  overflow-x auto
+  display flex
+  flex-direction row
+  gap 4px
+  padding 16px 0 16px 4px
+  scrollbar-width none
+  -ms-overflow-style none
+
+  &::-webkit-scrollbar
+    display none
+
+.carouselItem
+  border-radius 24px
+  transition border 0.2s
+  cursor pointer
+  width 96px
+  height 128px
+  display flex
+  align-items center
+  justify-content center
+  flex-shrink 0
+  overflow hidden
+
+.lastCarouselItem
+  margin-right 4px
+
+.carouselItem.selected
+  border 2px solid var(--primary-color)
+  background #333

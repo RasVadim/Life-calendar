@@ -9,3 +9,5 @@ export * from './paths';
 export * from './tabs';
 
 export * from './language';
+
+export * from './themes';

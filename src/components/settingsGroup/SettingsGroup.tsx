@@ -12,10 +12,14 @@ export const SettingsGroup: FC<{ children: React.ReactNode }> = ({ children }) =
           React.isValidElement(child) &&
           (child.type as unknown as { displayName?: string }).displayName === 'SettingBlock'
         ) {
-          return React.cloneElement(child as ReactElement, {
-            isFirst: idx === 0,
-            isLast: idx === items.length - 1,
-          });
+          return (
+            <div className={s.settingBlockWrap} key={child.key || idx}>
+              {React.cloneElement(child as ReactElement, {
+                isFirst: idx === 0,
+                isLast: idx === items.length - 1,
+              })}
+            </div>
+          );
         }
         return child;
       })}
