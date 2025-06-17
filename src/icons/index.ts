@@ -21,3 +21,5 @@ export { OutlineProfile } from './outlineProfile';
 export { ChevronIcon } from './chevronIcon';
 
 export { CheckIcon } from './checkIcon';
+
+export { MoonIcon, SunIcon, StarIcon, PaletteIcon, RocketIcon } from './themeIcons';

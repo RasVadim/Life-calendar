@@ -5,12 +5,19 @@
   width 100%
   padding 8px 10px
   background var(--background-front-color)
-  border-radius 40px
   font-size 15px
   color var(--text-color)
   margin-bottom 0
   border none
   outline none
+
+  &:focus, &:active, &.active
+    border none
+    outline none
+    box-shadow none
+    background var(--background-front-color)
+    border-bottom 1px solid var(--group-divider-color)
+
   cursor pointer
   transition background 0.15s
   min-height 48px

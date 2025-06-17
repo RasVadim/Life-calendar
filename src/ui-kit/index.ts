@@ -2,6 +2,8 @@ export { Page } from './page/Page';
 
 export { SyncingLine } from './syncingLine/SyncingLine';
 
+export { PageLoadingHolder } from './pageLoadingHolder/PageLoadingHolder';
+
 //buttons
 export { Button } from './button/Button';
 

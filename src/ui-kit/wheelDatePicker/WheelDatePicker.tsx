@@ -35,7 +35,6 @@ export const WheelDatePicker: React.FC<WheelDatePickerProps> = ({
   appearAnimation = false,
   direction = 'past',
 }) => {
-  console.log('value', value);
   // Parse value into draft
   const parsed = value ? parseISO(value) : defaultDate ? parseISO(defaultDate) : new Date();
 

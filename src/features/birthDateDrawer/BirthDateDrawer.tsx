@@ -7,8 +7,8 @@ import { useNavigate, useLocation } from 'react-router-dom';
 
 import { ISO_DATE_FORMAT, DEFAULT_BIRTH_DATE, DEFAULT_LIFE_SPAN_YEARS } from '@/constants';
 import { OutlineProfile } from '@/icons';
-import { useSetOpenDrawerKey, useSetSyncPending } from '@/store/atoms';
-import { saveWeeks, updateUserData } from '@/store/clientDB';
+import { useSetOpenDrawerKey, useSetPageLoading, useSetSyncPending } from '@/store/atoms';
+import { resetDBWeeks, saveWeeks, updateUserData } from '@/store/clientDB';
 import { useDBUserData } from '@/store/clientDB';
 import { EModalKeys } from '@/types';
 import { Button, Drawer, WheelDatePicker } from '@/ui-kit';
@@ -25,6 +25,7 @@ export const BirthDateDrawer = () => {
 
   const setDrawerKey = useSetOpenDrawerKey();
   const setPending = useSetSyncPending();
+  const setPageLoading = useSetPageLoading();
 
   const [birthDate, setBirthDate] = useState<string | null>(null);
 
@@ -67,6 +68,7 @@ export const BirthDateDrawer = () => {
     setDrawerKey(null);
 
     if (birthDate) {
+      setPageLoading(true);
       setPending(true);
       try {
         if (location.pathname !== '/') {
@@ -86,11 +88,13 @@ export const BirthDateDrawer = () => {
         // --- Web Worker helper ---
         const weeks = await generateWeeksInWorker(birthDate, DEFAULT_LIFE_SPAN_YEARS);
 
+        await resetDBWeeks();
         await saveWeeks(weeks);
       } catch (err) {
         // handle error
       } finally {
         setPending(false);
+        setPageLoading(false);
       }
     }
   };

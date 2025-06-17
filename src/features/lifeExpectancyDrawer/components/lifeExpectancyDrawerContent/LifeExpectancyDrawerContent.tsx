@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { ISO_DATE_FORMAT } from '@/constants';
-import { useSetOpenDrawerKey, useSetSyncPending } from '@/store/atoms';
+import { useSetOpenDrawerKey, useSetPageLoading, useSetSyncPending } from '@/store/atoms';
 import { resetDBWeeks, saveWeeks, updateUserData } from '@/store/clientDB';
 import { useDBUserData } from '@/store/clientDB';
 import { WheelDatePicker, Select, Button } from '@/ui-kit';
@@ -25,6 +25,7 @@ export const LifeExpectancyDrawerContent = () => {
 
   const setDrawerKey = useSetOpenDrawerKey();
   const setPending = useSetSyncPending();
+  const setPageLoading = useSetPageLoading();
 
   const [lifeExpectancy, setLifeExpectancy] = useState<number | null>(null);
   const [deathDate, setDeathDate] = useState<string | null>(null);
@@ -34,8 +35,6 @@ export const LifeExpectancyDrawerContent = () => {
   const isLifeExpectancyDecadeRounded = lifeExpectancy
     ? Number.isInteger(lifeExpectancy / 10)
     : true;
-
-  console.log('isLifeExpectancyDecadeRounded', isLifeExpectancyDecadeRounded);
 
   const userData = useDBUserData();
 
@@ -84,8 +83,14 @@ export const LifeExpectancyDrawerContent = () => {
   const calculateLifeExpectancy = async () => {
     setDrawerKey(null);
 
+    if (location.pathname !== '/') {
+      navigate('/');
+    }
+
     if (lifeExpectancy) {
       setPending(true);
+      setPageLoading(true);
+
       try {
         await updateUserData({ deathDate, lifeExpectancy });
         // --- Web Worker helper ---
@@ -96,14 +101,11 @@ export const LifeExpectancyDrawerContent = () => {
         );
         await resetDBWeeks();
         await saveWeeks(weeks);
-
-        if (location.pathname !== '/') {
-          navigate('/');
-        }
       } catch (err) {
         // handle error
       } finally {
         setPending(false);
+        setPageLoading(false);
       }
     }
   };

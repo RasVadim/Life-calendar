@@ -2,7 +2,7 @@ import { Suspense, FC, ReactNode } from 'react';
 
 import KeepAlive from 'react-activation';
 
-import { PageLoadingHolder } from '../pageLoadingHolder/PageLoadingHolder';
+import { PageLoadingHolder } from '@/ui-kit';
 
 import s from './s.module.styl';
 
@@ -15,7 +15,6 @@ export const Page: FC<PropsType> = ({ children, name = 'page' }) => {
   return (
     <KeepAlive name={name} cacheKey={name} id={name} autoFreeze>
       <Suspense fallback={<PageLoadingHolder />}>
-        {/* <PageLoadingHolder /> */}
         <div className={s.page}>{children}</div>
       </Suspense>
     </KeepAlive>
