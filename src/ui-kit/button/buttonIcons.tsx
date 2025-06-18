@@ -1,5 +1,6 @@
 import { FC } from 'react';
 
+import { LIFE_MODES } from '@/constants';
 import {
   BackIcon,
   HouseIcon,
@@ -10,12 +11,9 @@ import {
   SeasonsIcon,
   YearsIcon,
 } from '@/icons';
-import { LIFE_MODES } from '@/constants';
 
 type TBaseIconName = 'menu' | 'back' | 'life' | 'settings' | 'plans';
-export type TIconName =
-  | TBaseIconName
-  | (typeof LIFE_MODES)[keyof typeof LIFE_MODES];
+export type TIconName = TBaseIconName | (typeof LIFE_MODES)[keyof typeof LIFE_MODES];
 
 export type TIconProps = {
   isActive?: boolean;

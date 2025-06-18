@@ -1,10 +1,11 @@
 import { FC } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+
 import cx from 'classnames';
+import { Link, useLocation } from 'react-router-dom';
 
 import { TABS, PATHS } from '@/constants';
-import { Button, type TIconName } from '@/ui-kit';
 import { useLifeMode } from '@/hooks';
+import { Button, type TIconName } from '@/ui-kit';
 
 import s from './s.module.styl';
 
@@ -13,6 +14,7 @@ type PropsType = {
   label?: string;
   to: string;
   position: number;
+  pathName?: string;
 };
 
 /**
@@ -33,24 +35,27 @@ export const NavigationButton: FC<PropsType> = ({
   icon,
   label,
   position,
+  pathName: propPathName,
 }) => {
   const { pathname } = useLocation();
   const [currentMode] = useLifeMode();
-  const isActive = to === '/' ? pathname === to : pathname.startsWith(to);
+
+  const pathName = propPathName || pathname;
+  const isActive = to === '/' ? pathName === to : pathName.startsWith(to);
 
   const lastTabIndex = TABS.length - 1;
   const isFirstTab = position === 0;
   const isLastTab = position === lastTabIndex;
   const isCenterTab = !isFirstTab && !isLastTab;
 
-  const activeTabPosition = TABS.findIndex((tab) => tab.to === pathname);
+  const activeTabPosition = TABS.findIndex((tab) => tab.to === pathName);
 
   const labelShiftAnimation =
     isLastTab || (activeTabPosition === 0 && isCenterTab)
       ? 'right-start'
       : isCenterTab
-      ? 'left-start'
-      : undefined;
+        ? 'left-start'
+        : undefined;
 
   const finalIcon = to === PATHS.MAIN ? currentMode : icon;
 

@@ -1,5 +1,6 @@
 import { FC } from 'react';
 
+import cx from 'classnames';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 
@@ -14,7 +15,11 @@ import { LifeActions } from './components/lifeActions';
 
 import s from './s.module.styl';
 
-export const Header: FC = () => {
+type TProps = {
+  preview?: boolean;
+};
+
+export const Header: FC<TProps> = ({ preview = false }) => {
   const { t } = useTranslation();
   const [pending] = useSyncPending();
   const { pathname } = useLocation();
@@ -34,7 +39,7 @@ export const Header: FC = () => {
   )}`;
 
   return (
-    <div className={s.container}>
+    <div className={cx(s.container, { [s.preview]: preview })}>
       <div className={s.header}>
         {pending && <SyncingLine />}
         <div className={s.leftSide}>
