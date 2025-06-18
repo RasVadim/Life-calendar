@@ -5,7 +5,7 @@ const path = require('path');
 const stylusPath = path.join(__dirname, '../src/styles/colors.styl');
 const outputPath = path.join(__dirname, '../src/constants/themes.ts');
 
-const stylus = fs.readFileSync(stylusPath, 'utf8');
+const stylus = fs.readFileSync(stylusPath, 'utf8').replace(/\r\n/g, '\n');
 
 // Regex to match theme blocks (captures all indented lines after theme name)
 const themeRegex = /^(\.[\w-]+)\n((?:[ ]{2,}.+\n)+)/gm;
