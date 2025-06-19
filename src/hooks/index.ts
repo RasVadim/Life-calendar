@@ -1,3 +1,8 @@
-export { useDevice } from './useDevice/useDevice';
+export * from './useDevice/useDevice';
 
-export { useLifeMode } from './useLifeMode/useLifeMode';
+export * from './useLifeMode/useLifeMode';
+
+export * from './useInitLanguage/useInitLanguage';
+
+// Debug
+export * from './debug';
