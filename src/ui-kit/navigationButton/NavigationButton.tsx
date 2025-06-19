@@ -4,7 +4,7 @@ import cx from 'classnames';
 import { Link, useLocation } from 'react-router-dom';
 
 import { TABS, PATHS } from '@/constants';
-import { useLifeMode } from '@/hooks';
+import { useDevice, useLifeMode } from '@/hooks';
 import { Button, type TIconName } from '@/ui-kit';
 
 import s from './s.module.styl';
@@ -37,6 +37,8 @@ export const NavigationButton: FC<PropsType> = ({
   position,
   pathName: propPathName,
 }) => {
+  const { isMobile } = useDevice();
+
   const { pathname } = useLocation();
   const [currentMode] = useLifeMode();
 
@@ -72,8 +74,8 @@ export const NavigationButton: FC<PropsType> = ({
         label={label}
         active={isActive}
         gost={!isActive}
-        hideNonActiveLabel
-        labelShiftAnimation={labelShiftAnimation}
+        hideNonActiveLabel={isMobile}
+        labelShiftAnimation={isMobile ? labelShiftAnimation : undefined}
       />
     </Link>
   );

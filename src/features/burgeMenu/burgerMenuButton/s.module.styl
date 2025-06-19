@@ -1,3 +1,5 @@
+@import '../../../styles/vars.styl'
+
 .wrapper
   width 30px
   height 30px
@@ -34,6 +36,9 @@
     left 4px
     top 50%
     transform-origin left center
+
+    @media (min-width $medium-width)
+      left 12px
 
     &:nth-child(1)
       transform rotate(-40deg)
@@ -85,7 +90,6 @@
 
     to
       opacity 50%
-
 
   /* ------------- sliding menu ------------------ */
 

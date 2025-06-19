@@ -1,3 +1,5 @@
+@import '../../styles/vars.styl'
+
 .container
   display grid
   grid-template-rows 42px 1fr 75px
@@ -8,3 +10,8 @@
   padding-top 42px
   padding-bottom 75px
   overflow-x hidden
+
+  @media (min-width $medium-width)
+    grid-template-rows 0 1fr 0
+    padding-top 0
+    padding-bottom 0

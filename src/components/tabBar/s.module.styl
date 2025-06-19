@@ -1,3 +1,5 @@
+@import '../../styles/vars.styl'
+
 .container
   position fixed
   bottom 20px
@@ -9,6 +11,11 @@
   z-index 100
   width 100vw
 
+  @media (min-width $medium-width)
+    width auto
+    left auto
+    right 0
+
 .tabBar
   display flex
   justify-content space-between
@@ -18,9 +25,18 @@
   box-shadow 0 -1px 25px -16px rgba(0, 0, 0, 0.1)
   background-color var(--background-front-color)
   border-radius 40px
+  max-width 420px
+  margin: 0 auto;
+
+  @media (min-width $medium-width)
+    flex-direction column
+    justify-content start
+    align-items start
+    gap 10px
+    padding 15px
 
 .preview
   position relative
   transform scale(0.8)
   padding 6px 0px
-  margin-top: 16px;
+  margin-top 16px

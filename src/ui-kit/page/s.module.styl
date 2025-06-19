@@ -1,3 +1,8 @@
+@import '../../styles/vars.styl'
+
 .page
-    height calc(100vh - 117px)
-    grid-area page
+  height calc(100dvh - 117px)
+  grid-area page
+
+  @media (min-width $medium-width)
+    height 100dvh

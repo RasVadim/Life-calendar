@@ -7,9 +7,7 @@ export const useDevice = () => {
     const width = window.innerWidth;
     return {
       isMobile: width < DEVICE_SCREEN_WIDTH.mobile,
-      isTablet:
-        width >= DEVICE_SCREEN_WIDTH.mobile &&
-        width < DEVICE_SCREEN_WIDTH.tablet,
+      isTablet: width >= DEVICE_SCREEN_WIDTH.mobile && width < DEVICE_SCREEN_WIDTH.tablet,
       isDesktop: width >= DEVICE_SCREEN_WIDTH.tablet,
       isTouchScreen: 'ontouchstart' in window || navigator.maxTouchPoints > 0,
     };
