@@ -1,9 +1,8 @@
 import React, { FC } from 'react';
 
-import { useTranslation } from 'react-i18next';
-
 import { SettingBlock, SettingsGroup } from '@/components';
 import { LifeExpectancyDrawer } from '@/features';
+import { useTranslation } from '@/hooks';
 import { useSetOpenDrawerKey } from '@/store/atoms';
 import { useDBUserData } from '@/store/clientDB';
 import { EModalKeys } from '@/types';

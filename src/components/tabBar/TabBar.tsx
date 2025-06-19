@@ -1,9 +1,9 @@
 import { FC } from 'react';
 
 import cx from 'classnames';
-import { useTranslation } from 'react-i18next';
 
 import { PATHS, TABS } from '@/constants';
+import { useTranslation } from '@/hooks';
 import { NavigationButton } from '@/ui-kit';
 
 import s from './s.module.styl';

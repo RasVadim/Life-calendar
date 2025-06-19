@@ -1,12 +1,11 @@
 import { FC } from 'react';
 
 import cx from 'classnames';
-import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 
 import { PATHS } from '@/constants/paths';
 import { BurgerMenu } from '@/features';
-import { useLifeMode } from '@/hooks';
+import { useTranslation, useLifeMode } from '@/hooks';
 import { useSyncPending } from '@/store/atoms';
 import { AccountButton, SyncingLine } from '@/ui-kit';
 import { getDepth } from '@/utils';

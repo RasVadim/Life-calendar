@@ -1,5 +1,4 @@
-import { useTranslation } from 'react-i18next';
-
+import { useTranslation } from '@/hooks';
 import { EThemeMode, useThemeMode } from '@/store/atoms';
 import { Button } from '@/ui-kit';
 

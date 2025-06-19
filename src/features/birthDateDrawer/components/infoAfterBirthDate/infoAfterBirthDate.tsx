@@ -10,9 +10,9 @@ import {
   differenceInDays,
 } from 'date-fns';
 import { enUS, ru } from 'date-fns/locale';
-import { useTranslation } from 'react-i18next';
 
 import { DEFAULT_BIRTH_DATE } from '@/constants';
+import { useTranslation } from '@/hooks';
 import { Button } from '@/ui-kit';
 import {
   getYearsWordGenitive,

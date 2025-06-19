@@ -8,7 +8,6 @@ export function useInitLanguage() {
   const [language, setLanguage] = useLanguage();
   const setPending = useSetSyncPending();
 
-  console.log('language', language);
   useEffect(() => {
     if (!language) {
       // Only set browser language if no language is set in atom

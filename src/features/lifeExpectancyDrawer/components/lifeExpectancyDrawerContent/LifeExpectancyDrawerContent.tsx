@@ -3,10 +3,10 @@ import { useState, useEffect } from 'react';
 import cx from 'classnames';
 import { addYears, format, parseISO, differenceInHours } from 'date-fns';
 import { ru } from 'date-fns/locale';
-import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { ISO_DATE_FORMAT } from '@/constants';
+import { useTranslation } from '@/hooks';
 import { useSetOpenDrawerKey, useSetPageLoading, useSetSyncPending } from '@/store/atoms';
 import { resetDBWeeks, saveWeeks, updateUserData } from '@/store/clientDB';
 import { useDBUserData } from '@/store/clientDB';

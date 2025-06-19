@@ -2,10 +2,10 @@ import { useMemo, useState, useEffect } from 'react';
 
 import { addYears, format } from 'date-fns';
 import { ru } from 'date-fns/locale';
-import { useTranslation } from 'react-i18next';
 import { useNavigate, useLocation } from 'react-router-dom';
 
 import { ISO_DATE_FORMAT, DEFAULT_BIRTH_DATE, DEFAULT_LIFE_SPAN_YEARS } from '@/constants';
+import { useTranslation } from '@/hooks';
 import { OutlineProfile } from '@/icons';
 import { useSetOpenDrawerKey, useSetPageLoading, useSetSyncPending } from '@/store/atoms';
 import { resetDBWeeks, saveWeeks, updateUserData } from '@/store/clientDB';

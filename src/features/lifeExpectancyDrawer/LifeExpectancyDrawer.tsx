@@ -1,5 +1,4 @@
-import { useTranslation } from 'react-i18next';
-
+import { useTranslation } from '@/hooks';
 import { useSetOpenDrawerKey } from '@/store/atoms';
 import { EModalKeys } from '@/types';
 import { Drawer } from '@/ui-kit';

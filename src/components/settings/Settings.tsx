@@ -1,10 +1,10 @@
 import React from 'react';
 
-import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
 import { SettingBlock, SettingsGroup } from '@/components';
 import { LANGUAGE_LABELS } from '@/constants';
+import { useTranslation } from '@/hooks';
 
 import { Avatar } from './components';
 

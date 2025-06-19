@@ -1,8 +1,8 @@
 import { FC, ReactNode, useEffect } from 'react';
 
 import cx from 'classnames';
-import { useTranslation } from 'react-i18next';
 
+import { useTranslation } from '@/hooks';
 import { useOpenDrawerKey } from '@/store/atoms';
 import { EModalKeys } from '@/types';
 import { Button } from '@/ui-kit';

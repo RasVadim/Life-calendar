@@ -1,10 +1,9 @@
 import React from 'react';
 
-import { useTranslation } from 'react-i18next';
-
 import { SettingBlock } from '@/components/settingBlock/SettingBlock';
 import { SettingsGroup } from '@/components/settingsGroup/SettingsGroup';
 import { LANGUAGES } from '@/constants';
+import { useTranslation } from '@/hooks';
 import { TLanguage, useSetLanguage } from '@/store/atoms';
 
 import s from './s.module.styl';

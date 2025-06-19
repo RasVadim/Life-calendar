@@ -10,9 +10,9 @@ import {
   differenceInMonths,
   addMonths,
 } from 'date-fns';
-import { useTranslation } from 'react-i18next';
 
 import { DEFAULT_BIRTH_DATE } from '@/constants';
+import { useTranslation } from '@/hooks';
 import { Button } from '@/ui-kit';
 import { getYearsWordDative, getWeeksWord, getMonthsWord, getRestDaysSentence } from '@/utils';
 
