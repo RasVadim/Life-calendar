@@ -16,7 +16,7 @@ export { YearsIcon } from './yearsIcon';
 
 export { MonthsIcon } from './monthsIcon';
 
-export { OutlineProfile } from './outlineProfile';
+export { OutlineProfile } from './outlineProfileIcon';
 
 export { ChevronIcon } from './chevronIcon';
 
