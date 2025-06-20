@@ -6,7 +6,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 
 import { ISO_DATE_FORMAT, DEFAULT_BIRTH_DATE, DEFAULT_LIFE_SPAN_YEARS } from '@/constants';
 import { useTranslation } from '@/hooks';
-import { OutlineProfile } from '@/icons';
+import { OutlineProfileIcon } from '@/icons';
 import { useSetOpenDrawerKey, useSetPageLoading, useSetSyncPending } from '@/store/atoms';
 import { resetDBWeeks, saveWeeks, updateUserData } from '@/store/clientDB';
 import { useDBUserData } from '@/store/clientDB';
@@ -46,7 +46,7 @@ export const BirthDateDrawer = () => {
       <div>
         <Button
           label={t('layout.login')}
-          icon={<OutlineProfile isActive />}
+          icon={<OutlineProfileIcon isActive />}
           onClick={() => console.log('login')}
         />
       </div>

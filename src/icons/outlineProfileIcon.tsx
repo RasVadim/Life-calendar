@@ -7,7 +7,7 @@ type PropsType = {
   isActive?: boolean;
 };
 
-export const OutlineProfile: FC<PropsType> = ({
+export const OutlineProfileIcon: FC<PropsType> = ({
   size = '20',
   color = '#9DB2CE',
   secondaryColor = '#FFFFFF',
