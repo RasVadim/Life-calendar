@@ -74,11 +74,11 @@ export const ThemeCard: FC<TProps> = ({ theme }) => {
           className={s.fakeNavButton}
           style={{
             background: `linear-gradient(to top right, ${themePalettes[theme].brandG1}, ${themePalettes[theme].brandG2})`,
-            color: themePalettes[theme].whiteout,
+            color: themePalettes[theme].contrast,
           }}
         >
           <ProfileIcon isActive />
-          <span className={s.fakeNavButtonLabel} style={{ color: themePalettes[theme].whiteout }}>
+          <span className={s.fakeNavButtonLabel} style={{ color: themePalettes[theme].contrast }}>
             {t('layout.settings')}
           </span>
         </div>
