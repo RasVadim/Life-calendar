@@ -3,6 +3,7 @@ import path from 'path';
 import { defineConfig } from 'vite';
 import mkcert from 'vite-plugin-mkcert';
 import { VitePWA } from 'vite-plugin-pwa';
+import svgr from 'vite-plugin-svgr';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -10,6 +11,7 @@ export default defineConfig({
     host: '0.0.0.0',
   },
   plugins: [
+    svgr(),
     react(),
     mkcert(),
     VitePWA({
