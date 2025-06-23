@@ -2,6 +2,8 @@ import { THEMES } from '@/constants';
 import { EThemeMode } from '@/store/atoms';
 
 export type TThemePalette = {
+  brandG1: string;
+  brandG2: string;
   primary: string;
   primaryLight: string;
   primaryDark: string;
@@ -26,6 +28,8 @@ export const themePalettes = Object.values(EThemeMode).reduce(
     const theme = THEMES[mode as unknown as keyof typeof THEMES];
     if (theme) {
       acc[mode as EThemeMode] = {
+        brandG1: theme.brandG1,
+        brandG2: theme.brandG2,
         primary: theme.primary,
         primaryLight: theme.primaryLight,
         primaryDark: theme.primaryDark,
