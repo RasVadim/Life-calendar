@@ -7,7 +7,7 @@ import { Routes } from '@/Routes';
 import { useThemeMode, useSetPrevRoute } from '@/store/atoms';
 import { initDefaultWeeks } from '@/store/clientDB';
 
-import { BirthDateDrawer } from './features';
+import { BirthDateDrawer, UpdateNotification } from './features';
 import { toggleTheme } from './utils';
 
 // Function to enter fullscreen
@@ -54,6 +54,7 @@ const App = () => {
     <>
       <Routes prevPath={prevPathRef.current} />
       <BirthDateDrawer />
+      <UpdateNotification />
     </>
   );
 };

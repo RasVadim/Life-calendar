@@ -6,7 +6,7 @@
     "years": "Года",
     "seasons": "Сезоны",
     "months": "Месяцы",
-    "settings": "Профиль",
+    "settings": "Настройки",
     "events": "События",
     "plans": "Планы",
     "light": "светлая",
@@ -21,7 +21,7 @@
     "account": "Аккаунт",
     "dataAndStorage": "Хранилище данных",
     "storage": "Хранилище данных",
-    "appearance": "Оформление",
+    "appearance": "Внешний вид",
     "language": "Язык",
     "lcPremium": "LC Premium",
     "premium": "Premium",
@@ -33,6 +33,9 @@
     "deathDate": "Последний день",
     "setDeathDate": "Не известен",
     "selectLifeExpectancy": "Продолжительность жизни",
-    "p-years": "лет"
+    "p-years": "лет",
+    "share": "Поделиться",
+    "newVersion": "Доступна новая версия",
+    "update": "Обновить"
   }
 }

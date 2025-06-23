@@ -18,14 +18,14 @@
     "logout": "Logout",
     "close": "Close",
     "myProfile": "My Profile",
-    "account": "Profile",
+    "account": "Account",
     "dataAndStorage": "Data and Storage",
     "storage": "Data and Storage",
     "appearance": "Appearance",
     "language": "Language",
     "lcPremium": "LC Premium",
     "premium": "Premium",
-    "about": "About",
+    "about": "About App",
     "birthDate": "Birth date",
     "setBirthDate": "Set birth date",
     "lifeSpan": "Life span",
@@ -34,5 +34,10 @@
     "setDeathDate": "Unknown",
     "selectLifeExpectancy": "Life expectancy",
     "p-years": "years"
-  }
+  },
+  "settings": "Settings",
+  "share": "Share",
+  "appearance": "Appearance",
+  "newVersion": "A new version is available",
+  "update": "Update"
 }

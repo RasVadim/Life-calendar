@@ -15,7 +15,7 @@ export default defineConfig({
     react(),
     mkcert(),
     VitePWA({
-      registerType: 'autoUpdate',
+      registerType: 'prompt',
       includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'mask-icon.svg'],
       outDir: 'dist',
       manifest: {
