@@ -23,6 +23,11 @@ export default defineConfig({
         short_name: 'LC',
         description: 'Calendar for your all life',
         display: 'fullscreen',
+        start_url: '/',
+        scope: '/',
+        background_color: '#ffffff',
+        theme_color: '#242424',
+        lang: 'en',
         icons: [
           {
             src: 'images/pwa-64x64.png',
