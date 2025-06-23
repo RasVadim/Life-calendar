@@ -6,7 +6,7 @@
   box-shadow none
   display flex
   align-items center
-  background-color var(--primary-color)
+  background linear-gradient(to top right, var(--brand-g1-color), var(--brand-g2-color))
   padding 2px 12px
   border-radius 22px
   will-change transform, background-color
@@ -110,14 +110,17 @@
   opacity 0
 
 .link
-  background transparent
-  color var(--primary-light-color)
+  background linear-gradient(to top right, var(--brand-g1-color), var(--brand-g2-color))
+  -webkit-background-clip text
+  background-clip text
+  color transparent
   padding 0
   border-radius 0
   height auto
   font-size 12px
   text-align center
   padding 0 5px
+  transition filter 0.2s ease
 
   &:hover
-    color var(--primary-color)
+    filter brightness(1.2)

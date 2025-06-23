@@ -68,7 +68,7 @@ export const SettingBlock: React.FC<SettingBlockProps> = ({
         {arrow ? (
           <ChevronIcon isActive={active} />
         ) : active ? (
-          <CheckIcon isActive />
+          <CheckIcon />
         ) : (
           <div className={s.emptyIcon} />
         )}

@@ -2,7 +2,6 @@ import { FC } from 'react';
 
 import cx from 'classnames';
 
-import IconGradient from '@/assets/images/logo.svg?react';
 import { LanguageSwitcher, ThemeSwitcher } from '@/features';
 import { useSetOpenDrawerKey } from '@/store/atoms';
 import { EModalKeys } from '@/types';
@@ -31,9 +30,6 @@ export const Menu: FC<PropsType> = ({ isOpen }) => {
         onClick={() => setDrawerKey(EModalKeys.USER_BIRTH_DATE)}
       />
       <br />
-      <div style={{ width: '100%', height: '100px', display: 'flex', justifyContent: 'center' }}>
-        <IconGradient />
-      </div>
     </div>
   );
 };
