@@ -4,7 +4,7 @@ import { addYears, format } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import { useNavigate, useLocation } from 'react-router-dom';
 
-import { ISO_DATE_FORMAT, DEFAULT_BIRTH_DATE, DEFAULT_LIFE_SPAN_YEARS } from '@/constants';
+import { ISO_DATE_FORMAT, DEFAULT_BIRTH_DATE } from '@/constants';
 import { useTranslation } from '@/hooks';
 import { OutlineProfileIcon } from '@/icons';
 import { useSetOpenDrawerKey, useSetPageLoading, useSetSyncPending } from '@/store/atoms';
@@ -15,6 +15,7 @@ import { Button, Drawer, WheelDatePicker } from '@/ui-kit';
 import { generateWeeksInWorker } from '@/webWorkers';
 
 import { InfoAfterBirthDate } from './components';
+import { getLifeExpectancy } from './utils';
 
 import s from './s.module.styl';
 
@@ -30,6 +31,8 @@ export const BirthDateDrawer = () => {
   const [birthDate, setBirthDate] = useState<string | null>(null);
 
   const userData = useDBUserData();
+
+  const lifeExpectancy = getLifeExpectancy(birthDate);
 
   // On mount, get birth date from DB if exists
   useEffect(() => {
@@ -75,18 +78,15 @@ export const BirthDateDrawer = () => {
           navigate('/');
         }
 
-        const deathDate = format(
-          addYears(new Date(birthDate), DEFAULT_LIFE_SPAN_YEARS),
-          ISO_DATE_FORMAT,
-        );
+        const deathDate = format(addYears(new Date(birthDate), lifeExpectancy), ISO_DATE_FORMAT);
 
         await updateUserData({
           birthDate,
-          lifeExpectancy: DEFAULT_LIFE_SPAN_YEARS,
+          lifeExpectancy,
           deathDate,
         });
         // --- Web Worker helper ---
-        const weeks = await generateWeeksInWorker(birthDate, DEFAULT_LIFE_SPAN_YEARS);
+        const weeks = await generateWeeksInWorker(birthDate, lifeExpectancy);
 
         await resetDBWeeks();
         await saveWeeks(weeks);
@@ -122,6 +122,7 @@ export const BirthDateDrawer = () => {
           birthDate={birthDate || ''}
           birthDateFromDB={userData?.birthDate || ''}
           onButtonClick={calculateLifeExpectancy}
+          lifeExpectancy={lifeExpectancy}
         />
       </div>
     </Drawer>

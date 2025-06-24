@@ -1,0 +1,1 @@
+export { getLifeExpectancy } from './getLifeExpectancy';

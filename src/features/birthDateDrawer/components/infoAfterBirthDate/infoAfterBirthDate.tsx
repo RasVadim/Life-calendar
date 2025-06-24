@@ -11,7 +11,7 @@ import {
 } from 'date-fns';
 import { enUS, ru } from 'date-fns/locale';
 
-import { DEFAULT_BIRTH_DATE } from '@/constants';
+import { DEFAULT_BIRTH_DATE, DEFAULT_LIFE_SPAN_YEARS } from '@/constants';
 import { useTranslation } from '@/hooks';
 import { Button } from '@/ui-kit';
 import {
@@ -33,15 +33,23 @@ interface Props {
   birthDate: string;
   birthDateFromDB?: string;
   onButtonClick?: () => void;
+  lifeExpectancy?: number;
 }
 
-export const InfoAfterBirthDate: FC<Props> = ({ birthDate, birthDateFromDB, onButtonClick }) => {
+export const InfoAfterBirthDate: FC<Props> = ({
+  birthDate,
+  birthDateFromDB,
+  onButtonClick,
+  lifeExpectancy,
+}) => {
   const [showLifeExpectancy, setShowLifeExpectancy] = useState(false);
   const [showFinalBlock, setShowFinalBlock] = useState(false);
 
   const { t, i18n } = useTranslation();
 
   const isBirthDateFilled = !!birthDate;
+  const isLongLiver = lifeExpectancy && lifeExpectancy >= DEFAULT_LIFE_SPAN_YEARS - 5;
+  const expectancyWeeks = isLongLiver ? Math.round(lifeExpectancy * 52.179) : 0;
 
   useEffect(() => {
     if (birthDateFromDB) {
@@ -82,6 +90,9 @@ export const InfoAfterBirthDate: FC<Props> = ({ birthDate, birthDateFromDB, onBu
 
   return (
     <>
+      <div className={cx(s.resultText, { [s.visible]: isBirthDateFilled })}>
+        {isBirthDateFilled && isLongLiver && t('life.birthDateDrawerLongLiverCongrats')}
+      </div>
       <div className={cx(s.resultText, { [s.visible]: isBirthDateFilled })}>
         {isBirthDateFilled &&
           t('life.birthDateDrawerResult', {
@@ -130,7 +141,17 @@ export const InfoAfterBirthDate: FC<Props> = ({ birthDate, birthDateFromDB, onBu
       >
         {isBirthDateFilled && (
           <>
-            <div>{t('life.birthDateDrawer90YearsSleep')}</div>
+            {isLongLiver ? (
+              <div>
+                {t('life.birthDateDrawerLongLiverGoal', {
+                  lifeExpectancy,
+                  expectancyWeeks: expectancyWeeks,
+                  weeksWord: getWeeksWord(expectancyWeeks, i18n.language),
+                })}
+              </div>
+            ) : (
+              <div>{t('life.birthDateDrawer90YearsSleep')}</div>
+            )}
             {birthDate !== birthDateFromDB && (
               <Button onClick={onButtonClick} label={t('life.letsSee')} />
             )}
