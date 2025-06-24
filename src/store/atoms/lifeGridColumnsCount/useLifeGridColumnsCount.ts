@@ -4,5 +4,4 @@ import { LifeGridColumnsCount } from './atom';
 
 export const useLifeGridColumnsCount = () => useAtom(LifeGridColumnsCount);
 
-export const useSetLifeGridColumnsCount = () =>
-  useSetAtom(LifeGridColumnsCount);
+export const useSetLifeGridColumnsCount = () => useSetAtom(LifeGridColumnsCount);

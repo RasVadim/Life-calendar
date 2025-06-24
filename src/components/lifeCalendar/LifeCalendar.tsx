@@ -1,6 +1,8 @@
 import { FC } from 'react';
 
-import { IWeek } from '@/store/clientDB';
+import { LIFE_GRID_ZOOM_LEVELS } from '@/constants';
+import { useLifeGridColumnsCount } from '@/store/atoms';
+import { IWeek, useDBUserData } from '@/store/clientDB';
 
 import { Week, ZoomableGrid } from './components';
 
@@ -11,10 +13,20 @@ type PropsType = {
 };
 
 export const LifeCalendar: FC<PropsType> = ({ weeks }) => {
+  const userData = useDBUserData();
+  const [columns] = useLifeGridColumnsCount();
+
+  const isByWidth = Boolean(
+    (userData?.lifeExpectancy && userData.lifeExpectancy < 90) ||
+      columns !== LIFE_GRID_ZOOM_LEVELS.years,
+  );
+
   return (
     <div className={s.calendar}>
       <ZoomableGrid>
-        {weeks?.map((week) => <Week key={week.id} id={week.id} week={week} />)}
+        {weeks?.map((week) => (
+          <Week key={week.id} id={week.id} week={week} isByWidth={isByWidth} />
+        ))}
       </ZoomableGrid>
     </div>
   );
