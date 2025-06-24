@@ -1,3 +1,5 @@
+@import '../../../../styles/vars.styl'
+
 .week
   height 100%
   aspect-ratio 1
@@ -8,6 +10,22 @@
   border-radius 2px
   font-size 1px
 
+  @media (min-width $medium-width)
+    border solid 2px var(--disabled-color)
+    border-radius 4px
+
+.seasonsMode
+  border-radius 4px
+
+  @media (min-width $medium-width)
+    border-radius 6px
+
+.monthsMode
+  border-radius 14px
+
+  @media (min-width $medium-width)
+    border-radius 22px
+
 .byWidth
   width 100%
   height auto
@@ -15,3 +33,11 @@
 
 .present
   box-shadow 0 0 6px 2px var(--week-present-color)
+  z-index 10
+
+.present.monthsMode
+  box-shadow 0 0 6px 3px var(--week-present-color)
+  border solid 2px var(--disabled-color)
+
+  @media (min-width $medium-width)
+    border solid 3px var(--disabled-color)

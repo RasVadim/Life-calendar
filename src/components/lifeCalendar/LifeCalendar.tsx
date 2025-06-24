@@ -25,7 +25,7 @@ export const LifeCalendar: FC<PropsType> = ({ weeks }) => {
     <div className={s.calendar}>
       <ZoomableGrid>
         {weeks?.map((week) => (
-          <Week key={week.id} id={week.id} week={week} isByWidth={isByWidth} />
+          <Week key={week.id} id={week.id} week={week} isByWidth={isByWidth} columns={columns} />
         ))}
       </ZoomableGrid>
     </div>
