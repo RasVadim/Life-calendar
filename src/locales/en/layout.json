@@ -33,11 +33,9 @@
     "deathDate": "Last day",
     "setDeathDate": "Unknown",
     "selectLifeExpectancy": "Life expectancy",
-    "p-years": "years"
-  },
-  "settings": "Settings",
-  "share": "Share",
-  "appearance": "Appearance",
-  "newVersion": "A new version is available",
-  "update": "Update"
+    "p-years": "years",
+    "share": "Share",
+    "newVersion": "A new version is available",
+    "update": "Update"
+  }
 }

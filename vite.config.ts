@@ -64,6 +64,37 @@ export default defineConfig({
             sizes: '375x812',
             type: 'image/png',
           },
+          {
+            src: 'images/mobile-screenshot-2.png',
+            sizes: '375x812',
+            type: 'image/png',
+          },
+          {
+            src: 'images/mobile-screenshot-3.png',
+            sizes: '375x812',
+            type: 'image/png',
+          },
+          {
+            src: 'images/mobile-screenshot-ru.png',
+            sizes: '375x812',
+            type: 'image/png',
+            // @ts-expect-error lang is valid in manifest spec
+            lang: 'ru',
+          },
+          {
+            src: 'images/mobile-screenshot-ru-2.png',
+            sizes: '375x812',
+            type: 'image/png',
+            // @ts-expect-error lang is valid in manifest spec
+            lang: 'ru',
+          },
+          {
+            src: 'images/mobile-screenshot-ru-3.png',
+            sizes: '375x812',
+            type: 'image/png',
+            // @ts-expect-error lang is valid in manifest spec
+            lang: 'ru',
+          },
         ],
       },
     }),
