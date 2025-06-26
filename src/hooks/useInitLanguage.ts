@@ -4,7 +4,7 @@ import i18n from 'i18next';
 
 import { TLanguage, useLanguage, useSetSyncPending } from '@/store/atoms';
 
-export function useInitLanguage() {
+export const useInitLanguage = () => {
   const [language, setLanguage] = useLanguage();
   const setPending = useSetSyncPending();
 
@@ -26,4 +26,4 @@ export function useInitLanguage() {
       });
     }
   }, [language]);
-}
+};

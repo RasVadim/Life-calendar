@@ -2,7 +2,7 @@ import { useEffect, useRef, useLayoutEffect } from 'react';
 
 import { useLocation } from 'react-router-dom';
 
-import { useInitLanguage } from '@/hooks';
+import { useInitLanguage, useActualizeWeeks } from '@/hooks';
 import { Routes } from '@/Routes';
 import { useThemeMode, useSetPrevRoute } from '@/store/atoms';
 import { initDefaultWeeks } from '@/store/clientDB';
@@ -39,16 +39,19 @@ const App = () => {
     toggleTheme(theme);
   }, [theme]);
 
+  // Initialize default weeks in background
+  useEffect(() => {
+    initDefaultWeeks();
+  }, []);
+
+  // Actualize weeks at startup and by timer until the next 01:00
+  useActualizeWeeks();
+
   // Save previous route for navigation purposes
   useLayoutEffect(() => {
     setPrevRoute(prevPathRef.current);
     prevPathRef.current = location.pathname;
   }, [location.pathname]);
-
-  // Initialize default weeks in background
-  useEffect(() => {
-    initDefaultWeeks();
-  }, []);
 
   return (
     <>

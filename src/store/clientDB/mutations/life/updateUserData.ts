@@ -1,12 +1,12 @@
-import { lifeCalendarDB } from '../../lifeCalendarDB';
+import { lifeCalendarDB } from '@/store/clientDB';
 
 /**
  * Update user data in IndexedDB. Only provided fields will be updated.
  * @param data - Partial user data fields to update
  */
-export async function updateUserData(
+export const updateUserData = async (
   data: Partial<{ birthDate: string; lifeExpectancy: number | null; deathDate: string | null }>,
-) {
+) => {
   let prev = await lifeCalendarDB.userData.get('main');
   if (!prev) {
     // Create new userData if not exists
@@ -17,4 +17,4 @@ export async function updateUserData(
     ...data,
     id: 'main',
   });
-}
+};

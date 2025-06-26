@@ -47,6 +47,7 @@ export const LifeCalendar: FC<PropsType> = ({ weeks }) => {
           })}
         </ZoomableGrid>
       )}
+      {columns !== LIFE_GRID_ZOOM_LEVELS.years && <div className={s.bottomPadding} />}
     </div>
   );
 };

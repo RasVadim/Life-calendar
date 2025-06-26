@@ -82,10 +82,10 @@ button:focus-visible {
   }
 
   @supports (padding-top: constant(safe-area-inset-top)) {
-    /* Применение фона строки состояния на устройствах iOS */
-    /* Для iPhone X и новее */
-    /* Задайте фон через --status-bar-background-color */
-    /* Дополнительно можно использовать дополнительные стили, если необходимо */
+    /* Applying the background color to the top status bar for iOS */
+    /* For iPhone X and newer */
+    /* Set the background color through --status-bar-background-color */
+    /* Additional styles can be used if necessary */
     :root {
       --status-bar-background-color: #242424;
     }

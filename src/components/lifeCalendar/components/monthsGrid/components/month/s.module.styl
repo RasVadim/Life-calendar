@@ -12,14 +12,14 @@
   display flex
   gap 6px
   font-size 13px
-  margin-bottom 2px
+  margin-bottom 6px
   padding-left 12px
   opacity 1
   animation fadeIn 1.4s ease
 
   @media (min-width $medium-width)
     position absolute
-    margin-left -150px
+    margin-left -140px
     margin-top 50px
 
 .weeksRow
@@ -35,6 +35,10 @@
 
 .labelMonth
   color var(--primary2-color)
+
+.emptyWeek
+  flex 1 1 0%
+  min-width 0
 
 @keyframes fadeIn
   from

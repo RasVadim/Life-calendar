@@ -2,7 +2,7 @@ import { useTranslation as useI18nTranslation } from 'react-i18next';
 
 import { useLanguage } from '@/store/atoms';
 
-export function useTranslation() {
+export const useTranslation = () => {
   const { t, i18n: i18nInstance } = useI18nTranslation();
   const [language] = useLanguage();
 
@@ -19,4 +19,4 @@ export function useTranslation() {
     i18n: i18nInstance,
     isInitialized: i18nInstance.isInitialized,
   };
-}
+};

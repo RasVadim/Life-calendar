@@ -48,13 +48,18 @@ export interface UserDataEntity {
   deathDate: string | null; // calculated death date (ISO string)
 }
 
+// Meta entity for storing global app info
+export interface MetaEntity {
+  id: string;
+  todayWeekId: string;
+}
+
 // Dexie database class
 export class LifeCalendarDB extends Dexie {
   weeks!: Table<IWeek, string>;
   userData!: Table<UserDataEntity, string>;
   holidays!: Table<IHoliday, string>;
-  firstVisit: boolean = false; // true if user opens app for the first time
-  isProfileCompleted: boolean = false; // true if user completed onboarding/profile
+  meta!: Table<MetaEntity, string>;
 
   constructor() {
     super('LifeCalendarDB'); // Name of the database in IndexedDB
@@ -62,6 +67,7 @@ export class LifeCalendarDB extends Dexie {
       weeks: 'id, dateStart, dateEnd, type', // Create 'weeks' table with primary key 'id' and indexes on 'dateStart', 'dateEnd', 'type'
       userData: 'id', // Create 'userData' table with primary key 'id'
       holidays: 'name', // Create 'holidays' table with primary key 'name'
+      meta: 'id', // Create 'meta' table for global app info
     });
   }
 }

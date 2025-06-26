@@ -9,7 +9,7 @@ import s from './s.module.styl';
 type TProps = {
   year: string;
   month: string;
-  weeks: IWeek[];
+  weeks: (IWeek | number)[];
   isByWidth: boolean;
 };
 
@@ -22,9 +22,13 @@ export const Month: FC<TProps> = ({ year, month, weeks, isByWidth }) => {
         <div className={s.labelMonth}>{t(`life.${month}`)}</div>
       </div>
       <div className={s.weeksRow}>
-        {weeks.map((week) => (
-          <Week key={week.id} id={week.id} week={week} isByWidth={isByWidth} columns={4} />
-        ))}
+        {weeks.map((week) => {
+          if (typeof week === 'number') {
+            return <div key={week} className={s.emptyWeek} />;
+          }
+
+          return <Week key={week.id} id={week.id} week={week} isByWidth={isByWidth} columns={4} />;
+        })}
       </div>
     </div>
   );

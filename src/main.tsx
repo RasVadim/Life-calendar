@@ -11,17 +11,6 @@ import i18n from './i18n';
 import './styles/common.styl';
 import './index.css';
 
-// Функция для входа в полноэкранный режим
-function enterFullscreen() {
-  document.documentElement.requestFullscreen();
-}
-
-// Обработчик события visibilitychange
-document.addEventListener('visibilitychange', () => {
-  if (document.visibilityState === 'visible') {
-    enterFullscreen();
-  }
-});
 ReactDOM.createRoot(document.getElementById('root')!).render(
   // <React.StrictMode>
   <BrowserRouter>

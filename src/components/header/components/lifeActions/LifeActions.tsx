@@ -1,9 +1,9 @@
 import { FC } from 'react';
 
-import { Button } from '@/ui-kit';
-import { useLifeMode } from '@/hooks';
 import { LIFE_MODES } from '@/constants';
-import type { TLifeMode } from '@/hooks/useLifeMode/useLifeMode';
+import { useLifeMode } from '@/hooks';
+import type { TLifeMode } from '@/hooks/useLifeMode';
+import { Button } from '@/ui-kit';
 
 import s from './s.module.styl';
 

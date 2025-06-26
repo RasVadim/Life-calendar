@@ -27,6 +27,7 @@ export const GridLabels: FC = () => {
           key={index}
           className={cx(s.label, {
             [s.monthMode]: columns === LIFE_GRID_ZOOM_LEVELS.months,
+            [s.seasonsMode]: columns === LIFE_GRID_ZOOM_LEVELS.seasons,
           })}
           style={{
             gridRow: `${label.rowIndex + 1}`,

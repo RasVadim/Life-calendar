@@ -5,6 +5,8 @@ export type { IWeek } from './lifeCalendarDB';
 // Mutations
 export { saveWeeks } from './mutations/life/saveWeeks';
 export { resetDBWeeks } from './mutations/life/resetDBWeeks';
+export { updateWeek } from './mutations/life/updateWeek';
+export { updateTodayWeekId } from './mutations/life/updateTodayWeekId';
 export { updateUserData } from './mutations/life/updateUserData';
 
 // Queries

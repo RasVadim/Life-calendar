@@ -125,7 +125,6 @@ export const ZoomableGrid = ({ children }: { children?: React.ReactNode }) => {
         className={cx(s.container, {
           [s.monthsMode]: columns === LIFE_GRID_ZOOM_LEVELS.months,
           [s.seasonsMode]: columns === LIFE_GRID_ZOOM_LEVELS.seasons,
-          [s.yearsMode]: columns === LIFE_GRID_ZOOM_LEVELS.years,
         })}
         style={{
           gridTemplateColumns: `repeat(${columns}, 1fr)`,
@@ -135,7 +134,7 @@ export const ZoomableGrid = ({ children }: { children?: React.ReactNode }) => {
       >
         {children}
         <GridLabels />
-        {columns !== LIFE_GRID_ZOOM_LEVELS.years && <div className={s.bottomPadding} />}
+        {columns === LIFE_GRID_ZOOM_LEVELS.seasons && <div className={s.bottomPadding} />}
       </div>
     </>
   );

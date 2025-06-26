@@ -7,7 +7,7 @@ const MEDIUM_COLUMNS = LIFE_GRID_ZOOM_LEVELS.seasons; // Middle point where gap 
 
 const MIN_GAP = 1; // Minimum gap (in px) when columns = MAX_COLUMNS
 const MAX_GAP = 55; // Maximum gap (in px) when columns = MIN_COLUMNS
-const MEDIUM_GAP = 25; // Gap value at the middle point (in px)
+const MEDIUM_GAP = 32; // Gap value at the middle point (in px)
 
 /**
  * Calculates the row gap size based on the current number of columns.
