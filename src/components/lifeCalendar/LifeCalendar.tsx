@@ -5,6 +5,7 @@ import { useLifeGridColumnsCount } from '@/store/atoms';
 import { IWeek, useDBUserData } from '@/store/clientDB';
 
 import { Week, ZoomableGrid } from './components';
+import { getOffsetBegin } from './utils';
 
 import s from './s.module.styl';
 
@@ -21,12 +22,20 @@ export const LifeCalendar: FC<PropsType> = ({ weeks }) => {
       columns !== LIFE_GRID_ZOOM_LEVELS.years,
   );
 
+  const offsetBegin = getOffsetBegin(columns, userData?.birthDate);
+
   return (
     <div className={s.calendar}>
       <ZoomableGrid>
-        {weeks?.map((week) => (
-          <Week key={week.id} id={week.id} week={week} isByWidth={isByWidth} columns={columns} />
-        ))}
+        {[...offsetBegin, ...(weeks || [])].map((week) => {
+          if (typeof week === 'number') {
+            return <div key={week} />;
+          }
+
+          return (
+            <Week key={week.id} id={week.id} week={week} isByWidth={isByWidth} columns={columns} />
+          );
+        })}
       </ZoomableGrid>
     </div>
   );

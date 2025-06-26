@@ -15,6 +15,22 @@
     "setExactDeathDate": "Указать предполагаемую дату окончания жизни.",
     "lifeExpectancyDrawerYearsResult": "{{lifeExpectancyYears}} {{lifeExpectancyYearsWord}} содеражат в себе {{weeks}} {{weeksWord}}.",
     "lifeExpectancyDrawerDateResult": "Ожидаемая продолжительность жизни сосставляет {{lifeExpectancyYears}} {{lifeExpectancyYearsWord}} {{lifeExpectancyMonths}} {{lifeExpectancyMonthsWord}}{{lifeExpectancyDaysString}}, которые содеражат в себе {{weeks}} {{weeksWord}}.",
-    "newLifeExpectancy": "С новой продолжительностью жизни изменится и ваш календарь"
+    "newLifeExpectancy": "С новой продолжительностью жизни изменится и ваш календарь",
+    "01": "Январь",
+    "02": "Февраль",
+    "03": "Март",
+    "04": "Апрель",
+    "05": "Май",
+    "06": "Июнь",
+    "07": "Июль",
+    "08": "Август",
+    "09": "Сентябрь",
+    "10": "Октябрь",
+    "11": "Ноябрь",
+    "12": "Декабрь",
+    "winter": "Зима",
+    "spring": "Весна",
+    "summer": "Лето",
+    "autumn": "Осень"
   }
 }

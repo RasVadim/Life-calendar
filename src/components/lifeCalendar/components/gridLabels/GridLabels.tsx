@@ -4,36 +4,19 @@ import cx from 'classnames';
 
 import { LIFE_GRID_ZOOM_LEVELS } from '@/constants';
 import { useLifeGridColumnsCount } from '@/store/atoms';
+import { useDBUserData } from '@/store/clientDB/queries/life/useDBUserData';
+import { useDBWeeks } from '@/store/clientDB/queries/life/useDBWeeks';
+
+import { useRowLabels } from './hooks';
 
 import s from './s.module.styl';
 
-type LabelData = {
-  text: string;
-  rowIndex: number;
-};
-
 export const GridLabels: FC = () => {
   const [columns] = useLifeGridColumnsCount();
+  const weeks = useDBWeeks();
+  const userData = useDBUserData();
 
-  const getLabels = (): LabelData[] => {
-    // Здесь логика генерации лейблов в зависимости от columns
-    if (columns === LIFE_GRID_ZOOM_LEVELS.seasons) {
-      return [
-        { text: 'Зима 2024', rowIndex: 0 },
-        { text: 'Весна 2024', rowIndex: 1 },
-        // и т.д.
-      ];
-    } else if (columns === LIFE_GRID_ZOOM_LEVELS.months) {
-      return [
-        { text: 'Январь 2024', rowIndex: 0 },
-        { text: 'Февраль 2024', rowIndex: 1 },
-        // и т.д.
-      ];
-    }
-    return [];
-  };
-
-  const labels = getLabels();
+  const labels = useRowLabels(weeks, userData, columns);
 
   if (labels.length === 0) return null;
 
@@ -50,7 +33,9 @@ export const GridLabels: FC = () => {
             gridColumn: '1 / -1',
           }}
         >
-          {label.text}
+          <div className={s.labelYear}>{label.year}</div>
+          {label.season && <div className={s.labelSeason}>{label.season}</div>}
+          {label.month && <div className={s.labelMonth}>{label.month}</div>}
         </div>
       ))}
     </>

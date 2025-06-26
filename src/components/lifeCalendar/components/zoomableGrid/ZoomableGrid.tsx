@@ -118,16 +118,19 @@ export const ZoomableGrid = ({ children }: { children?: React.ReactNode }) => {
   }, [columns]);
 
   return (
-    <div
-      className={s.container}
-      style={{
-        gridTemplateColumns: `repeat(${columns}, 1fr)`,
-        rowGap: `${currentRowGap}px`,
-        paddingTop: `${currentTopPadding}px`,
-      }}
-    >
-      {children}
-      <GridLabels />
-    </div>
+    <>
+      <div
+        className={s.container}
+        style={{
+          gridTemplateColumns: `repeat(${columns}, 1fr)`,
+          rowGap: `${currentRowGap}px`,
+          paddingTop: `${currentTopPadding}px`,
+        }}
+      >
+        {children}
+        <GridLabels />
+        {columns !== LIFE_GRID_ZOOM_LEVELS.years && <div className={s.bottomPadding} />}
+      </div>
+    </>
   );
 };

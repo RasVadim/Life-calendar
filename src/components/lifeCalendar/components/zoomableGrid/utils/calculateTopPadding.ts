@@ -22,7 +22,5 @@ export const calculateTopPadding = (columns: number): number => {
   // Linear interpolation between 2 and 40
   const range = MAX_COLUMNS - COLUMNS_AT_13;
   const position = columns - COLUMNS_AT_13;
-  return Math.round(
-    PADDING_AT_13 - ((PADDING_AT_13 - MIN_PADDING) * position) / range
-  );
+  return Math.round(PADDING_AT_13 - ((PADDING_AT_13 - MIN_PADDING) * position) / range);
 };

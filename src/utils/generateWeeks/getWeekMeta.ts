@@ -1,4 +1,4 @@
-import { addDays, getDate, getMonth, isLeapYear } from 'date-fns';
+import { addDays, getDate, isLeapYear } from 'date-fns';
 
 import { ESeason } from '@/types/life';
 
@@ -26,7 +26,9 @@ export const getWeekMeta = (
     days.push(d);
   }
   const dateYear = getMajorityDate(days, 'year');
-  const dateMonth = String(getMonth(weekStart) + 1).padStart(2, '0');
+  // Ensure dateMonth is always two digits (e.g. '01', '02', ..., '12')
+  const rawMonth = getMajorityDate(days, 'month');
+  const dateMonth = String(rawMonth).padStart(2, '0');
   const dateSeason = getMajorityDate(days, 'season') as ESeason;
   const year = yearOfLife + 1;
   const isFirst = i === 0;

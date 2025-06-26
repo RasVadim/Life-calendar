@@ -6,13 +6,15 @@
     opacity 1
 
 .label
+  display flex
+  gap 6px
   position absolute
   left 0
   width 100%
   text-align left
   padding 0 5px
   color var(--text-secondary)
-  font-size 13px
+  font-size 12px
   pointer-events none // Do not interfere with grid interaction
   transform translateY(-100%) // Move label into the gap between grid rows
   opacity 1
@@ -20,3 +22,12 @@
 
 .monthMode
   padding 5px
+
+.labelYear
+  color var(--text-secondary)
+
+.labelMonth
+  color var(--primary2-color)
+
+.labelSeason
+  color var(--primary-color)

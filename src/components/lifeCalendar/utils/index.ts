@@ -1,0 +1,1 @@
+export { getOffsetBegin } from './getOffsetBegin';
