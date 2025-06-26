@@ -24,6 +24,7 @@ export const Week: FC<PropsType> = ({ id, week, isByWidth, columns }) => {
 
   return (
     <div
+      key={id}
       className={cx(s.week, {
         [s.present]: isPresent,
         [s.byWidth]: isByWidth,

@@ -4,7 +4,7 @@ import { LIFE_GRID_ZOOM_LEVELS } from '@/constants';
 import { useLifeGridColumnsCount } from '@/store/atoms';
 import { IWeek, useDBUserData } from '@/store/clientDB';
 
-import { Week, ZoomableGrid } from './components';
+import { MonthsGrid, Week, ZoomableGrid } from './components';
 import { getOffsetBegin } from './utils';
 
 import s from './s.module.styl';
@@ -26,17 +26,27 @@ export const LifeCalendar: FC<PropsType> = ({ weeks }) => {
 
   return (
     <div className={s.calendar}>
-      <ZoomableGrid>
-        {[...offsetBegin, ...(weeks || [])].map((week) => {
-          if (typeof week === 'number') {
-            return <div key={week} />;
-          }
+      {columns === LIFE_GRID_ZOOM_LEVELS.months ? (
+        <MonthsGrid weeks={weeks || []} offsetBegin={offsetBegin} isByWidth={isByWidth} />
+      ) : (
+        <ZoomableGrid>
+          {[...offsetBegin, ...(weeks || [])].map((week) => {
+            if (typeof week === 'number') {
+              return <div key={week} />;
+            }
 
-          return (
-            <Week key={week.id} id={week.id} week={week} isByWidth={isByWidth} columns={columns} />
-          );
-        })}
-      </ZoomableGrid>
+            return (
+              <Week
+                key={week.id}
+                id={week.id}
+                week={week}
+                isByWidth={isByWidth}
+                columns={columns}
+              />
+            );
+          })}
+        </ZoomableGrid>
+      )}
     </div>
   );
 };

@@ -1,0 +1,44 @@
+@import '../../../../../../styles/vars.styl'
+
+.wrapper
+  padding-top 24px
+  border-radius 8px
+
+  @media (min-width $medium-width)
+    padding-top 3px
+    position relative
+
+.header
+  display flex
+  gap 6px
+  font-size 13px
+  margin-bottom 2px
+  padding-left 12px
+  opacity 1
+  animation fadeIn 1.4s ease
+
+  @media (min-width $medium-width)
+    position absolute
+    margin-left -150px
+    margin-top 50px
+
+.weeksRow
+  display flex
+  gap 0
+  flex-wrap wrap
+
+  @media (min-width $medium-width)
+    gap 1px
+
+.labelYear
+  color var(--text-secondary)
+
+.labelMonth
+  color var(--primary2-color)
+
+@keyframes fadeIn
+  from
+    opacity 0
+
+  to
+    opacity 1

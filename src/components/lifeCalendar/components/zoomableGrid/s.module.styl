@@ -12,6 +12,26 @@
   transition grid-template-columns 0.15s cubic-bezier(0.4, 0, 0.2, 1)
   transition border-color 1.5s ease
 
+.monthsMode
+  grid-template-columns repeat(12, 1fr)
+  gap 1px
+  row-gap 1px
+  padding-top 1px
+
+  @media (min-width $medium-width)
+    row-gap 55px
+    padding-top 40px
+
+.seasonsMode
+  grid-template-columns repeat(4, 1fr)
+  gap 1px
+  row-gap 1px
+  padding-top 1px
+
+  @media (min-width $medium-width)
+    row-gap 25px
+    padding-top 40px
+
 .bottomPadding
   height 250px
 

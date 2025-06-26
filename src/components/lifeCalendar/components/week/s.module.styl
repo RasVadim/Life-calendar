@@ -14,6 +14,11 @@
     border solid 2px var(--disabled-color)
     border-radius 4px
 
+.byWidth
+  width 100%
+  height auto
+  min-height auto
+
 .seasonsMode
   border-radius 4px
 
@@ -22,14 +27,14 @@
 
 .monthsMode
   border-radius 14px
+  width auto
+  flex 1 1 0%
+  min-width 0
+  border solid 2px var(--disabled-color)
 
   @media (min-width $medium-width)
+    border solid 3px var(--disabled-color)
     border-radius 22px
-
-.byWidth
-  width 100%
-  height auto
-  min-height auto
 
 .present
   box-shadow 0 0 6px 2px var(--week-present-color)
@@ -37,7 +42,3 @@
 
 .present.monthsMode
   box-shadow 0 0 6px 3px var(--week-present-color)
-  border solid 2px var(--disabled-color)
-
-  @media (min-width $medium-width)
-    border solid 3px var(--disabled-color)

@@ -1,5 +1,7 @@
 import { useEffect, useRef } from 'react';
 
+import cx from 'classnames';
+
 import { LIFE_GRID_ZOOM_LEVELS } from '@/constants';
 import { useDevice } from '@/hooks';
 import { useLifeGridColumnsCount } from '@/store/atoms';
@@ -120,7 +122,11 @@ export const ZoomableGrid = ({ children }: { children?: React.ReactNode }) => {
   return (
     <>
       <div
-        className={s.container}
+        className={cx(s.container, {
+          [s.monthsMode]: columns === LIFE_GRID_ZOOM_LEVELS.months,
+          [s.seasonsMode]: columns === LIFE_GRID_ZOOM_LEVELS.seasons,
+          [s.yearsMode]: columns === LIFE_GRID_ZOOM_LEVELS.years,
+        })}
         style={{
           gridTemplateColumns: `repeat(${columns}, 1fr)`,
           rowGap: `${currentRowGap}px`,

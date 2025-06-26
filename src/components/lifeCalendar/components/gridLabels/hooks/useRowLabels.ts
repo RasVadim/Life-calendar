@@ -1,5 +1,5 @@
 import { LIFE_GRID_ZOOM_LEVELS } from '@/constants';
-import { useTranslation } from '@/hooks/useTranslation/useTranslation';
+import { useTranslation } from '@/hooks';
 import { IWeek, UserDataEntity } from '@/store/clientDB/lifeCalendarDB';
 import { ESeason } from '@/types/life';
 
