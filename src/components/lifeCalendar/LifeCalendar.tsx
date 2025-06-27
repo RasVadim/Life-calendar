@@ -22,7 +22,8 @@ export const LifeCalendar: FC<PropsType> = ({ weeks }) => {
       columns !== LIFE_GRID_ZOOM_LEVELS.years,
   );
 
-  const offsetBegin = getOffsetBegin(columns, userData?.birthDate);
+  // 14 weeks = season + 1 week
+  const offsetBegin = getOffsetBegin(columns, weeks?.slice(0, 14));
 
   return (
     <div className={s.calendar}>
