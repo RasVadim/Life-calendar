@@ -36,7 +36,7 @@ export const MonthsGrid: FC<TProps> = ({ weeks, offsetBegin, isByWidth }) => {
         }
         // Add empty weeks to the end of the last month
         if (idx === monthKeys.length - 1) {
-          monthWeeks = [...monthWeeks, ...offsetBegin];
+          monthWeeks = [...monthWeeks, ...Array(4 - offsetBegin.length).fill(0)];
         }
         const [year, month] = key.split('-');
         return (

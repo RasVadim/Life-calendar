@@ -4,7 +4,8 @@ import cx from 'classnames';
 import { Link, useLocation } from 'react-router-dom';
 
 import { TABS, PATHS } from '@/constants';
-import { useDevice, useLifeMode } from '@/hooks';
+import { useDevice } from '@/hooks';
+import { useLifeGridMode } from '@/store/atoms';
 import { Button, type TIconName } from '@/ui-kit';
 
 import s from './s.module.styl';
@@ -40,7 +41,7 @@ export const NavigationButton: FC<PropsType> = ({
   const { isMobile } = useDevice();
 
   const { pathname } = useLocation();
-  const [currentMode] = useLifeMode();
+  const [currentMode] = useLifeGridMode();
 
   const pathName = propPathName || pathname;
   const isActive = to === '/' ? pathName === to : pathName.startsWith(to);

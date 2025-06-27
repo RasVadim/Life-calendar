@@ -1,4 +1,4 @@
-import { HOLIDAY_NAMES } from '@/types/life';
+import { HOLIDAY_NAMES } from '@/constants';
 
 /**
  * Returns holidays for the given week

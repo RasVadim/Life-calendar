@@ -4,10 +4,7 @@ export { EThemeMode } from './themeMode/atom';
 export { useLanguage, useSetLanguage } from './language/useLanguage';
 export type { TLanguage } from './language/atom';
 
-export {
-  useLifeGridColumnsCount,
-  useSetLifeGridColumnsCount,
-} from './lifeGridColumnsCount/useLifeGridColumnsCount';
+export { useLifeGridMode, useSetLifeGridMode } from './lifeGridMode/useLifeGridMode';
 
 export { useSyncPending, useSetSyncPending } from './syncPending/useSyncPending';
 
