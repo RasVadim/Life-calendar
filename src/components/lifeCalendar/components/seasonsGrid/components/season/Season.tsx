@@ -23,9 +23,9 @@ export const Season: FC<TProps> = ({ year, season, weeks, isByWidth }) => {
         <div className={s.labelSeason}>{t(`life.${season}`)}</div>
       </div>
       <div className={s.weeksRow}>
-        {weeks.map((week) => {
+        {weeks.map((week, idx) => {
           if (typeof week === 'number') {
-            return <div key={week} className={s.emptyWeek} />;
+            return <div key={`empty-${idx}`} className={s.emptyWeek} />;
           }
 
           return (

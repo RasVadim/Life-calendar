@@ -1,5 +1,8 @@
-import { FC } from 'react';
+import { FC, useCallback, useLayoutEffect, useRef } from 'react';
 
+import cx from 'classnames';
+
+import { useSetSyncPending } from '@/store/atoms';
 import { IWeek } from '@/store/clientDB';
 
 import { Season } from './components';
@@ -10,6 +13,7 @@ type TProps = {
   weeks: IWeek[];
   offsetBegin: number[];
   isByWidth: boolean;
+  todayWeekId: string;
 };
 
 // Group weeks by season, making sure winter (Dec+Jan+Feb) is always a single row
@@ -35,26 +39,50 @@ const groupWeeksBySeason = (weeks: IWeek[]) => {
   return grouped;
 };
 
-export const SeasonsGrid: FC<TProps> = ({ weeks, offsetBegin, isByWidth }) => {
+export const SeasonsGrid: FC<TProps> = ({ weeks, offsetBegin, isByWidth, todayWeekId }) => {
   const grouped = groupWeeksBySeason(weeks);
-  // Sort by year, then by season order
   const seasonKeys = Object.keys(grouped);
 
+  const seasonRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const setPending = useSetSyncPending();
+
+  const scrollToTodayWeek = useCallback(() => {
+    setPending(true);
+    if (!todayWeekId) return;
+
+    // Find the index of the season containing the current week
+    const idx = seasonKeys.findIndex((key) =>
+      grouped[key].some((week) => typeof week !== 'number' && week.id === todayWeekId),
+    );
+    if (idx !== -1 && seasonRefs.current[idx]) {
+      seasonRefs.current[idx]?.scrollIntoView({ block: 'center', behavior: 'auto' });
+    }
+    // Give the browser a tick to finish scroll before showing content
+    setTimeout(() => setPending(false), 0);
+  }, [todayWeekId, seasonKeys.join(','), weeks]);
+
+  useLayoutEffect(() => {
+    scrollToTodayWeek();
+  }, [scrollToTodayWeek]);
+
   return (
-    <div className={s.wrapper}>
+    <div className={cx(s.wrapper, { [s.transparent]: !todayWeekId })}>
       {seasonKeys.map((key, idx) => {
         let seasonWeeks = grouped[key] as (IWeek | number)[];
-        // Add empty weeks to the beginning of the first season
         if (idx === 0) {
           seasonWeeks = [...offsetBegin, ...seasonWeeks];
         }
-        // Add empty weeks to the end of the last season
         if (idx === seasonKeys.length - 1) {
-          seasonWeeks = [...seasonWeeks, ...Array(13 - offsetBegin.length).fill(0)];
+          const emptyCount = 13 - offsetBegin.length;
+          if (emptyCount > 0) {
+            seasonWeeks = [...seasonWeeks, ...Array(emptyCount).fill(0)];
+          }
         }
         const [year, season] = key.split('-');
         return (
-          <Season key={key} year={year} season={season} weeks={seasonWeeks} isByWidth={isByWidth} />
+          <div ref={(el) => (seasonRefs.current[idx] = el)} key={key}>
+            <Season year={year} season={season} weeks={seasonWeeks} isByWidth={isByWidth} />
+          </div>
         );
       })}
     </div>

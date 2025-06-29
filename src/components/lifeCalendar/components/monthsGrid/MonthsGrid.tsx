@@ -1,5 +1,8 @@
-import React, { FC } from 'react';
+import { FC, useLayoutEffect, useRef, useCallback } from 'react';
 
+import cx from 'classnames';
+
+import { useSetSyncPending } from '@/store/atoms';
 import { IWeek } from '@/store/clientDB';
 
 import { Month } from './components';
@@ -10,6 +13,7 @@ type TProps = {
   weeks: IWeek[];
   offsetBegin: number[];
   isByWidth: boolean;
+  todayWeekId: string;
 };
 
 const groupWeeksByMonth = (weeks: IWeek[]) => {
@@ -22,12 +26,32 @@ const groupWeeksByMonth = (weeks: IWeek[]) => {
   return grouped;
 };
 
-export const MonthsGrid: FC<TProps> = ({ weeks, offsetBegin, isByWidth }) => {
+export const MonthsGrid: FC<TProps> = ({ weeks, offsetBegin, isByWidth, todayWeekId }) => {
   const grouped = groupWeeksByMonth(weeks);
   const monthKeys = Object.keys(grouped).sort();
 
+  const monthRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const setPending = useSetSyncPending();
+
+  const scrollToTodayWeek = useCallback(() => {
+    setPending(true);
+    if (!todayWeekId) return;
+    // Find the index of the month containing the current week
+    const idx = monthKeys.findIndex((key) =>
+      grouped[key].some((week) => typeof week !== 'number' && week.id === todayWeekId),
+    );
+    if (idx !== -1 && monthRefs.current[idx]) {
+      monthRefs.current[idx]?.scrollIntoView({ block: 'center', behavior: 'auto' });
+    }
+    setTimeout(() => setPending(false), 0);
+  }, [todayWeekId, monthKeys.join(','), weeks]);
+
+  useLayoutEffect(() => {
+    scrollToTodayWeek();
+  }, [scrollToTodayWeek]);
+
   return (
-    <div className={s.wrapper}>
+    <div className={cx(s.wrapper, { [s.transparent]: !todayWeekId })}>
       {monthKeys.map((key, idx) => {
         let monthWeeks = grouped[key] as (IWeek | number)[];
         // Add empty weeks to the beginning of the first month
@@ -36,11 +60,16 @@ export const MonthsGrid: FC<TProps> = ({ weeks, offsetBegin, isByWidth }) => {
         }
         // Add empty weeks to the end of the last month
         if (idx === monthKeys.length - 1) {
-          monthWeeks = [...monthWeeks, ...Array(4 - offsetBegin.length).fill(0)];
+          const emptyCount = 4 - offsetBegin.length;
+          if (emptyCount > 0) {
+            monthWeeks = [...monthWeeks, ...Array(emptyCount).fill(0)];
+          }
         }
         const [year, month] = key.split('-');
         return (
-          <Month key={key} year={year} month={month} weeks={monthWeeks} isByWidth={isByWidth} />
+          <div ref={(el) => (monthRefs.current[idx] = el)} key={key}>
+            <Month year={year} month={month} weeks={monthWeeks} isByWidth={isByWidth} />
+          </div>
         );
       })}
     </div>

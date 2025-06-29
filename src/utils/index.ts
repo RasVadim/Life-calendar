@@ -4,6 +4,7 @@ export { hexToRgb } from './common/hexToRgb';
 export { rgbToHex } from './common/rgbToHex';
 export { blendColors } from './common/blendColors';
 export { formatDateToUI } from './common/formatDateToUI';
+export { findWithIndex } from './common/findWithIndex';
 
 // mobile
 export { changeByDrawerStatusBarColor } from './mobile/changeByDrawerStatusBarColor';

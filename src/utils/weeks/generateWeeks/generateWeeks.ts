@@ -10,7 +10,7 @@ import {
 } from 'date-fns';
 
 import { DEFAULT_LIFE_SPAN_YEARS, ISO_DATE_FORMAT } from '@/constants';
-import { updateTodayWeekId } from '@/store/clientDB';
+import { updateTodayWeek } from '@/store/clientDB';
 import { EWeekType } from '@/types/life';
 
 import { getWeekHolidays } from './getWeekHolidays';
@@ -65,7 +65,9 @@ export const generateWeeks = (
     const yearStart = yearOfLife === 0 ? birthDate : addYears(birthDate, yearOfLife);
     if (yearStart >= deathDate) break;
     const yearEnd =
-      yearOfLife === yearsToGenerate - 1 ? deathDate : addYears(birthDate, yearOfLife + 1);
+      yearOfLife === yearsToGenerate - 1
+        ? deathDate
+        : addDays(addYears(birthDate, yearOfLife + 1), -1);
     let weeksInYear = [];
     let weekStart = yearStart;
     let weekIndex = 0;
@@ -153,7 +155,7 @@ export const generateWeeks = (
       const weekId = `w${String(meta.year).padStart(3, '0')}_${String(i + 1).padStart(2, '0')}`;
 
       if (type === EWeekType.Present) {
-        updateTodayWeekId(weekId);
+        updateTodayWeek({ todayWeekId: weekId, todayWeekIndex: weeks.length });
       }
 
       weeks.push({

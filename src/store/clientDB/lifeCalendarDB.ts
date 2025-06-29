@@ -52,6 +52,7 @@ export interface UserDataEntity {
 export interface MetaEntity {
   id: string;
   todayWeekId: string;
+  todayWeekIndex: number;
 }
 
 // Dexie database class
