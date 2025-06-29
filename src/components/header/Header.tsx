@@ -5,8 +5,8 @@ import { useLocation } from 'react-router-dom';
 
 import { PATHS } from '@/constants/paths';
 import { BurgerMenu } from '@/features';
-import { useTranslation, useLifeMode } from '@/hooks';
-import { useSyncPending } from '@/store/atoms';
+import { useTranslation } from '@/hooks';
+import { useLifeGridMode, useSyncPending } from '@/store/atoms';
 import { AccountButton, SyncingLine } from '@/ui-kit';
 import { getDepth } from '@/utils';
 
@@ -23,7 +23,7 @@ export const Header: FC<TProps> = ({ preview = false }) => {
   const [pending] = useSyncPending();
   const { pathname } = useLocation();
 
-  const [currentMode] = useLifeMode();
+  const [currentMode] = useLifeGridMode();
   const isLifePage = pathname === PATHS.MAIN;
 
   const pathSegments = pathname.split('/').filter(Boolean);

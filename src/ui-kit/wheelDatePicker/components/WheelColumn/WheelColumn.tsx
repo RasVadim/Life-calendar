@@ -42,7 +42,7 @@ export const WheelColumn: React.FC<WheelColumnProps> = ({
 
   useEffect(() => {
     let isAnimating = false;
-    function handleScroll(event: Event) {
+    const handleScroll = (event: Event) => {
       if (isProgrammaticScroll.current) {
         isProgrammaticScroll.current = false;
         return;
@@ -68,13 +68,13 @@ export const WheelColumn: React.FC<WheelColumnProps> = ({
             origin,
           );
           currentValue.current = selectedElement;
-          isScrolling.current = setTimeout(function () {
+          isScrolling.current = setTimeout(() => {
             onChange(items[selectedElement].value);
           }, SCROLL_DEBOUNCE_TIME);
           isAnimating = false;
         });
       }
-    }
+    };
     const container = itemsContRef.current;
     container?.addEventListener('scroll', handleScroll);
     if (itemRefs.current[currentValue.current]) {

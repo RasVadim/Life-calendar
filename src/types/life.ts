@@ -1,4 +1,4 @@
-import { HOLIDAY_NAMES } from '@/constants';
+import { HOLIDAY_NAMES, LIFE_MODES } from '@/constants';
 import type { IWeek } from '@/store/clientDB';
 
 export enum EWeekType {
@@ -43,4 +43,4 @@ export type TYear = {
   weeks: IWeek[];
 };
 
-export { HOLIDAY_NAMES };
+export type TLifeMode = (typeof LIFE_MODES)[keyof typeof LIFE_MODES];

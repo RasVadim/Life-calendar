@@ -8,6 +8,6 @@ import { UserDataEntity } from '../../lifeCalendarDB';
  * React hook to get user data from IndexedDB reactively
  * @returns {UserDataEntity} User data
  */
-export function useDBUserData(): UserDataEntity | undefined {
+export const useDBUserData = (): UserDataEntity | undefined => {
   return useLiveQuery(() => lifeCalendarDB.userData.toCollection().first(), []);
-}
+};
