@@ -1,0 +1,88 @@
+@import '../../../../styles/vars.styl'
+
+.wrapper
+  position absolute
+
+.content
+  padding 18px 0
+  color var(--whiteout-color)
+  font-size 16px
+  font-weight 500
+  text-align center
+  position fixed
+  top 35%
+  left 0
+  right 0
+  z-index 180
+  background rgba(0, 0, 0, 0.8)
+  transform translateY(0)
+  transition transform 0.3s ease
+
+.header
+  display flex
+  flex-direction column
+
+.label
+  font-size 18px
+  font-weight 600
+  text-align center
+
+.sideLabel
+  font-size 14px
+  font-weight 300
+  text-align center
+  color var(--secondary-color)
+  line-height 10px
+
+.zoomArea
+  display flex
+  gap 1px
+  justify-content center
+  align-items center
+  flex-wrap wrap
+  width 100%
+  padding 20px 0px
+
+.weeksContainer
+  display flex
+  gap 1px
+  justify-content center
+  align-items center
+  flex-wrap wrap
+  width 100%
+  overflow-x auto
+  padding 0 2px
+
+.blackout
+  width 100%
+  height 100vh
+  background-color var(--blackout-color)
+  position fixed
+  top 0
+  left 0
+  z-index 50
+  opacity 50%
+  animation 0.5s show ease
+  animation-fill-mode forwards
+
+  @keyframes show
+    from
+      opacity 0
+
+    to
+      opacity 50%
+
+.hidden
+  animation 0.5s hide ease
+  animation-fill-mode forwards
+  pointer-events none
+
+  @keyframes hide
+    from
+      display flex
+      opacity 50%
+
+    to
+      opacity 0
+      display none
+      z-index 0

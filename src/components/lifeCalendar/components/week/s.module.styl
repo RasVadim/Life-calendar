@@ -9,6 +9,9 @@
   background-color var(--default-color)
   border-radius 2px
   font-size 1px
+  width auto
+  flex 1 1 0%
+  min-width 0
 
   @media (min-width $medium-width)
     border solid 2px var(--disabled-color)
@@ -21,18 +24,12 @@
 
 .seasonsMode
   border-radius 4px
-  width auto
-  flex 1 1 0%
-  min-width 0
 
   @media (min-width $medium-width)
     border-radius 6px
 
 .monthsMode
   border-radius 14px
-  width auto
-  flex 1 1 0%
-  min-width 0
   border solid 2px var(--disabled-color)
 
   @media (min-width $medium-width)
@@ -41,7 +38,7 @@
 
 .present
   box-shadow 0 0 6px 2px var(--week-present-color)
-  z-index 10
+  z-index 70
 
 .present.monthsMode
   box-shadow 0 0 6px 3px var(--week-present-color)

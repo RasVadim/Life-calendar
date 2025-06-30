@@ -6,6 +6,8 @@ export type { TLanguage } from './language/atom';
 
 export { useLifeGridMode, useSetLifeGridMode } from './lifeGridMode/useLifeGridMode';
 
+export { useZoomCentralWeek, useSetZoomCentralWeek } from './zoomCentralWeek/useCentralWeek';
+
 export { useSyncPending, useSetSyncPending } from './syncPending/useSyncPending';
 
 export { usePageLoading, useSetPageLoading } from './pageLoading/usePageLoading';

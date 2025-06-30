@@ -25,6 +25,7 @@ export const Week: FC<PropsType> = ({ id, week, isByWidth, lifeMode }) => {
   return (
     <div
       key={id}
+      data-week-id={id}
       className={cx(s.week, {
         [s.present]: isPresent,
         [s.byWidth]: isByWidth,
