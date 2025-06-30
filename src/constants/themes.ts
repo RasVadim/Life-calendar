@@ -49,7 +49,7 @@ export const THEMES = {
     secondary: '#6c757d',
     nonActive: '#9DB2CE',
     text: '#bbbcbf',
-    background: '#242424',
+    background: '#000',
     disabledBackground: '#747474',
     disabled: '#747474',
     backgroundFront: '#1E1E1E',
