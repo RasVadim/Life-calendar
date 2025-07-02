@@ -2,6 +2,7 @@ import { FC, useLayoutEffect, useRef, useCallback } from 'react';
 
 import cx from 'classnames';
 
+import { useDevice } from '@/hooks';
 import { useSetSyncPending } from '@/store/atoms';
 import { IWeek } from '@/store/clientDB';
 
@@ -27,6 +28,8 @@ const groupWeeksByMonth = (weeks: IWeek[]) => {
 };
 
 export const MonthsGrid: FC<TProps> = ({ weeks, offsetBegin, isByWidth, todayWeekId }) => {
+  const { isMedium } = useDevice();
+
   const grouped = groupWeeksByMonth(weeks);
   const monthKeys = Object.keys(grouped).sort();
 
@@ -66,9 +69,21 @@ export const MonthsGrid: FC<TProps> = ({ weeks, offsetBegin, isByWidth, todayWee
           }
         }
         const [year, month] = key.split('-');
+
+        // Get zodiac from the first week of the season
+        const firstWeek = monthWeeks.find((week) => typeof week !== 'number') as IWeek | undefined;
+        const zodiac = firstWeek?.yearZodiacLabel || '';
+
         return (
           <div ref={(el) => (monthRefs.current[idx] = el)} key={key}>
-            <Month year={year} month={month} weeks={monthWeeks} isByWidth={isByWidth} />
+            <Month
+              year={year}
+              zodiac={zodiac}
+              month={month}
+              weeks={monthWeeks}
+              isByWidth={isByWidth}
+              isMediumScreen={isMedium}
+            />
           </div>
         );
       })}

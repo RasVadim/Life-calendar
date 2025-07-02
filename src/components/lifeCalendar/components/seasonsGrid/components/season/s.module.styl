@@ -13,14 +13,24 @@
   gap 6px
   font-size 13px
   margin-bottom 6px
-  padding-left 12px
+  padding-left 16px
   opacity 1
   animation fadeIn 1.4s ease
+  align-items center
+
+  svg
+    fill var(--primary-color)
+
+    path
+      fill var(--primary-color)
 
   @media (min-width $medium-width)
     position absolute
-    margin-left -130px
+    margin-left -174px
     margin-top 12px
+    width 154px
+    justify-content end
+    gap 8px
 
 .weeksRow
   display flex

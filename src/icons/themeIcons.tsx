@@ -69,7 +69,11 @@ export const StarIcon: FC<PropsType> = ({ size = '20', color = '#9DB2CE', isActi
   </svg>
 );
 
-export const PaletteIcon: FC<PropsType> = ({ size = '20', color = '#9DB2CE', isActive = false }) => (
+export const PaletteIcon: FC<PropsType> = ({
+  size = '20',
+  color = '#9DB2CE',
+  isActive = false,
+}) => (
   <svg
     width={size}
     height={size}
@@ -124,4 +128,4 @@ export const RocketIcon: FC<PropsType> = ({ size = '20', color = '#9DB2CE', isAc
       strokeLinejoin="round"
     />
   </svg>
-); 
+);

@@ -23,3 +23,16 @@ export { ChevronIcon } from './chevronIcon';
 export { CheckIcon } from './checkIcon';
 
 export { MoonIcon, SunIcon, StarIcon, PaletteIcon, RocketIcon } from './themeIcons';
+
+// Zodiac
+export { BullIcon } from './zodiac/BullIcon';
+export { DragonIcon } from './zodiac/DragonIcon';
+export { DogIcon } from './zodiac/DogIcon';
+export { GoatIcon } from './zodiac/GoatIcon';
+export { HorseIcon } from './zodiac/HorseIcon';
+export { MonkeyIcon } from './zodiac/MonkeyIcon';
+export { RabbitIcon } from './zodiac/RabbitIcon';
+export { RatIcon } from './zodiac/RatIcon';
+export { RoosterIcon } from './zodiac/RoosterIcon';
+export { SnakeIcon } from './zodiac/SnakeIcon';
+export { PigIcon } from './zodiac/PigIcon';

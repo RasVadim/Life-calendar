@@ -1,24 +1,31 @@
 import { FC } from 'react';
 
 import { Week } from '@/components/lifeCalendar/components/week/Week';
-import { LIFE_MODES } from '@/constants';
+import { LIFE_MODES, ZODIAC_ICONS } from '@/constants';
 import { useTranslation } from '@/hooks';
 import { IWeek } from '@/store/clientDB';
+import { TWeekZodiac } from '@/types';
 
 import s from './s.module.styl';
 
 type TProps = {
   year: string;
+  zodiac: string;
   month: string;
   weeks: (IWeek | number)[];
   isByWidth: boolean;
+  isMediumScreen: boolean;
 };
 
-export const Month: FC<TProps> = ({ year, month, weeks, isByWidth }) => {
+export const Month: FC<TProps> = ({ year, zodiac, month, weeks, isByWidth, isMediumScreen }) => {
   const { t } = useTranslation();
+
+  const ZodiacIcon = ZODIAC_ICONS[zodiac as TWeekZodiac];
+
   return (
     <div className={s.wrapper}>
       <div className={s.header}>
+        <ZodiacIcon size={isMediumScreen ? '16' : '20'} />
         <div className={s.labelYear}>{year}</div>
         <div className={s.labelMonth}>{t(`life.${month}`)}</div>
       </div>
