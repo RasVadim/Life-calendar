@@ -30,7 +30,6 @@ export const Menu: FC<PropsType> = ({ isOpen }) => {
         ]}
         onSelection={() => {}}
       />
-      <br />
       <Button
         label="Open User Data Drawer"
         active

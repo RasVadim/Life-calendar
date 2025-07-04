@@ -12,7 +12,7 @@ export const changeByDrawerStatusBarColor = () => {
   if (!themeColorMeta) return;
 
   // Get the current status bar color from meta tag
-  const currentStatusBarColor = themeColorMeta.getAttribute('content') || '#ffffff';
+  const currentStatusBarColor = themeColorMeta.getAttribute('content') || '#000000';
   const blackoutColor = getComputedStyle(body).getPropertyValue('--blackout-color').trim();
   const currentStatusBarColorRgb = hexToRgb(currentStatusBarColor);
   const blackoutColorRgb = hexToRgb(blackoutColor);

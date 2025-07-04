@@ -42,12 +42,7 @@ export const YearsIcon: FC<PropsType> = ({
         strokeLinecap="round"
         strokeLinejoin="round"
       />
-      <circle
-        cx="12"
-        cy="12"
-        r="5"
-        fill={secondaryColor}
-      />
+      <circle cx="12" cy="12" r="5" fill={secondaryColor} />
     </svg>
   ) : (
     <svg

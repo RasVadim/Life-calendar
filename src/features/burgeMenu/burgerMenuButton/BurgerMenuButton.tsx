@@ -36,9 +36,9 @@ export const BurgerMenuButton: FC<BurgerMenuProps> = ({ backButton = false, onBa
     }
     setIsOpen((prev) => {
       if (!prev) {
-        setStatusBarColor('--background-front-color');
+        setStatusBarColor({ colorName: '--background-front-color' });
       } else {
-        setStatusBarColor();
+        setStatusBarColor({ colorName: '--background-color' });
       }
       return !prev;
     });

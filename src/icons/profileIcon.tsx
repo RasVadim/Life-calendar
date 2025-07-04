@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC } from 'react';
 
 type PropsType = {
   size?: string;
@@ -8,9 +8,9 @@ type PropsType = {
 };
 
 export const ProfileIcon: FC<PropsType> = ({
-  size = "20",
-  color = "#9DB2CE",
-  secondaryColor = "#FFFFFF",
+  size = '20',
+  color = '#9DB2CE',
+  secondaryColor = '#FFFFFF',
   isActive = false,
 }) => {
   return isActive ? (

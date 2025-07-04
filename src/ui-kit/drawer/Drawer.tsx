@@ -41,7 +41,7 @@ export const Drawer: FC<DrawerProps> = ({
     if (drawerKey) {
       previusStatusBarColor.current = changeByDrawerStatusBarColor();
     } else {
-      setStatusBarColor(previusStatusBarColor.current);
+      setStatusBarColor({ color: previusStatusBarColor.current });
     }
   }, [drawerKey]);
 
