@@ -37,15 +37,15 @@ export const Drawer: FC<DrawerProps> = ({
 
   const { t } = useTranslation();
 
+  const isOpen = drawerKey === keyProp;
+
   useEffect(() => {
-    if (drawerKey) {
+    if (isOpen) {
       previusStatusBarColor.current = changeByDrawerStatusBarColor();
     } else {
       setStatusBarColor({ color: previusStatusBarColor.current });
     }
-  }, [drawerKey]);
-
-  const isOpen = drawerKey === keyProp;
+  }, [isOpen]);
 
   const showContent = isOpen || forceReRender;
 
