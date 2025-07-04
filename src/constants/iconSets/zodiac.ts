@@ -1,17 +1,19 @@
 import { FC } from 'react';
 
-import { BullIcon } from '@/icons/zodiac/bullIcon';
-import { DogIcon } from '@/icons/zodiac/dogIcon';
-import { DragonIcon } from '@/icons/zodiac/dragonIcon';
-import { GoatIcon } from '@/icons/zodiac/goatIcon';
-import { HorseIcon } from '@/icons/zodiac/horseIcon';
-import { MonkeyIcon } from '@/icons/zodiac/monkeyIcon';
-import { PigIcon } from '@/icons/zodiac/pigIcon';
-import { RabbitIcon } from '@/icons/zodiac/rabbitIcon';
-import { RatIcon } from '@/icons/zodiac/ratIcon';
-import { RoosterIcon } from '@/icons/zodiac/roosterIcon';
-import { SnakeIcon } from '@/icons/zodiac/snakeIcon';
-import { TigerIcon } from '@/icons/zodiac/TigerIcon';
+import {
+  BullIcon,
+  DogIcon,
+  DragonIcon,
+  GoatIcon,
+  HorseIcon,
+  MonkeyIcon,
+  PigIcon,
+  RabbitIcon,
+  RatIcon,
+  RoosterIcon,
+  SnakeIcon,
+  TigerIcon,
+} from '@/icons';
 import { TWeekZodiac } from '@/types';
 
 export const ZODIAC_ICONS: Record<TWeekZodiac, FC<{ size?: string; color?: string }>> = {

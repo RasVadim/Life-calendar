@@ -36,3 +36,18 @@ export { RatIcon } from './zodiac/ratIcon';
 export { RoosterIcon } from './zodiac/roosterIcon';
 export { SnakeIcon } from './zodiac/snakeIcon';
 export { PigIcon } from './zodiac/pigIcon';
+export { TigerIcon } from './zodiac/tigerIcon';
+
+// Zodiac Circle Icons
+export { RatCircleIcon } from './zodiac/circles/ratCircleIcon';
+export { DogCircleIcon } from './zodiac/circles/dogCircleIcon';
+export { DragonCircleIcon } from './zodiac/circles/dragonCircleIcon';
+export { GoatCircleIcon } from './zodiac/circles/goatCircleIcon';
+export { HorseCircleIcon } from './zodiac/circles/horseCircleIcon';
+export { MonkeyCircleIcon } from './zodiac/circles/monkeyCircleIcon';
+export { PigCircleIcon } from './zodiac/circles/pigCircleIcon';
+export { RabbitCircleIcon } from './zodiac/circles/rabbitCircleIcon';
+export { RoosterCircleIcon } from './zodiac/circles/roosterCircleIcon';
+export { SnakeCircleIcon } from './zodiac/circles/snakeCircleIcon';
+export { TigerCircleIcon } from './zodiac/circles/tigerCircleIcon';
+export { BullCircleIcon } from './zodiac/circles/bullCircleIcon';
