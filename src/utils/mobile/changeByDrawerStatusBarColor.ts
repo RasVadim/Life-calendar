@@ -20,4 +20,6 @@ export const changeByDrawerStatusBarColor = () => {
   const blendedColor = rgbToHex(r, g, b);
 
   themeColorMeta.setAttribute('content', blendedColor);
+
+  return currentStatusBarColor;
 };

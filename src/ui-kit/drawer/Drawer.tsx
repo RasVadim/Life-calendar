@@ -1,4 +1,4 @@
-import { FC, ReactNode, useEffect } from 'react';
+import { FC, ReactNode, useEffect, useRef } from 'react';
 
 import cx from 'classnames';
 
@@ -33,13 +33,15 @@ export const Drawer: FC<DrawerProps> = ({
 }) => {
   const [drawerKey] = useOpenDrawerKey();
 
+  const previusStatusBarColor = useRef<string | undefined>('');
+
   const { t } = useTranslation();
 
   useEffect(() => {
     if (drawerKey) {
-      changeByDrawerStatusBarColor();
+      previusStatusBarColor.current = changeByDrawerStatusBarColor();
     } else {
-      setStatusBarColor();
+      setStatusBarColor(previusStatusBarColor.current);
     }
   }, [drawerKey]);
 
