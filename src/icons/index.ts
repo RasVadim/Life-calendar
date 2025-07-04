@@ -25,14 +25,14 @@ export { CheckIcon } from './checkIcon';
 export { MoonIcon, SunIcon, StarIcon, PaletteIcon, RocketIcon } from './themeIcons';
 
 // Zodiac
-export { BullIcon } from './zodiac/BullIcon';
-export { DragonIcon } from './zodiac/DragonIcon';
-export { DogIcon } from './zodiac/DogIcon';
-export { GoatIcon } from './zodiac/GoatIcon';
-export { HorseIcon } from './zodiac/HorseIcon';
-export { MonkeyIcon } from './zodiac/MonkeyIcon';
-export { RabbitIcon } from './zodiac/RabbitIcon';
-export { RatIcon } from './zodiac/RatIcon';
-export { RoosterIcon } from './zodiac/RoosterIcon';
-export { SnakeIcon } from './zodiac/SnakeIcon';
-export { PigIcon } from './zodiac/PigIcon';
+export { BullIcon } from './zodiac/bullIcon';
+export { DragonIcon } from './zodiac/dragonIcon';
+export { DogIcon } from './zodiac/dogIcon';
+export { GoatIcon } from './zodiac/goatIcon';
+export { HorseIcon } from './zodiac/horseIcon';
+export { MonkeyIcon } from './zodiac/monkeyIcon';
+export { RabbitIcon } from './zodiac/rabbitIcon';
+export { RatIcon } from './zodiac/ratIcon';
+export { RoosterIcon } from './zodiac/roosterIcon';
+export { SnakeIcon } from './zodiac/snakeIcon';
+export { PigIcon } from './zodiac/pigIcon';

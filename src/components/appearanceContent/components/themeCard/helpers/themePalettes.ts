@@ -1,5 +1,5 @@
 import { THEMES } from '@/constants';
-import { EThemeMode } from '@/store/atoms';
+import { EThemeMode } from '@/types';
 
 export type TThemePalette = {
   brandG1: string;

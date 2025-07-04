@@ -1,4 +1,4 @@
-import { EThemeMode } from '@/store/atoms';
+import { EThemeMode } from '@/types';
 
 /**
  * Toggles the theme of the App between available themes.

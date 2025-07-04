@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 
 import { useTranslation } from '@/hooks';
 import { ProfileIcon } from '@/icons';
-import { EThemeMode } from '@/store/atoms';
+import { EThemeMode } from '@/types';
 
 import { themePalettes } from './helpers';
 

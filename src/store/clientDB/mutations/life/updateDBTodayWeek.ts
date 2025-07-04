@@ -4,7 +4,7 @@ import { lifeCalendarDB } from '@/store/clientDB';
  * Update todayWeekId and todayWeekIndex in meta table (always one record with key 'main')
  * @param params - object with todayWeekId and todayWeekIndex
  */
-export const updateTodayWeek = async ({
+export const updateDBTodayWeek = async ({
   todayWeekId,
   todayWeekIndex,
 }: {

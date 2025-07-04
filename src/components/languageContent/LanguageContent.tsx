@@ -4,7 +4,8 @@ import { SettingBlock } from '@/components/settingBlock/SettingBlock';
 import { SettingsGroup } from '@/components/settingsGroup/SettingsGroup';
 import { LANGUAGES } from '@/constants';
 import { useTranslation } from '@/hooks';
-import { TLanguage, useSetLanguage } from '@/store/atoms';
+import { useSetLanguage } from '@/store/atoms';
+import { TLanguage } from '@/types';
 
 import s from './s.module.styl';
 

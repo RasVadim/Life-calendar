@@ -1,5 +1,6 @@
 import { useTranslation } from '@/hooks';
-import { EThemeMode, useThemeMode } from '@/store/atoms';
+import { useThemeMode } from '@/store/atoms';
+import { EThemeMode } from '@/types';
 import { Button } from '@/ui-kit';
 
 import s from './s.module.styl';

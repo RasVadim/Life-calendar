@@ -1,6 +1,15 @@
 import Dexie, { Table } from 'dexie';
 
-import { THolidayName, ESeason, EWeekType, TWeekZodiac, EHolidayType } from '@/types';
+import {
+  THolidayName,
+  ESeason,
+  EWeekType,
+  TWeekZodiac,
+  EHolidayType,
+  EZodiacMode,
+  EThemeMode,
+  TLanguage,
+} from '@/types';
 
 // Тип праздника
 export interface IHoliday {
@@ -40,7 +49,7 @@ export interface IWeek {
   photoLocal?: string;
 }
 
-// Type for user settings entity
+// Type for user data entity
 export interface UserDataEntity {
   id: string; // unique id, for example 'main' or user id
   birthDate: string | null; // user's birth date (ISO string)
@@ -55,10 +64,19 @@ export interface MetaEntity {
   todayWeekIndex: number;
 }
 
+// Type for user settings entity
+export interface Settings {
+  id: string; // unique id, for example 'main' or user id
+  theme: EThemeMode;
+  language: TLanguage;
+  zodiacMode: EZodiacMode;
+}
+
 // Dexie database class
 export class LifeCalendarDB extends Dexie {
   weeks!: Table<IWeek, string>;
   userData!: Table<UserDataEntity, string>;
+  settings!: Table<Settings, string>;
   holidays!: Table<IHoliday, string>;
   meta!: Table<MetaEntity, string>;
 
@@ -67,6 +85,7 @@ export class LifeCalendarDB extends Dexie {
     this.version(1).stores({
       weeks: 'id, dateStart, dateEnd, type', // Create 'weeks' table with primary key 'id' and indexes on 'dateStart', 'dateEnd', 'type'
       userData: 'id', // Create 'userData' table with primary key 'id'
+      settings: 'id', // Create 'settings' table with primary key 'id'
       holidays: 'name', // Create 'holidays' table with primary key 'name'
       meta: 'id', // Create 'meta' table for global app info
     });

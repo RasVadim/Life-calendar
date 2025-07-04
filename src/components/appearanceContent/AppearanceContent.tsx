@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 
 import { SettingBlock, SettingsGroup } from '@/components';
 import { useThemeMode, useSetThemeMode } from '@/store/atoms';
-import { EThemeMode } from '@/store/atoms';
+import { EThemeMode } from '@/types';
 
 import { ThemeCard, ThemePreview } from './components';
 

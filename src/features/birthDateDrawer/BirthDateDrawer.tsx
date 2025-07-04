@@ -8,7 +8,7 @@ import { ISO_DATE_FORMAT, DEFAULT_BIRTH_DATE } from '@/constants';
 import { useTranslation } from '@/hooks';
 import { OutlineProfileIcon } from '@/icons';
 import { useSetOpenDrawerKey, useSetPageLoading, useSetSyncPending } from '@/store/atoms';
-import { resetDBWeeks, saveWeeks, updateUserData } from '@/store/clientDB';
+import { resetDBWeeks, saveDBWeeks, updateDBUserData } from '@/store/clientDB';
 import { useDBUserData } from '@/store/clientDB';
 import { EModalKeys } from '@/types';
 import { Button, Drawer, WheelDatePicker } from '@/ui-kit';
@@ -80,7 +80,7 @@ export const BirthDateDrawer = () => {
 
         const deathDate = format(addYears(new Date(birthDate), lifeExpectancy), ISO_DATE_FORMAT);
 
-        await updateUserData({
+        await updateDBUserData({
           birthDate,
           lifeExpectancy,
           deathDate,
@@ -89,7 +89,7 @@ export const BirthDateDrawer = () => {
         const weeks = await generateWeeksInWorker(birthDate, lifeExpectancy);
 
         await resetDBWeeks();
-        await saveWeeks(weeks);
+        await saveDBWeeks(weeks);
       } catch (err) {
         // handle error
       } finally {

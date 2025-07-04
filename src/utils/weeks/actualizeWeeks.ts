@@ -1,4 +1,4 @@
-import { IWeek, lifeCalendarDB, updateTodayWeek, updateWeek } from '@/store/clientDB';
+import { IWeek, lifeCalendarDB, updateDBTodayWeek, updateDBWeek } from '@/store/clientDB';
 import { EWeekType } from '@/types/life';
 import { findWithIndex } from '@/utils';
 
@@ -53,8 +53,8 @@ export const actualizeWeeks = async () => {
     }
   }
   for (const w of updatedWeeks) {
-    await updateWeek(w);
+    await updateDBWeek(w);
   }
   // Update todayWeekId in meta
-  await updateTodayWeek({ todayWeekId: nowWeekId, todayWeekIndex: nowIndex });
+  await updateDBTodayWeek({ todayWeekId: nowWeekId, todayWeekIndex: nowIndex });
 };

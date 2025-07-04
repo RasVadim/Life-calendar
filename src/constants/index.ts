@@ -11,3 +11,7 @@ export * from './tabs';
 export * from './language';
 
 export * from './themes';
+
+// Icon Sets
+export * from './iconSets/zodiac';
+export * from './iconSets/zodiacCircles';

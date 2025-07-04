@@ -2,7 +2,8 @@ import { useEffect } from 'react';
 
 import i18n from 'i18next';
 
-import { TLanguage, useLanguage, useSetSyncPending } from '@/store/atoms';
+import { useLanguage, useSetSyncPending } from '@/store/atoms';
+import { TLanguage } from '@/types';
 
 export const useInitLanguage = () => {
   const [language, setLanguage] = useLanguage();

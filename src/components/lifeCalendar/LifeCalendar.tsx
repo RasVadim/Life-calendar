@@ -3,7 +3,7 @@ import { FC } from 'react';
 import { LIFE_MODES } from '@/constants';
 import { useLifeGridMode } from '@/store/atoms';
 import { IWeek, useDBUserData } from '@/store/clientDB';
-import { useTodayWeek } from '@/store/clientDB';
+import { useDBTodayWeek } from '@/store/clientDB';
 
 import { MonthsGrid, SeasonsGrid, YearsGrid } from './components';
 import { getOffsetBegin } from './utils';
@@ -17,7 +17,7 @@ type PropsType = {
 export const LifeCalendar: FC<PropsType> = ({ weeks }) => {
   const userData = useDBUserData();
   const [lifeMode] = useLifeGridMode();
-  const { todayWeekId } = useTodayWeek();
+  const { todayWeekId } = useDBTodayWeek();
 
   const isByWidth = Boolean(
     (userData?.lifeExpectancy && userData.lifeExpectancy < 90) || lifeMode !== LIFE_MODES.YEARS,

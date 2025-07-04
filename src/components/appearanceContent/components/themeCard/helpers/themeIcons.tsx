@@ -1,6 +1,6 @@
 // TODO: unused icons
 import { MoonIcon, PaletteIcon, RocketIcon, StarIcon, SunIcon } from '@/icons';
-import { EThemeMode } from '@/store/atoms';
+import { EThemeMode } from '@/types';
 
 // Generate themes array dynamically from EThemeMode
 export const themeIcons: Record<EThemeMode, JSX.Element> = {
