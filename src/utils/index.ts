@@ -4,6 +4,7 @@ export { hexToRgb } from './common/hexToRgb';
 export { rgbToHex } from './common/rgbToHex';
 export { blendColors } from './common/blendColors';
 export { formatDateToUI } from './common/formatDateToUI';
+export { findWithIndex } from './common/findWithIndex';
 
 // mobile
 export { changeByDrawerStatusBarColor } from './mobile/changeByDrawerStatusBarColor';
@@ -22,5 +23,6 @@ export { getDaysWord } from './getRightWordEnd/getDaysWord';
 export { getHoursWord } from './getRightWordEnd/getHoursWord';
 export { getRestDaysSentence } from './getRightWordEnd/getRestDaysSentence';
 
-// generateWeeks
-export { generateWeeks } from './generateWeeks/generateWeeks';
+// weeks
+export { generateWeeks } from './weeks/generateWeeks/generateWeeks';
+export { actualizeWeeks } from './weeks/actualizeWeeks';

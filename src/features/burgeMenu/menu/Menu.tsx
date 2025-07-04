@@ -6,6 +6,7 @@ import { LanguageSwitcher, ThemeSwitcher } from '@/features';
 import { useSetOpenDrawerKey } from '@/store/atoms';
 import { EModalKeys } from '@/types';
 import { Button } from '@/ui-kit';
+import { Segmented } from '@/ui-kit/segmented/Segmented';
 
 import s from './s.module.styl';
 
@@ -21,7 +22,14 @@ export const Menu: FC<PropsType> = ({ isOpen }) => {
         <ThemeSwitcher />
         <LanguageSwitcher />
       </div>
-      <br />
+      <Segmented
+        tabs={[
+          { label: 'Animals', value: 'animals' },
+          { label: 'Circle Animals', value: 'circleAnimals' },
+          { label: 'Off', value: 'off' },
+        ]}
+        onSelection={() => {}}
+      />
       <br />
       <Button
         label="Open User Data Drawer"

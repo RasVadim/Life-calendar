@@ -1,10 +1,10 @@
-export * from './useDevice/useDevice';
+export { useDevice } from './useDevice';
 
-export * from './useLifeMode/useLifeMode';
+export { useTranslation } from './useTranslation';
 
-export * from './useTranslation/useTranslation';
+export { useInitLanguage } from './useInitLanguage';
 
-export * from './useInitLanguage/useInitLanguage';
+export { useActualizeWeeks } from './useActualizeWeeks';
 
 // Debug
-export * from './debug';
+export { useConsoleLogger } from './debug';

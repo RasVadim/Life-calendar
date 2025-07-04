@@ -8,7 +8,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { ISO_DATE_FORMAT } from '@/constants';
 import { useTranslation } from '@/hooks';
 import { useSetOpenDrawerKey, useSetPageLoading, useSetSyncPending } from '@/store/atoms';
-import { resetDBWeeks, saveWeeks, updateUserData } from '@/store/clientDB';
+import { resetDBWeeks, saveDBWeeks, updateDBUserData } from '@/store/clientDB';
 import { useDBUserData } from '@/store/clientDB';
 import { WheelDatePicker, Select, Button } from '@/ui-kit';
 import { generateWeeksInWorker } from '@/webWorkers';
@@ -92,7 +92,7 @@ export const LifeExpectancyDrawerContent = () => {
       setPageLoading(true);
 
       try {
-        await updateUserData({ deathDate, lifeExpectancy });
+        await updateDBUserData({ deathDate, lifeExpectancy });
         // --- Web Worker helper ---
         const weeks = await generateWeeksInWorker(
           userData?.birthDate || '',
@@ -100,7 +100,7 @@ export const LifeExpectancyDrawerContent = () => {
           deathDate || undefined,
         );
         await resetDBWeeks();
-        await saveWeeks(weeks);
+        await saveDBWeeks(weeks);
       } catch (err) {
         // handle error
       } finally {

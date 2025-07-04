@@ -2,9 +2,9 @@ import { FC } from 'react';
 
 import cx from 'classnames';
 
-import { LIFE_GRID_ZOOM_LEVELS } from '@/constants';
+import { LIFE_MODES } from '@/constants';
 import { IWeek } from '@/store/clientDB';
-import { EWeekType } from '@/types/life';
+import { EWeekType, TLifeMode } from '@/types';
 
 import { getBGColor, getBorderColor } from './utils';
 
@@ -14,21 +14,23 @@ type PropsType = {
   id: string;
   week: IWeek;
   isByWidth?: boolean;
-  columns: number;
+  lifeMode: TLifeMode;
 };
 
-export const Week: FC<PropsType> = ({ id, week, isByWidth, columns }) => {
+export const Week: FC<PropsType> = ({ id, week, isByWidth, lifeMode }) => {
   const bGColor = getBGColor(week.holidays);
   const borderColor = getBorderColor(week.type);
   const isPresent = week.type === EWeekType.Present;
 
   return (
     <div
+      key={id}
+      data-week-id={id}
       className={cx(s.week, {
         [s.present]: isPresent,
         [s.byWidth]: isByWidth,
-        [s.seasonsMode]: columns === LIFE_GRID_ZOOM_LEVELS.seasons,
-        [s.monthsMode]: columns === LIFE_GRID_ZOOM_LEVELS.months,
+        [s.seasonsMode]: lifeMode === LIFE_MODES.SEASONS,
+        [s.monthsMode]: lifeMode === LIFE_MODES.MONTHS,
       })}
       style={{ backgroundColor: bGColor, borderColor: borderColor }}
     >

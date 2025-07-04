@@ -1,6 +1,6 @@
-import { FC } from "react";
+import { FC } from 'react';
 
-import s from "./s.module.styl";
+import s from './s.module.styl';
 
 export const SyncingLine: FC = () => {
   return (

@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC } from 'react';
 
 type PropsType = {
   size?: string;
@@ -6,12 +6,8 @@ type PropsType = {
   isActive?: boolean;
 };
 
-export const BackIcon: FC<PropsType> = ({
-  size = "34",
-  color = "#747474",
-  isActive = false,
-}) => {
-  const iconColor = isActive ? "#95cbc9" : color;
+export const BackIcon: FC<PropsType> = ({ size = '34', color = '#747474', isActive = false }) => {
+  const iconColor = isActive ? '#95cbc9' : color;
   return (
     <svg
       width={size}

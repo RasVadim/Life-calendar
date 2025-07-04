@@ -48,8 +48,6 @@ export const InfoAfterBirthDate: FC<Props> = ({
   const { t, i18n } = useTranslation();
 
   const isBirthDateFilled = !!birthDate;
-  const isLongLiver = lifeExpectancy && lifeExpectancy >= DEFAULT_LIFE_SPAN_YEARS - 5;
-  const expectancyWeeks = isLongLiver ? Math.round(lifeExpectancy * 52.179) : 0;
 
   useEffect(() => {
     if (birthDateFromDB) {
@@ -87,6 +85,9 @@ export const InfoAfterBirthDate: FC<Props> = ({
   const sleepYearsWord = showSleepYears
     ? getYearsWordGenitive(sleepHoursInYearsInt, i18n.language)
     : '';
+
+  const isLongLiver = age >= DEFAULT_LIFE_SPAN_YEARS - 5;
+  const expectancyWeeks = isLongLiver && lifeExpectancy ? Math.round(lifeExpectancy * 52.179) : 0;
 
   return (
     <>

@@ -1,10 +1,11 @@
 import { FC } from 'react';
 
-import { LIFE_GRID_ZOOM_LEVELS } from '@/constants';
-import { useLifeGridColumnsCount } from '@/store/atoms';
+import { LIFE_MODES } from '@/constants';
+import { useLifeGridMode } from '@/store/atoms';
 import { IWeek, useDBUserData } from '@/store/clientDB';
+import { useDBTodayWeek } from '@/store/clientDB';
 
-import { Week, ZoomableGrid } from './components';
+import { MonthsGrid, SeasonsGrid, YearsGrid } from './components';
 import { getOffsetBegin } from './utils';
 
 import s from './s.module.styl';
@@ -15,28 +16,40 @@ type PropsType = {
 
 export const LifeCalendar: FC<PropsType> = ({ weeks }) => {
   const userData = useDBUserData();
-  const [columns] = useLifeGridColumnsCount();
+  const [lifeMode] = useLifeGridMode();
+  const { todayWeekId } = useDBTodayWeek();
 
   const isByWidth = Boolean(
-    (userData?.lifeExpectancy && userData.lifeExpectancy < 90) ||
-      columns !== LIFE_GRID_ZOOM_LEVELS.years,
+    (userData?.lifeExpectancy && userData.lifeExpectancy < 90) || lifeMode !== LIFE_MODES.YEARS,
   );
 
-  const offsetBegin = getOffsetBegin(columns, userData?.birthDate);
+  // 14 weeks = season + 1 week
+  const offsetBegin = getOffsetBegin(lifeMode, weeks?.slice(0, 14));
 
   return (
     <div className={s.calendar}>
-      <ZoomableGrid>
-        {[...offsetBegin, ...(weeks || [])].map((week) => {
-          if (typeof week === 'number') {
-            return <div key={week} />;
-          }
+      {lifeMode === LIFE_MODES.MONTHS && (
+        <MonthsGrid
+          weeks={weeks || []}
+          offsetBegin={offsetBegin}
+          isByWidth={isByWidth}
+          todayWeekId={todayWeekId || ''}
+        />
+      )}
 
-          return (
-            <Week key={week.id} id={week.id} week={week} isByWidth={isByWidth} columns={columns} />
-          );
-        })}
-      </ZoomableGrid>
+      {lifeMode === LIFE_MODES.SEASONS && (
+        <SeasonsGrid
+          weeks={weeks || []}
+          offsetBegin={offsetBegin}
+          isByWidth={isByWidth}
+          todayWeekId={todayWeekId || ''}
+        />
+      )}
+
+      {lifeMode === LIFE_MODES.YEARS && (
+        <YearsGrid weeks={weeks || []} isByWidth={isByWidth} lifeMode={lifeMode} />
+      )}
+      {lifeMode !== LIFE_MODES.YEARS && <div className={s.bottomPadding} />}
     </div>
   );
 };
