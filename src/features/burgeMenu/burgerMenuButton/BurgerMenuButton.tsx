@@ -34,12 +34,14 @@ export const BurgerMenuButton: FC<BurgerMenuProps> = ({ backButton = false, onBa
     if (firstOpen.current !== true) {
       firstOpen.current = true;
     }
-    if (isOpen) {
-      setStatusBarColor('--background-front-color');
-    } else {
-      setStatusBarColor();
-    }
-    setIsOpen((prev) => !prev);
+    setIsOpen((prev) => {
+      if (!prev) {
+        setStatusBarColor('--background-front-color');
+      } else {
+        setStatusBarColor();
+      }
+      return !prev;
+    });
   };
 
   const handleBack = () => {
