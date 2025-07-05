@@ -52,7 +52,12 @@ export const LifeCalendar: FC<PropsType> = ({ weeks }) => {
       )}
 
       {lifeMode === LIFE_MODES.YEARS && (
-        <YearsGrid weeks={weeks || []} isByWidth={isByWidth} lifeMode={lifeMode} />
+        <YearsGrid
+          weeks={weeks || []}
+          isByWidth={isByWidth}
+          lifeMode={lifeMode}
+          zodiacIconSet={zodiacIconSet ?? ({} as TZodiacIconSet)}
+        />
       )}
       {lifeMode !== LIFE_MODES.YEARS && <div className={s.bottomPadding} />}
     </div>

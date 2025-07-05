@@ -1,9 +1,11 @@
 import { useRef, useEffect } from 'react';
 
+import { useDevice } from '@/hooks';
 import { useZoomCentralWeek } from '@/store/atoms';
 import { IWeek } from '@/store/clientDB';
-import { TLifeMode } from '@/types';
+import { TLifeMode, TZodiacIconSet } from '@/types';
 
+import { GridLabels } from './components';
 import { VirtualRow } from '../virtaulRow/VirtaulRow';
 import { Week } from '../week/Week';
 
@@ -15,9 +17,12 @@ type PropsType = {
   weeks: IWeek[];
   isByWidth: boolean;
   lifeMode: TLifeMode;
+  zodiacIconSet: TZodiacIconSet;
 };
 
-export const YearsGrid = ({ weeks, isByWidth, lifeMode }: PropsType) => {
+export const YearsGrid = ({ weeks, isByWidth, lifeMode, zodiacIconSet }: PropsType) => {
+  const { isMedium } = useDevice();
+
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [zoomCentralWeekId, setZoomCentralWeekId] = useZoomCentralWeek();
 
@@ -104,6 +109,7 @@ export const YearsGrid = ({ weeks, isByWidth, lifeMode }: PropsType) => {
         {(weeks || []).map((week) => (
           <Week key={week.id} id={week.id} week={week} isByWidth={isByWidth} lifeMode={lifeMode} />
         ))}
+        {!isMedium && <GridLabels zodiacIconSet={zodiacIconSet} />}
       </div>
     </>
   );

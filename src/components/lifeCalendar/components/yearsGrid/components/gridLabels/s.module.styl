@@ -1,0 +1,46 @@
+@keyframes fadeIn
+  from
+    opacity 0
+
+  to
+    opacity 1
+
+.label
+  display flex
+  gap 1px
+  position absolute
+  left 0
+  width 100%
+  text-align left
+  padding 0 1px
+  color var(--text-secondary)
+  font-size 11px
+  font-weight 100
+  pointer-events none // Do not interfere with grid interaction
+  opacity 1
+  animation fadeIn 1.4s ease
+  margin-left -122px
+  margin-top -2px
+  width 110px
+  justify-content space-between
+
+.labelYear
+  color var(--text-secondary)
+  font-weight 700
+
+.labelZodiac
+  display flex
+  gap 3px
+  align-items center
+  justify-content center
+  opacity 0.6
+
+  svg:first-child
+    fill var(--primary2-color)
+    path
+      fill var(--primary2-color)
+
+  svg:last-child
+    fill var(--primary-color)
+    path
+      fill var(--primary-color)
