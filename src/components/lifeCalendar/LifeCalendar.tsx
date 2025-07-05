@@ -1,9 +1,11 @@
 import { FC } from 'react';
 
 import { LIFE_MODES } from '@/constants';
+import { useZodiacIconSet } from '@/hooks';
 import { useLifeGridMode } from '@/store/atoms';
 import { IWeek, useDBUserData } from '@/store/clientDB';
 import { useDBTodayWeek } from '@/store/clientDB';
+import { TZodiacIconSet } from '@/types';
 
 import { MonthsGrid, SeasonsGrid, YearsGrid } from './components';
 import { getOffsetBegin } from './utils';
@@ -18,6 +20,7 @@ export const LifeCalendar: FC<PropsType> = ({ weeks }) => {
   const userData = useDBUserData();
   const [lifeMode] = useLifeGridMode();
   const { todayWeekId } = useDBTodayWeek();
+  const zodiacIconSet = useZodiacIconSet();
 
   const isByWidth = Boolean(
     (userData?.lifeExpectancy && userData.lifeExpectancy < 90) || lifeMode !== LIFE_MODES.YEARS,
@@ -34,6 +37,7 @@ export const LifeCalendar: FC<PropsType> = ({ weeks }) => {
           offsetBegin={offsetBegin}
           isByWidth={isByWidth}
           todayWeekId={todayWeekId || ''}
+          zodiacIconSet={zodiacIconSet ?? ({} as TZodiacIconSet)}
         />
       )}
 
@@ -43,6 +47,7 @@ export const LifeCalendar: FC<PropsType> = ({ weeks }) => {
           offsetBegin={offsetBegin}
           isByWidth={isByWidth}
           todayWeekId={todayWeekId || ''}
+          zodiacIconSet={zodiacIconSet ?? ({} as TZodiacIconSet)}
         />
       )}
 

@@ -54,6 +54,17 @@
   &.active
     font-weight bold
 
+.unclickable
+  cursor default
+
+  &:focus, &:active, &.active
+    border none
+    outline none
+    box-shadow none
+    background var(--background-front-color)
+    border-bottom 1px solid var(--background-front-color)
+
+
 .first
   border-top-left-radius 28px
   border-top-right-radius 28px

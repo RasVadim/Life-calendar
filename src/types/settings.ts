@@ -1,3 +1,7 @@
+import { FC } from 'react';
+
+import { TWeekZodiac } from './life';
+
 export enum EThemeMode {
   LIGHT = 'light',
   DARK = 'dark',
@@ -13,3 +17,5 @@ export enum EZodiacMode {
   NATURAL = 'natural',
   OFF = 'off',
 }
+
+export type TZodiacIconSet = Record<TWeekZodiac, FC<{ size?: string; color?: string }>>;

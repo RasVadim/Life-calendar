@@ -36,6 +36,10 @@
     "p-years": "years",
     "share": "Share",
     "newVersion": "A new version is available",
-    "update": "Update"
+    "update": "Update",
+    "yearIcons": "Year icons",
+    "circles": "Circles",
+    "natural": "Nature",
+    "off": "Off"
   }
 }

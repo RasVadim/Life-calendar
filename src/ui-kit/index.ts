@@ -23,6 +23,9 @@ export { WheelPicker } from './wheelDatePicker/WheelPicker';
 
 export { WheelDatePicker } from './wheelDatePicker/WheelDatePicker';
 
+// Segmented
+export { Segmented } from './segmented/Segmented';
+
 // Data input components
 export { Select } from './select/Select';
 export type { TOption } from './select/Select';

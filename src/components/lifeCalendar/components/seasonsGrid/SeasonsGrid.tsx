@@ -5,6 +5,7 @@ import cx from 'classnames';
 import { useDevice } from '@/hooks';
 import { useSetSyncPending } from '@/store/atoms';
 import { IWeek } from '@/store/clientDB';
+import { TZodiacIconSet } from '@/types';
 
 import { Season } from './components';
 
@@ -15,6 +16,7 @@ type TProps = {
   offsetBegin: number[];
   isByWidth: boolean;
   todayWeekId: string;
+  zodiacIconSet: TZodiacIconSet;
 };
 
 // Group weeks by season, making sure winter (Dec+Jan+Feb) is always a single row
@@ -40,7 +42,13 @@ const groupWeeksBySeason = (weeks: IWeek[]) => {
   return grouped;
 };
 
-export const SeasonsGrid: FC<TProps> = ({ weeks, offsetBegin, isByWidth, todayWeekId }) => {
+export const SeasonsGrid: FC<TProps> = ({
+  weeks,
+  offsetBegin,
+  isByWidth,
+  todayWeekId,
+  zodiacIconSet,
+}) => {
   const { isMedium } = useDevice();
 
   const grouped = groupWeeksBySeason(weeks);
@@ -96,6 +104,7 @@ export const SeasonsGrid: FC<TProps> = ({ weeks, offsetBegin, isByWidth, todayWe
               weeks={seasonWeeks}
               isByWidth={isByWidth}
               isMediumScreen={isMedium}
+              zodiacIconSet={zodiacIconSet}
             />
           </div>
         );

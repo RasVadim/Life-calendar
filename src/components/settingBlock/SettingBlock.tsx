@@ -23,6 +23,7 @@ interface SettingBlockProps {
   expandedPreview?: React.ReactNode;
   carouselItems?: { id: string; content: React.ReactNode | string; selected: boolean }[];
   onCarouselSelect?: (id: string) => void;
+  unclickable?: boolean;
 }
 
 export const SettingBlock: React.FC<SettingBlockProps> = ({
@@ -42,6 +43,7 @@ export const SettingBlock: React.FC<SettingBlockProps> = ({
   expandedPreview,
   carouselItems,
   onCarouselSelect,
+  unclickable = false,
 }) => {
   const blockClass = cx(s.settingBlock, {
     [s.first]: isFirst,
@@ -53,6 +55,7 @@ export const SettingBlock: React.FC<SettingBlockProps> = ({
     [s.thinText]: thinText,
     [s.lessPadding]: lessPadding,
     [s.expanded]: !!expandedPreview || !!carouselItems,
+    [s.unclickable]: unclickable,
   });
 
   const content = (

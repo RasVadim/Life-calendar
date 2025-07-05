@@ -3,8 +3,6 @@
   justify-content center
   align-items center
   width 100%
-  margin-top 16px
-  margin-bottom 16px
 
 .trackContainer
   display flex
@@ -12,51 +10,82 @@
   align-items center
   justify-content center
   text-align center
-  height 30px
-  background-color #272729
+  height 32px
+  background-color var(--background-front-color)
+  border 1px solid var(--border-color)
   border-radius 40px
+  padding 2px 1px
+  box-shadow inset 0 1px 3px rgba(0, 0, 0, 0.1)
+  box-sizing border-box
+  width 100%
 
 .tab
   display flex
   align-items center
   justify-content center
-  height 16px
-  flex 1
+  height 28px
+  flex 1 1 0%
   background-color transparent
   border none
-  border-right 1px solid #646368
-  border-radius 40px
+  border-radius 38px
+  transition all 0.2s ease
+  min-width 0
+  width 100%
+  padding 0 12px
 
   &:focus, &:active
     outline none
     box-shadow none
 
-.tab:last-child
-  background-color transparent
-  border none
+  &:hover
+    background-color var(--block-hover-bg)
 
 .selected
   display flex
   align-items center
   justify-content center
-  height 100%
+  height 28px
   flex 1
-  background-color #646368
+  background linear-gradient(90deg, var(--brand-g1-color) 0%, var(--brand-g2-color) 100%)
   border none
-  border 3px solid #272729
-  border-radius 40px
+  border-radius 38px
+  transition all 0.2s ease
+  min-width 0
+  padding 0 12px
+  box-shadow 0 1px 3px rgba(0, 0, 0, 0.2)
 
   &:focus, &:active
     outline none
-    box-shadow none
+    box-shadow 0 1px 3px rgba(0, 0, 0, 0.2)
 
 .text
   font-family -apple-system, system-ui, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
   font-size 13px
-  font-weight 600
-  letter-spacing 0.4px
-  color #FFFFFF
+  font-weight 500
+  letter-spacing 0.2px
+  color var(--non-active-color)
   text-decoration none
   margin 0
-  padding 5px 20px
   cursor pointer
+  white-space nowrap
+  overflow hidden
+  text-overflow ellipsis
+  max-width 100%
+
+  .selected &
+    color var(--contrast-color)
+    font-weight 600
+
+.icon
+  width 24px
+  height 24px
+  display flex
+  align-items center
+  justify-content center
+
+  .selected &
+    svg
+      fill var(--contrast-color)
+
+      path
+        fill var(--contrast-color)
