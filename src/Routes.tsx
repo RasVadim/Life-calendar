@@ -5,6 +5,7 @@ import { Routes as OriginalRoutes, Route } from 'react-router-dom';
 import { Layout } from './components';
 import {
   Life,
+  Friends,
   Settings,
   MainSettingsScreen,
   Account,
@@ -24,6 +25,7 @@ export const Routes = memo(({ prevPath }: RoutesProps) => {
     <OriginalRoutes>
       <Route path="/" element={<Layout />}>
         <Route index element={<Life />} />
+        <Route path="friends" element={<Friends />} />
         <Route path="settings" element={<Settings prevPath={prevPath} />}>
           <Route index element={<MainSettingsScreen />} />
           <Route path="account" element={<Account />} />

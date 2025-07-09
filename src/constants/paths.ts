@@ -2,6 +2,7 @@ export const PATHS = {
   MAIN: '/',
   LOGIN: '/login',
   LIFE: '/life',
+  FRIENDS: '/friends',
   SETTINGS: '/settings',
   SETTINGS_ACCOUNT: '/settings/account',
   SETTINGS_STORAGE: '/settings/storage',
@@ -10,5 +11,4 @@ export const PATHS = {
   SETTINGS_PREMIUM: '/settings/premium',
   SETTINGS_ABOUT: '/settings/about',
   EVENTS: '/events',
-  PLANS: '/plans',
 };
