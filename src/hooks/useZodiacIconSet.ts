@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 
-import { ZODIAC_CIRCLES_ICONS, ZODIAC_ICONS } from '@/constants';
+import { ZODIAC_CIRCLES_ICONS, ZODIAC_ICONS } from '@/icons';
 import { useDBSettings } from '@/store/clientDB';
 import { EZodiacMode } from '@/types';
 

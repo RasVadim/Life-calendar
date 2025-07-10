@@ -51,3 +51,7 @@ export { RoosterCircleIcon } from './zodiac/circles/roosterCircleIcon';
 export { SnakeCircleIcon } from './zodiac/circles/snakeCircleIcon';
 export { TigerCircleIcon } from './zodiac/circles/tigerCircleIcon';
 export { BullCircleIcon } from './zodiac/circles/bullCircleIcon';
+
+// Icon Sets
+export { ZODIAC_CIRCLES_ICONS } from './iconSets/zodiacCircles';
+export { ZODIAC_ICONS } from './iconSets/zodiac';

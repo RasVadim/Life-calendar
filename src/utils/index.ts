@@ -24,5 +24,5 @@ export { getHoursWord } from './getRightWordEnd/getHoursWord';
 export { getRestDaysSentence } from './getRightWordEnd/getRestDaysSentence';
 
 // weeks
-export { generateWeeks } from './weeks/generateWeeks/generateWeeks';
+export { generateWeeks, type IGenerateWeeksResult } from './weeks/generateWeeks/generateWeeks';
 export { actualizeWeeks } from './weeks/actualizeWeeks';
