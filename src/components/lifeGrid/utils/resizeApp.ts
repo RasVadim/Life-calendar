@@ -2,7 +2,7 @@ import { Application } from 'pixi.js';
 
 import { IWeek } from '@/store/clientDB';
 
-import { renderWeeks } from './renderWeeks';
+import { renderWeekList } from './renderWeekList';
 
 /**
  * Resizes PixiJS application and redraws weeks grid.
@@ -29,7 +29,7 @@ export function resizeApp({
   const width = app.renderer.width;
   const height = app.renderer.height;
   app.stage.removeChildren();
-  renderWeeks({
+  renderWeekList({
     weeks,
     theme,
     width,

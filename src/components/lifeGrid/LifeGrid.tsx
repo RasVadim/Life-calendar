@@ -8,8 +8,7 @@ import { useLifeGridMode } from '@/store/atoms';
 import { useThemeMode } from '@/store/atoms/themeMode/useThemeMode';
 import { IWeek } from '@/store/clientDB';
 
-import { initPixi } from './utils';
-import { renderWeeks } from './utils/renderWeeks';
+import { initPixi, renderWeekList } from './utils';
 
 type TProps = {
   weeks: IWeek[];
@@ -28,7 +27,6 @@ export const LifeGrid: React.FC<TProps> = ({ weeks }) => {
   // 1. Initialize PixiJS
   useEffect(() => {
     if (!pixiContainer.current || appRef.current) return;
-    console.log('LifeGrid useEffect!', !pixiContainer.current, appRef.current);
     let destroyed = false;
 
     const setup = async () => {
@@ -73,7 +71,7 @@ export const LifeGrid: React.FC<TProps> = ({ weeks }) => {
     if (!appRef.current) return;
     const width = appRef.current.renderer.width;
     const height = appRef.current.renderer.height;
-    renderWeeks({
+    renderWeekList({
       weeks,
       theme,
       width,

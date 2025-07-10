@@ -2,7 +2,9 @@ export { initPixi } from './initPixi';
 
 export { resizeApp } from './resizeApp';
 
-export { renderWeeks } from './renderWeeks';
+export { renderWeekList } from './renderWeekList';
+
+export { renderWeek } from './renderWeek';
 
 export { getBGColor } from './getBGColor';
 
