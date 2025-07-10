@@ -7,3 +7,5 @@ export { renderWeeks } from './renderWeeks';
 export { getBGColor } from './getBGColor';
 
 export { getBorderColor } from './getBorderColor';
+
+export { normalizeHex } from './normalizeHex';

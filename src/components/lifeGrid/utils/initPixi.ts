@@ -10,6 +10,8 @@ type TInitPixiOptions = {
   weeks: IWeek[];
   theme: (typeof THEMES)[keyof typeof THEMES];
   onDestroy?: () => void;
+  isMedium?: boolean;
+  mode: string;
 };
 
 /**
@@ -18,7 +20,7 @@ type TInitPixiOptions = {
  * @returns Promise<Application|null>
  */
 export async function initPixi(options: TInitPixiOptions) {
-  const { container, weeks, theme, onDestroy } = options;
+  const { container, weeks, theme, onDestroy, isMedium, mode } = options;
 
   try {
     const app = new Application();
@@ -38,7 +40,7 @@ export async function initPixi(options: TInitPixiOptions) {
       const width = container.clientWidth;
       const height = container.clientHeight;
       app.renderer.resize(width, height);
-      resizeApp({ app, weeks, theme });
+      resizeApp({ app, weeks, theme, isMedium, mode });
     };
 
     handleResize();

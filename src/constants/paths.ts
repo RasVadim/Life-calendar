@@ -12,3 +12,16 @@ export const PATHS = {
   SETTINGS_ABOUT: '/settings/about',
   EVENTS: '/events',
 };
+
+export const PAGE_NAMES = {
+  MAIN: 'main',
+  LIFE: 'life',
+  FRIENDS: 'friends',
+  SETTINGS: 'settings',
+  ACCOUNT: 'account',
+  STORAGE: 'storage',
+  APPEARANCE: 'appearance',
+  LANGUAGE: 'language',
+  PREMIUM: 'premium',
+  ABOUT: 'about',
+} as const;

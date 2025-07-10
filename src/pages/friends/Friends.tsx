@@ -1,5 +1,6 @@
 import { lazy, FC, ReactNode, useEffect } from 'react';
 
+import { PAGE_NAMES } from '@/constants/paths';
 import { useSetOpenDrawerKey } from '@/store/atoms';
 import { lifeCalendarDB } from '@/store/clientDB';
 import { EModalKeys } from '@/types';
@@ -30,7 +31,7 @@ export const Friends: FC<PropsType> = () => {
   }, [setDrawerKey]);
 
   return (
-    <Page name="life">
+    <Page name={PAGE_NAMES.FRIENDS}>
       <LazyContent />
     </Page>
   );

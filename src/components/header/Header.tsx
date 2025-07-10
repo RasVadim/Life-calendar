@@ -24,7 +24,7 @@ export const Header: FC<TProps> = ({ preview = false }) => {
   const { pathname } = useLocation();
 
   const [currentMode] = useLifeGridMode();
-  const isLifePage = pathname === PATHS.MAIN;
+  const isLifePage = [PATHS.MAIN, PATHS.FRIENDS].includes(pathname);
 
   const pathSegments = pathname.split('/').filter(Boolean);
   const pageName = pathSegments[pathSegments.length - 1] || '';

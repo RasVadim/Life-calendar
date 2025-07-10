@@ -1,11 +1,15 @@
 import React, { useEffect, useRef } from 'react';
 
+import { Application } from 'pixi.js';
+
 import { THEMES } from '@/constants/themes';
 import { useDevice } from '@/hooks';
+import { useLifeGridMode } from '@/store/atoms';
 import { useThemeMode } from '@/store/atoms/themeMode/useThemeMode';
 import { IWeek } from '@/store/clientDB';
 
 import { initPixi } from './utils';
+import { renderWeeks } from './utils/renderWeeks';
 
 type TProps = {
   weeks: IWeek[];
@@ -13,35 +17,38 @@ type TProps = {
 
 export const LifeGrid: React.FC<TProps> = ({ weeks }) => {
   const { isMedium } = useDevice();
+  const [lifeMode] = useLifeGridMode();
   const [themeMode] = useThemeMode();
   const theme = THEMES[themeMode];
 
   const pixiContainer = useRef<HTMLDivElement>(null);
+  const appRef = useRef<Application | null>(null);
   const cleanupRef = useRef<(() => void) | null>(null);
 
+  // 1. Initialize PixiJS
   useEffect(() => {
+    if (!pixiContainer.current || appRef.current) return;
+    console.log('LifeGrid useEffect!', !pixiContainer.current, appRef.current);
     let destroyed = false;
 
     const setup = async () => {
-      if (!pixiContainer.current) return;
-
       try {
         const result = await initPixi({
-          container: pixiContainer.current,
+          container: pixiContainer.current!,
           weeks,
+          isMedium,
           theme,
+          mode: lifeMode,
           onDestroy: () => {
             if (destroyed) return;
           },
         });
-
         if (!result) {
           console.error('Failed to initialize PixiJS application');
           return;
         }
-
+        appRef.current = result.app;
         cleanupRef.current = result.cleanup;
-
         if (destroyed) {
           result.cleanup();
           return;
@@ -50,18 +57,32 @@ export const LifeGrid: React.FC<TProps> = ({ weeks }) => {
         console.error('PixiJS setup error:', e);
       }
     };
-
     setup();
-
     return () => {
       destroyed = true;
       if (cleanupRef.current) {
         cleanupRef.current();
         cleanupRef.current = null;
       }
+      appRef.current = null;
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [weeks, themeMode]);
+  }, [weeks?.length]);
+
+  // 2. Rerender weeks on parameters change
+  useEffect(() => {
+    if (!appRef.current) return;
+    const width = appRef.current.renderer.width;
+    const height = appRef.current.renderer.height;
+    renderWeeks({
+      weeks,
+      theme,
+      width,
+      height,
+      stage: appRef.current.stage,
+      isMedium,
+      mode: lifeMode,
+    });
+  }, [weeks, theme, isMedium, lifeMode]);
 
   const containerStyle: React.CSSProperties = {
     width: '100%',

@@ -1,14 +1,11 @@
-import { FC, ReactNode } from 'react'
-import s from './s.module.styl'
+import { FC, ReactNode } from 'react';
+
+import s from './s.module.styl';
 
 type PropsType = {
-    children: ReactNode
-}
+  children: ReactNode;
+};
 
 export const LoginPage: FC<PropsType> = ({ children }) => {
-    return (
-        <div className={s.page}>
-            {children}
-        </div>
-    )
-}
+  return <div className={s.page}>{children}</div>;
+};

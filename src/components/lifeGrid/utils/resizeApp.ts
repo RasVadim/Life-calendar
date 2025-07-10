@@ -15,15 +15,28 @@ export function resizeApp({
   app,
   weeks,
   theme,
-  gap = 2,
+  gap,
+  isMedium,
+  mode,
 }: {
   app: Application;
   weeks: IWeek[];
   theme: Record<string, string>;
   gap?: number;
+  isMedium?: boolean;
+  mode: string;
 }) {
   const width = app.renderer.width;
   const height = app.renderer.height;
   app.stage.removeChildren();
-  renderWeeks({ weeks, theme, width, height, gap, stage: app.stage });
+  renderWeeks({
+    weeks,
+    theme,
+    width,
+    height,
+    gap,
+    stage: app.stage,
+    isMedium,
+    mode,
+  });
 }
