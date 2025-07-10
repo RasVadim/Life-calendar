@@ -32,51 +32,85 @@ export function renderWeekList({
   gap = 1.5,
   stage,
   isMedium,
+  mode,
 }: TRenderWeekListProps) {
-  const cols = 52;
-  const rows = Math.ceil(weeks.length / cols);
-  if (rows === 0) return;
-  const cellWidth = (width - gap * (cols + 1)) / cols;
-  const cellHeight = (height - gap * (rows + 1)) / rows;
-  let presentWeekIndex: number | null = null;
+  if (!weeks.length) return;
 
-  // render all weeks except present
-  weeks.forEach((week, i) => {
-    if (week.type === 'present') {
-      presentWeekIndex = i;
-      return;
-    }
-    const col = i % cols;
-    const row = Math.floor(i / cols);
-    const x = col * (cellWidth + gap) + gap;
-    const y = row * (cellHeight + gap) + gap;
-
-    renderWeek({
-      week,
-      theme,
-      x,
-      y,
-      cellWidth,
-      cellHeight,
-      isMedium: isMedium || false,
-      isPresent: false,
-      stage,
-    });
+  // Группируем недели по годам жизни
+  const yearsMap: Record<number, IWeek[]> = {};
+  let minYear = Infinity;
+  let maxYear = -Infinity;
+  weeks.forEach((week) => {
+    if (!yearsMap[week.year]) yearsMap[week.year] = [];
+    yearsMap[week.year].push(week);
+    if (week.year < minYear) minYear = week.year;
+    if (week.year > maxYear) maxYear = week.year;
   });
 
-  // render present week last
-  if (presentWeekIndex !== null && presentWeekIndex !== -1) {
-    const week = weeks[presentWeekIndex];
-    const col = presentWeekIndex % cols;
-    const row = Math.floor(presentWeekIndex / cols);
-    const x = col * (cellWidth + gap) + gap;
-    const y = row * (cellHeight + gap) + gap;
+  // Определяем максимальное количество недель в году (столбцов)
+  let maxWeeksInYear = 0;
+  Object.values(yearsMap).forEach((arr) => {
+    if (arr.length > maxWeeksInYear) maxWeeksInYear = arr.length;
+  });
 
+  const rows = maxYear - minYear + 1;
+  const cols = maxWeeksInYear;
+
+  // --- Квадратизм и адаптивный gap ---
+  const minRows = 90;
+  let cellHeight: number;
+  let actualGap: number;
+  if (rows < minRows) {
+    cellHeight = (height - gap * (minRows + 1)) / minRows;
+    actualGap = (height - cellHeight * rows) / (rows + 1);
+  } else {
+    cellHeight = (height - gap * (rows + 1)) / rows;
+    actualGap = gap;
+  }
+  const cellWidth = (width - gap * (cols + 1)) / cols;
+
+  // Для быстрого поиска present-недели
+  let presentWeek: IWeek | null = null;
+  let presentRow = 0;
+  let presentCol = 0;
+
+  // Рендерим все недели
+  for (let y = 0; y < rows; y++) {
+    const year = minYear + y;
+    const weeksOfYear = yearsMap[year] || [];
+    for (let x = 0; x < weeksOfYear.length; x++) {
+      const week = weeksOfYear[x];
+      if (week.type === 'present') {
+        presentWeek = week;
+        presentRow = y;
+        presentCol = x;
+        continue;
+      }
+      const px = x * (cellWidth + gap) + gap;
+      const py = y * (cellHeight + actualGap) + actualGap;
+      renderWeek({
+        week,
+        theme,
+        x: px,
+        y: py,
+        cellWidth,
+        cellHeight,
+        isMedium: isMedium || false,
+        isPresent: false,
+        stage,
+      });
+    }
+  }
+
+  // Рендерим present-неделю последней
+  if (presentWeek) {
+    const px = presentCol * (cellWidth + gap) + gap;
+    const py = presentRow * (cellHeight + actualGap) + actualGap;
     renderWeek({
-      week,
+      week: presentWeek,
       theme,
-      x,
-      y,
+      x: px,
+      y: py,
       cellWidth,
       cellHeight,
       isMedium: isMedium || false,

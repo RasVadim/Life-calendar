@@ -4,6 +4,15 @@ import { IWeek } from '@/store/clientDB';
 
 import { renderWeekList } from './renderWeekList';
 
+type TResizeAppProps = {
+  app: Application;
+  weeks: IWeek[];
+  theme: Record<string, string>;
+  gap?: number;
+  isMedium?: boolean;
+  mode: string;
+};
+
 /**
  * Resizes PixiJS application and redraws weeks grid.
  * @param app - PixiJS Application
@@ -11,21 +20,7 @@ import { renderWeekList } from './renderWeekList';
  * @param theme - Theme palette
  * @param gap - Gap between cells
  */
-export function resizeApp({
-  app,
-  weeks,
-  theme,
-  gap,
-  isMedium,
-  mode,
-}: {
-  app: Application;
-  weeks: IWeek[];
-  theme: Record<string, string>;
-  gap?: number;
-  isMedium?: boolean;
-  mode: string;
-}) {
+export function resizeApp({ app, weeks, theme, gap, isMedium, mode }: TResizeAppProps) {
   const width = app.renderer.width;
   const height = app.renderer.height;
   app.stage.removeChildren();
