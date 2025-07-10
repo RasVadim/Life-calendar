@@ -10,13 +10,19 @@ import {
 } from 'date-fns';
 
 import { DEFAULT_LIFE_SPAN_YEARS, ISO_DATE_FORMAT } from '@/constants';
-import { updateDBTodayWeek } from '@/store/clientDB';
+import { IWeek } from '@/store/clientDB/lifeCalendarDB';
 import { EWeekType } from '@/types/life';
 
 import { getWeekHolidays } from './getWeekHolidays';
 import { getWeekMeta } from './getWeekMeta';
 import { getWeekType } from './getWeekType';
 import { getZodiac } from './getZodiac';
+
+export interface IGenerateWeeksResult {
+  weeks: IWeek[];
+  todayWeekId: string;
+  todayWeekIndex: number;
+}
 
 /**
  * Generates an array of life weeks for a given birth date and lifespan or death date.
@@ -25,17 +31,20 @@ import { getZodiac } from './getZodiac';
  * @param {string} birthDateISO - User's birth date in ISO format (e.g. '1990-03-07')
  * @param {number} [lifeSpanYears=DEFAULT_LIFE_SPAN_YEARS] - Expected lifespan in years
  * @param {string} [deathDateISO] - Optional death date in ISO format (e.g. '2080-03-07')
- * @returns {IWeek[]} Array of week objects for the entire life
+ * @returns {IGenerateWeeksResult} Array of week objects for the entire life, and today Week Id and Index
  */
 export const generateWeeks = (
   birthDateISO: string,
   lifeSpanYears: number = DEFAULT_LIFE_SPAN_YEARS,
   deathDateISO?: string,
 ) => {
+  console.log('generateWeeks!!!', birthDateISO, lifeSpanYears, deathDateISO);
   const weeks = [];
   const birthDate = startOfDay(new Date(birthDateISO));
   let deathDate: Date;
   let yearsToGenerate: number;
+  let todayWeekId: string = '';
+  let todayWeekIndex: number = 0;
 
   if (deathDateISO) {
     const parsedDeath = new Date(deathDateISO);
@@ -155,7 +164,8 @@ export const generateWeeks = (
       const weekId = `w${String(meta.year).padStart(3, '0')}_${String(i + 1).padStart(2, '0')}`;
 
       if (type === EWeekType.Present) {
-        updateDBTodayWeek({ todayWeekId: weekId, todayWeekIndex: weeks.length });
+        todayWeekId = weekId;
+        todayWeekIndex = weeks.length;
       }
 
       weeks.push({
@@ -189,5 +199,6 @@ export const generateWeeks = (
       });
     }
   }
-  return weeks;
+
+  return { weeks, todayWeekId, todayWeekIndex };
 };

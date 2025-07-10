@@ -1,10 +1,10 @@
-import type { IWeek } from '@/store/clientDB';
+import { IGenerateWeeksResult } from '@/utils';
 
 export const generateWeeksInWorker = (
   birthDateISO: string,
   lifeSpanYears: number,
   deathDateISO?: string,
-): Promise<IWeek[]> => {
+): Promise<IGenerateWeeksResult> => {
   return new Promise((resolve, reject) => {
     const worker = new Worker(new URL('./generateWeeks.worker.ts', import.meta.url), {
       type: 'module',
