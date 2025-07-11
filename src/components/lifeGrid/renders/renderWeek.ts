@@ -1,11 +1,36 @@
 import { GlowFilter } from 'pixi-filters';
 import { Container, Graphics } from 'pixi.js';
 
+import { LIFE_MODES } from '@/constants';
 import { IWeek } from '@/store/clientDB';
+import { TLifeMode } from '@/types';
 
-import { getBGColor } from './getBGColor';
-import { getBorderColor } from './getBorderColor';
-import { normalizeHex } from './normalizeHex';
+import { getBGColor, getBorderColor, normalizeHex } from '../utils';
+
+const BORDER_RADIUS_MAP = {
+  [LIFE_MODES.YEARS]: { small: 2, large: 4 },
+  [LIFE_MODES.SEASONS]: { small: 4, large: 6 },
+  [LIFE_MODES.MONTHS]: { small: 14, large: 22 },
+};
+
+const borderWidthMap = {
+  [LIFE_MODES.YEARS]: { small: 1, large: 2 },
+  [LIFE_MODES.SEASONS]: { small: 1, large: 2 },
+  [LIFE_MODES.MONTHS]: { small: 2, large: 3 },
+};
+
+type TRenderWeekProps = {
+  week: IWeek;
+  theme: Record<string, string>;
+  x: number;
+  y: number;
+  cellWidth: number;
+  cellHeight: number;
+  isMedium: boolean;
+  isPresent: boolean;
+  stage: Container;
+  mode: TLifeMode;
+};
 
 /**
  * Renders a single week on the given PixiJS stage.
@@ -29,17 +54,12 @@ export const renderWeek = ({
   isMedium,
   isPresent,
   stage,
-}: {
-  week: IWeek;
-  theme: Record<string, string>;
-  x: number;
-  y: number;
-  cellWidth: number;
-  cellHeight: number;
-  isMedium: boolean;
-  isPresent: boolean;
-  stage: Container;
-}) => {
+  mode = LIFE_MODES.YEARS,
+}: TRenderWeekProps) => {
+  const borderRadius = BORDER_RADIUS_MAP[mode][isMedium ? 'small' : 'large'];
+
+  const borderWidth = borderWidthMap[mode][isMedium ? 'small' : 'large'];
+
   const bgColorStr = normalizeHex(getBGColor(week.holidays, theme));
   const borderColorStr = normalizeHex(getBorderColor(week.type, theme));
   const bgColor = /^#[0-9A-Fa-f]{6}$/.test(bgColorStr)
@@ -50,8 +70,8 @@ export const renderWeek = ({
     : 0x00ffff;
 
   const g = new Graphics();
-  g.setStrokeStyle({ width: isMedium ? 1 : 2, color: borderColor });
-  const borderRadius = isMedium ? 2 : 4;
+  g.setStrokeStyle({ width: borderWidth, color: borderColor });
+
   const finalRadius = isPresent ? borderRadius + 1 : borderRadius;
 
   g.roundRect(x, y, cellWidth, cellHeight, finalRadius);

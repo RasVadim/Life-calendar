@@ -1,7 +1,8 @@
-import { Application } from 'pixi.js';
+import { Application, Container } from 'pixi.js';
 
 import { THEMES } from '@/constants/themes';
 import { IWeek } from '@/store/clientDB';
+import { TLifeMode } from '@/types';
 
 import { resizeApp } from './resizeApp';
 
@@ -11,7 +12,7 @@ type TInitPixiOptions = {
   theme: (typeof THEMES)[keyof typeof THEMES];
   onDestroy?: () => void;
   isMedium?: boolean;
-  mode: string;
+  mode: TLifeMode;
 };
 
 /**
@@ -36,11 +37,12 @@ export async function initPixi(options: TInitPixiOptions) {
     container.appendChild(app.canvas);
 
     // Initial resize
+    let scrollContainer: Container | null = null;
     const handleResize = () => {
       const width = container.clientWidth;
       const height = container.clientHeight;
       app.renderer.resize(width, height);
-      resizeApp({ app, weeks, theme, isMedium, mode });
+      scrollContainer = resizeApp({ app, weeks, theme, isMedium, mode }) || null;
     };
 
     handleResize();
@@ -55,7 +57,7 @@ export async function initPixi(options: TInitPixiOptions) {
       onDestroy?.();
     };
 
-    return { app, cleanup };
+    return { app, cleanup, scrollContainer };
   } catch (e) {
     console.error('PixiJS init error:', e);
     return null;

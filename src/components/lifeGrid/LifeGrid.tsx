@@ -1,14 +1,17 @@
 import React, { useEffect, useRef } from 'react';
 
 import { Application } from 'pixi.js';
+import { Container } from 'pixi.js';
 
+import { LIFE_MODES } from '@/constants';
 import { THEMES } from '@/constants/themes';
 import { useDevice } from '@/hooks';
 import { useLifeGridMode } from '@/store/atoms';
 import { useThemeMode } from '@/store/atoms/themeMode/useThemeMode';
 import { IWeek } from '@/store/clientDB';
 
-import { initPixi, renderWeekList } from './utils';
+import { renderWeekList } from './renders';
+import { initPixi, getHandleWheel } from './utils';
 
 type TProps = {
   weeks: IWeek[];
@@ -22,6 +25,7 @@ export const LifeGrid: React.FC<TProps> = ({ weeks }) => {
 
   const pixiContainer = useRef<HTMLDivElement>(null);
   const appRef = useRef<Application | null>(null);
+  const scrollContainerRef = useRef<Container | null>(null);
   const cleanupRef = useRef<(() => void) | null>(null);
 
   // 1. Initialize PixiJS
@@ -47,6 +51,7 @@ export const LifeGrid: React.FC<TProps> = ({ weeks }) => {
         }
         appRef.current = result.app;
         cleanupRef.current = result.cleanup;
+        scrollContainerRef.current = result.scrollContainer || null;
         if (destroyed) {
           result.cleanup();
           return;
@@ -63,6 +68,7 @@ export const LifeGrid: React.FC<TProps> = ({ weeks }) => {
         cleanupRef.current = null;
       }
       appRef.current = null;
+      scrollContainerRef.current = null;
     };
   }, [weeks?.length]);
 
@@ -71,7 +77,7 @@ export const LifeGrid: React.FC<TProps> = ({ weeks }) => {
     if (!appRef.current) return;
     const width = appRef.current.renderer.width;
     const height = appRef.current.renderer.height;
-    renderWeekList({
+    const scrollContainer = renderWeekList({
       weeks,
       theme,
       width,
@@ -80,11 +86,28 @@ export const LifeGrid: React.FC<TProps> = ({ weeks }) => {
       isMedium,
       mode: lifeMode,
     });
+    scrollContainerRef.current = scrollContainer || null;
   }, [weeks, theme, isMedium, lifeMode]);
+
+  // wheel scroll for seasons mode
+  useEffect(() => {
+    if (!pixiContainer.current) return;
+    const canvas = pixiContainer.current.querySelector('canvas');
+    if (!canvas) return;
+    const handleWheel = getHandleWheel({
+      lifeMode,
+      scrollContainerRef,
+      appRef,
+    });
+    canvas.addEventListener('wheel', handleWheel, { passive: false });
+    return () => {
+      canvas.removeEventListener('wheel', handleWheel);
+    };
+  }, [lifeMode, scrollContainerRef.current]);
 
   const containerStyle: React.CSSProperties = {
     width: '100%',
-    height: 'calc(100dvh - 118px)',
+    height: lifeMode === LIFE_MODES.YEARS ? 'calc(100dvh - 118px)' : '100dvh',
     position: 'absolute',
     top: '44px',
     left: '0',

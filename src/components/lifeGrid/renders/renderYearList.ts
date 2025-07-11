@@ -1,42 +1,33 @@
 import { Container } from 'pixi.js';
 
 import { IWeek } from '@/store/clientDB';
+import { TLifeMode } from '@/types';
 
 import { renderWeek } from './renderWeek';
 
-type TRenderWeekListProps = {
+type TRenderYearsProps = {
   weeks: IWeek[];
   theme: Record<string, string>;
   width: number;
   height: number;
   gap?: number;
-  stage: Container;
   isMedium?: boolean;
-  mode: string;
+  stage: Container;
+  mode: TLifeMode;
 };
 
-/**
- * Renders weeks grid on the given PixiJS stage.
- * @param weeks - Array of week objects
- * @param theme - Theme palette
- * @param width - Width of the canvas
- * @param height - Height of the canvas
- * @param gap - Gap between cells
- * @param stage - PixiJS Container (usually app.stage)
- */
-export function renderWeekList({
+export const renderYearList = ({
   weeks,
   theme,
   width,
   height,
   gap = 1.5,
-  stage,
   isMedium,
+  stage,
   mode,
-}: TRenderWeekListProps) {
-  if (!weeks.length) return;
-
-  // Группируем недели по годам жизни
+}: TRenderYearsProps) => {
+  // --- mode: years (default) ---
+  // Group weeks by years
   const yearsMap: Record<number, IWeek[]> = {};
   let minYear = Infinity;
   let maxYear = -Infinity;
@@ -47,7 +38,7 @@ export function renderWeekList({
     if (week.year > maxYear) maxYear = week.year;
   });
 
-  // Определяем максимальное количество недель в году (столбцов)
+  // Define the maximum number of weeks in a year (columns)
   let maxWeeksInYear = 0;
   Object.values(yearsMap).forEach((arr) => {
     if (arr.length > maxWeeksInYear) maxWeeksInYear = arr.length;
@@ -56,7 +47,7 @@ export function renderWeekList({
   const rows = maxYear - minYear + 1;
   const cols = maxWeeksInYear;
 
-  // --- Квадратизм и адаптивный gap ---
+  // --- Quadratic and adaptive gap ---
   const minRows = 90;
   let cellHeight: number;
   let actualGap: number;
@@ -69,12 +60,12 @@ export function renderWeekList({
   }
   const cellWidth = (width - gap * (cols + 1)) / cols;
 
-  // Для быстрого поиска present-недели
+  // For quick search of present week
   let presentWeek: IWeek | null = null;
   let presentRow = 0;
   let presentCol = 0;
 
-  // Рендерим все недели
+  // Render all weeks
   for (let y = 0; y < rows; y++) {
     const year = minYear + y;
     const weeksOfYear = yearsMap[year] || [];
@@ -98,11 +89,12 @@ export function renderWeekList({
         isMedium: isMedium || false,
         isPresent: false,
         stage,
+        mode,
       });
     }
   }
 
-  // Рендерим present-неделю последней
+  // Render present week last
   if (presentWeek) {
     const px = presentCol * (cellWidth + gap) + gap;
     const py = presentRow * (cellHeight + actualGap) + actualGap;
@@ -116,6 +108,7 @@ export function renderWeekList({
       isMedium: isMedium || false,
       isPresent: true,
       stage,
+      mode,
     });
   }
-}
+};

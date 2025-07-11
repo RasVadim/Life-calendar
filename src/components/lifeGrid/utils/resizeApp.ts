@@ -1,8 +1,9 @@
 import { Application } from 'pixi.js';
 
 import { IWeek } from '@/store/clientDB';
+import { TLifeMode } from '@/types';
 
-import { renderWeekList } from './renderWeekList';
+import { renderWeekList } from '../renders';
 
 type TResizeAppProps = {
   app: Application;
@@ -10,7 +11,7 @@ type TResizeAppProps = {
   theme: Record<string, string>;
   gap?: number;
   isMedium?: boolean;
-  mode: string;
+  mode: TLifeMode;
 };
 
 /**
@@ -24,7 +25,7 @@ export function resizeApp({ app, weeks, theme, gap, isMedium, mode }: TResizeApp
   const width = app.renderer.width;
   const height = app.renderer.height;
   app.stage.removeChildren();
-  renderWeekList({
+  const scrollContainer = renderWeekList({
     weeks,
     theme,
     width,
@@ -34,4 +35,5 @@ export function resizeApp({ app, weeks, theme, gap, isMedium, mode }: TResizeApp
     isMedium,
     mode,
   });
+  return scrollContainer;
 }
