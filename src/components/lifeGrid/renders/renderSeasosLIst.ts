@@ -1,7 +1,7 @@
 import { Container, Graphics } from 'pixi.js';
 
 import { IWeek } from '@/store/clientDB';
-import { TLifeMode } from '@/types';
+import { TLifeMode, TZodiacIconSet } from '@/types';
 
 import { renderSeason } from './renderSeason';
 
@@ -14,6 +14,7 @@ type TRenderSeasonsProps = {
   gap?: number;
   isMedium?: boolean;
   mode: TLifeMode;
+  zodiacIconSet?: TZodiacIconSet;
 };
 
 export const renderSeasonList = ({
@@ -23,6 +24,7 @@ export const renderSeasonList = ({
   gap = 1.5,
   isMedium,
   mode,
+  zodiacIconSet,
 }: TRenderSeasonsProps) => {
   // --- Grouping by seasons ---
   const grouped: Record<string, IWeek[]> = {};
@@ -54,11 +56,18 @@ export const renderSeasonList = ({
   // For calculating the maximum width of the line (for extra space)
   let maxCols = 0;
   let maxCellHeight = 0;
+  // Top extra space
+  const topExtraSpace = maxCellHeight * 2 + ROW_GAP;
+  const gTop = new Graphics();
+  gTop.rect(0, 0, (maxCellHeight + gap) * maxCols, topExtraSpace);
+  gTop.fill({ color: 0x000000, alpha: 0 });
+  // Add top offset for all seasons
+  const TOP_OFFSET = 14; // px, можно подправить по вкусу
   // Define the first and last season key
   const firstSeasonKey = seasonKeys[0];
   const lastSeasonKey = seasonKeys[seasonKeys.length - 1];
   // Render weeks by seasons
-  let offsetY = 0;
+  let offsetY = topExtraSpace + TOP_OFFSET;
   let presentWeek: IWeek | null = null;
   let presentRow = 0;
   // presentCol is not needed anymore
@@ -89,6 +98,7 @@ export const renderSeasonList = ({
       mode,
       isFirst,
       isLast,
+      zodiacIconSet,
       presentWeekId: presentWeek ? presentWeek.id : undefined,
       onPresentWeek: (colIdx) => {
         presentColIdx = colIdx;
@@ -109,6 +119,7 @@ export const renderSeasonList = ({
         mode,
         isFirst,
         isLast,
+        zodiacIconSet,
         presentWeekId: undefined,
         onPresentWeek: undefined,
       });
@@ -117,6 +128,7 @@ export const renderSeasonList = ({
     offsetY += cellHeight + ROW_GAP;
   });
   // Add extra space for scroll
+  scrollContainer.addChild(gTop);
   const extraSpace = maxCellHeight * 4 + ROW_GAP * 2;
   const g = new Graphics();
   g.rect(0, offsetY, (maxCellHeight + gap) * maxCols, extraSpace);

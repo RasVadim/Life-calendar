@@ -1,15 +1,23 @@
 import { useMemo } from 'react';
 
-import { ZODIAC_CIRCLES_ICONS, ZODIAC_ICONS } from '@/icons';
+import {
+  ZODIAC_CIRCLES_ICONS,
+  ZODIAC_CIRCLES_SVG_PATHS,
+  ZODIAC_ICONS,
+  ZODIAC_SVG_PATHS,
+} from '@/icons';
 import { useDBSettings } from '@/store/clientDB';
-import { EZodiacMode } from '@/types';
+import { EZodiacMode, TZodiacIconSet } from '@/types';
 
-export const useZodiacIconSet = () => {
+export const useZodiacIconSet = (
+  { jsx }: { jsx: boolean } = { jsx: false },
+): TZodiacIconSet | undefined => {
   const settings = useDBSettings();
 
   const actualSet = useMemo(() => {
-    if (settings?.zodiacMode === EZodiacMode.NATURAL) return ZODIAC_ICONS;
-    if (settings?.zodiacMode === EZodiacMode.CIRCLES) return ZODIAC_CIRCLES_ICONS;
+    if (settings?.zodiacMode === EZodiacMode.NATURAL) return jsx ? ZODIAC_ICONS : ZODIAC_SVG_PATHS;
+    if (settings?.zodiacMode === EZodiacMode.CIRCLES)
+      return jsx ? ZODIAC_CIRCLES_ICONS : ZODIAC_CIRCLES_SVG_PATHS;
     return undefined;
   }, [settings?.zodiacMode]);
 

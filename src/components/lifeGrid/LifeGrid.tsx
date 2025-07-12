@@ -1,17 +1,19 @@
 import React, { useEffect, useRef } from 'react';
 
+import cx from 'classnames';
 import { Application } from 'pixi.js';
 import { Container } from 'pixi.js';
 
-import { LIFE_MODES } from '@/constants';
 import { THEMES } from '@/constants/themes';
-import { useDevice } from '@/hooks';
+import { useDevice, useZodiacIconSet } from '@/hooks';
 import { useLifeGridMode } from '@/store/atoms';
 import { useThemeMode } from '@/store/atoms/themeMode/useThemeMode';
 import { IWeek } from '@/store/clientDB';
 
 import { renderWeekList } from './renders';
 import { initPixi, getHandleWheel } from './utils';
+
+import s from './s.module.styl';
 
 type TProps = {
   weeks: IWeek[];
@@ -22,6 +24,7 @@ export const LifeGrid: React.FC<TProps> = ({ weeks }) => {
   const [lifeMode] = useLifeGridMode();
   const [themeMode] = useThemeMode();
   const theme = THEMES[themeMode];
+  const zodiacIconSet = useZodiacIconSet();
 
   const pixiContainer = useRef<HTMLDivElement>(null);
   const appRef = useRef<Application | null>(null);
@@ -40,6 +43,7 @@ export const LifeGrid: React.FC<TProps> = ({ weeks }) => {
           weeks,
           isMedium,
           theme,
+          zodiacIconSet,
           mode: lifeMode,
           onDestroy: () => {
             if (destroyed) return;
@@ -82,12 +86,13 @@ export const LifeGrid: React.FC<TProps> = ({ weeks }) => {
       theme,
       width,
       height,
+      zodiacIconSet,
       stage: appRef.current.stage,
       isMedium,
       mode: lifeMode,
     });
     scrollContainerRef.current = scrollContainer || null;
-  }, [weeks, theme, isMedium, lifeMode]);
+  }, [weeks, theme, isMedium, lifeMode, zodiacIconSet]);
 
   // wheel scroll for seasons mode
   useEffect(() => {
@@ -105,21 +110,12 @@ export const LifeGrid: React.FC<TProps> = ({ weeks }) => {
     };
   }, [lifeMode, scrollContainerRef.current]);
 
-  const containerStyle: React.CSSProperties = {
-    width: '100%',
-    height: lifeMode === LIFE_MODES.YEARS ? 'calc(100dvh - 118px)' : '100dvh',
-    position: 'absolute',
-    top: '44px',
-    left: '0',
-    right: '0',
-    bottom: '76px',
-    ...(!isMedium && {
-      height: '100%',
-      top: '0',
-      bottom: '0',
-      maxWidth: '660px',
-      margin: '0 auto',
-    }),
-  };
-  return <div ref={pixiContainer} style={containerStyle} />;
+  return (
+    <div
+      ref={pixiContainer}
+      className={cx(s.container, {
+        [s.wide_mode]: !isMedium,
+      })}
+    />
+  );
 };

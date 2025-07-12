@@ -2,7 +2,7 @@ import { Application, Container } from 'pixi.js';
 
 import { THEMES } from '@/constants/themes';
 import { IWeek } from '@/store/clientDB';
-import { TLifeMode } from '@/types';
+import { TLifeMode, TZodiacIconSet } from '@/types';
 
 import { resizeApp } from './resizeApp';
 
@@ -13,6 +13,7 @@ type TInitPixiOptions = {
   onDestroy?: () => void;
   isMedium?: boolean;
   mode: TLifeMode;
+  zodiacIconSet?: TZodiacIconSet;
 };
 
 /**
@@ -21,7 +22,7 @@ type TInitPixiOptions = {
  * @returns Promise<Application|null>
  */
 export async function initPixi(options: TInitPixiOptions) {
-  const { container, weeks, theme, onDestroy, isMedium, mode } = options;
+  const { container, weeks, theme, onDestroy, isMedium, mode, zodiacIconSet } = options;
 
   try {
     const app = new Application();
@@ -42,7 +43,7 @@ export async function initPixi(options: TInitPixiOptions) {
       const width = container.clientWidth;
       const height = container.clientHeight;
       app.renderer.resize(width, height);
-      scrollContainer = resizeApp({ app, weeks, theme, isMedium, mode }) || null;
+      scrollContainer = resizeApp({ app, weeks, theme, isMedium, mode, zodiacIconSet }) || null;
     };
 
     handleResize();

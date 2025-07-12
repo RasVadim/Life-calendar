@@ -1,7 +1,7 @@
-import { Container, Text } from 'pixi.js';
+import { Container, Graphics, Text } from 'pixi.js';
 
 import { IWeek } from '@/store/clientDB';
-import { TLifeMode } from '@/types';
+import { TLifeMode, TWeekZodiac, TZodiacIconSet } from '@/types';
 
 import { renderWeek } from './renderWeek';
 
@@ -9,6 +9,8 @@ const LABEL_PADDING = 5;
 const LABEL_GAP = 4;
 const LABEL_FONT_SIZE = 13;
 const ROW_GAP = 40;
+const ZODIAC_ICON_SIZE = 14;
+const ZODIAC_ICON_OFFSET = 29;
 
 export type TRenderSeasonParams = {
   seasonWeeks: IWeek[];
@@ -20,6 +22,7 @@ export type TRenderSeasonParams = {
   mode: TLifeMode;
   isFirst: boolean;
   isLast: boolean;
+  zodiacIconSet?: TZodiacIconSet;
   presentWeekId?: string;
   onPresentWeek?: (colIdx: number) => void;
 };
@@ -34,6 +37,7 @@ export const renderSeason = ({
   mode,
   isFirst,
   isLast,
+  zodiacIconSet,
   presentWeekId,
   onPresentWeek,
 }: TRenderSeasonParams) => {
@@ -42,6 +46,7 @@ export const renderSeason = ({
   let cellHeight: number;
   const colGap = gap;
   let offsetX = 0;
+
   // Special behavior for the first and last season
   if ((isFirst || isLast) && cols < 13) {
     cols = 13;
@@ -59,7 +64,9 @@ export const renderSeason = ({
     cellHeight = cellWidth;
   }
   const container = new Container();
-  const firstWeek = seasonWeeks[0];
+  const firstWeek = seasonWeeks[0] as IWeek | undefined;
+  const zodiac = firstWeek?.yearZodiacLabel as TWeekZodiac | undefined;
+
   if (firstWeek && firstWeek.dateSeason) {
     const year = firstWeek.dateYear;
     const season = firstWeek.dateSeason.charAt(0).toUpperCase() + firstWeek.dateSeason.slice(1);
@@ -73,8 +80,14 @@ export const renderSeason = ({
         align: 'left',
       },
     });
-    yearText.x = colGap + cellWidth / 2 + LABEL_PADDING;
+    //  check if zodiac icon is needed
+    const hasZodiacIcon =
+      zodiac && zodiacIconSet && typeof zodiacIconSet[zodiac as TWeekZodiac] === 'string';
+    const leftOffset = hasZodiacIcon ? ZODIAC_ICON_OFFSET : 0;
+
+    yearText.x = colGap + cellWidth / 2 + leftOffset;
     yearText.y = offsetY + ROW_GAP / 2 - LABEL_PADDING;
+
     const seasonText = new Text({
       text: ` ${season}`,
       style: {
@@ -89,6 +102,26 @@ export const renderSeason = ({
     seasonText.y = yearText.y;
     container.addChild(yearText);
     container.addChild(seasonText);
+
+    // Add zodiac icon
+    if (hasZodiacIcon) {
+      const iconPath = zodiacIconSet[zodiac as TWeekZodiac];
+      if (typeof iconPath === 'string') {
+        const primaryColor = theme.primary;
+        fetch(iconPath)
+          .then((res) => res.text())
+          .then((svgString) => {
+            const coloredSvg = svgString.replace(/fill="[^"]*"/g, `fill="${primaryColor}"`);
+            const graphics = new Graphics().svg(coloredSvg);
+            const iconSize = ZODIAC_ICON_SIZE;
+            graphics.width = iconSize;
+            graphics.height = iconSize;
+            graphics.y = yearText.y + (yearText.height - iconSize) / 2;
+            graphics.x = colGap + cellWidth / 2 + LABEL_PADDING;
+            container.addChild(graphics);
+          });
+      }
+    }
   }
   for (let colIdx = 0; colIdx < seasonWeeks.length; colIdx++) {
     const week = seasonWeeks[colIdx];
@@ -96,7 +129,6 @@ export const renderSeason = ({
     const isPresent = presentWeekId && week.id === presentWeekId;
     if (isPresent && onPresentWeek) {
       onPresentWeek(colIdx);
-      continue;
     }
     const px = colIdx * (cellWidth + colGap) + colGap + offsetX;
     const py = offsetY + ROW_GAP;
@@ -108,7 +140,7 @@ export const renderSeason = ({
       cellWidth,
       cellHeight,
       isMedium: isMedium || false,
-      isPresent: false,
+      isPresent: !!isPresent,
       stage: container,
       mode,
     });

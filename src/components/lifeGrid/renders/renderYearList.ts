@@ -1,7 +1,7 @@
 import { Container } from 'pixi.js';
 
 import { IWeek } from '@/store/clientDB';
-import { TLifeMode } from '@/types';
+import { TLifeMode, TZodiacIconSet } from '@/types';
 
 import { renderWeek } from './renderWeek';
 
@@ -14,6 +14,7 @@ type TRenderYearsProps = {
   isMedium?: boolean;
   stage: Container;
   mode: TLifeMode;
+  zodiacIconSet?: TZodiacIconSet;
 };
 
 export const renderYearList = ({
@@ -51,11 +52,15 @@ export const renderYearList = ({
   const minRows = 90;
   let cellHeight: number;
   let actualGap: number;
+  // Padding for header and navbar in years mode
+  const PADDING_TOP = 45;
+  const PADDING_BOTTOM = 74;
+  const availableHeight = height - PADDING_TOP - PADDING_BOTTOM;
   if (rows < minRows) {
-    cellHeight = (height - gap * (minRows + 1)) / minRows;
-    actualGap = (height - cellHeight * rows) / (rows + 1);
+    cellHeight = (availableHeight - gap * (minRows + 1)) / minRows;
+    actualGap = (availableHeight - cellHeight * rows) / (rows + 1);
   } else {
-    cellHeight = (height - gap * (rows + 1)) / rows;
+    cellHeight = (availableHeight - gap * (rows + 1)) / rows;
     actualGap = gap;
   }
   const cellWidth = (width - gap * (cols + 1)) / cols;
@@ -78,7 +83,7 @@ export const renderYearList = ({
         continue;
       }
       const px = x * (cellWidth + gap) + gap;
-      const py = y * (cellHeight + actualGap) + actualGap;
+      const py = PADDING_TOP + y * (cellHeight + actualGap) + actualGap;
       renderWeek({
         week,
         theme,
@@ -97,7 +102,7 @@ export const renderYearList = ({
   // Render present week last
   if (presentWeek) {
     const px = presentCol * (cellWidth + gap) + gap;
-    const py = presentRow * (cellHeight + actualGap) + actualGap;
+    const py = PADDING_TOP + presentRow * (cellHeight + actualGap) + actualGap;
     renderWeek({
       week: presentWeek,
       theme,

@@ -2,7 +2,7 @@ import { Container } from 'pixi.js';
 
 import { LIFE_MODES } from '@/constants';
 import { IWeek } from '@/store/clientDB';
-import { TLifeMode } from '@/types';
+import { TLifeMode, TZodiacIconSet } from '@/types';
 
 import { renderSeasonList } from './renderSeasosLIst';
 import { renderYearList } from './renderYearList';
@@ -16,6 +16,7 @@ type TRenderWeekListProps = {
   stage: Container;
   isMedium?: boolean;
   mode: TLifeMode;
+  zodiacIconSet?: TZodiacIconSet;
 };
 
 /**
@@ -36,6 +37,7 @@ export function renderWeekList({
   stage,
   isMedium,
   mode,
+  zodiacIconSet,
 }: TRenderWeekListProps) {
   // clear stage before rendering a new grid, to avoid artifacts
   if (stage && stage.removeChildren) {
@@ -51,6 +53,7 @@ export function renderWeekList({
       gap,
       isMedium,
       mode,
+      zodiacIconSet,
     });
 
     // add scrollable container to stage
@@ -69,5 +72,6 @@ export function renderWeekList({
     isMedium,
     stage,
     mode,
+    zodiacIconSet,
   });
 }

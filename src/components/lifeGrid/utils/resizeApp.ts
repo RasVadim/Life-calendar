@@ -1,7 +1,7 @@
 import { Application } from 'pixi.js';
 
 import { IWeek } from '@/store/clientDB';
-import { TLifeMode } from '@/types';
+import { TLifeMode, TZodiacIconSet } from '@/types';
 
 import { renderWeekList } from '../renders';
 
@@ -12,6 +12,7 @@ type TResizeAppProps = {
   gap?: number;
   isMedium?: boolean;
   mode: TLifeMode;
+  zodiacIconSet: TZodiacIconSet;
 };
 
 /**
@@ -21,7 +22,15 @@ type TResizeAppProps = {
  * @param theme - Theme palette
  * @param gap - Gap between cells
  */
-export function resizeApp({ app, weeks, theme, gap, isMedium, mode }: TResizeAppProps) {
+export function resizeApp({
+  app,
+  weeks,
+  theme,
+  gap,
+  isMedium,
+  mode,
+  zodiacIconSet,
+}: TResizeAppProps) {
   const width = app.renderer.width;
   const height = app.renderer.height;
   app.stage.removeChildren();
@@ -34,6 +43,7 @@ export function resizeApp({ app, weeks, theme, gap, isMedium, mode }: TResizeApp
     stage: app.stage,
     isMedium,
     mode,
+    zodiacIconSet,
   });
   return scrollContainer;
 }
