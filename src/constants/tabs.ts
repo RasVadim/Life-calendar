@@ -6,9 +6,9 @@ type TTab = { icon: TIconName; label: string; to: string };
 
 export const TABS: TTab[] = [
   {
-    icon: 'plans',
-    label: 'plans',
-    to: PATHS.PLANS,
+    icon: 'friends',
+    label: 'friends',
+    to: PATHS.FRIENDS,
   },
   {
     icon: LIFE_MODES.YEARS,

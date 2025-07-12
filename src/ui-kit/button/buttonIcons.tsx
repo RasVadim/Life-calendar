@@ -12,7 +12,7 @@ import {
   YearsIcon,
 } from '@/icons';
 
-type TBaseIconName = 'menu' | 'back' | 'life' | 'settings' | 'plans';
+type TBaseIconName = 'menu' | 'back' | 'life' | 'settings' | 'friends';
 export type TIconName = TBaseIconName | (typeof LIFE_MODES)[keyof typeof LIFE_MODES];
 
 export type TIconProps = {
@@ -24,7 +24,7 @@ export const BUTTON_ICONS: Record<TIconName, FC<TIconProps>> = {
   back: BackIcon,
   life: PartOfLifeIcon,
   settings: ProfileIcon,
-  plans: HouseIcon,
+  friends: HouseIcon,
   [LIFE_MODES.MONTHS]: MonthsIcon,
   [LIFE_MODES.SEASONS]: SeasonsIcon,
   [LIFE_MODES.YEARS]: YearsIcon,

@@ -3,8 +3,10 @@ import { memo } from 'react';
 import { Routes as OriginalRoutes, Route } from 'react-router-dom';
 
 import { Layout } from './components';
+import { PAGE_NAMES } from './constants/paths';
 import {
   Life,
+  Friends,
   Settings,
   MainSettingsScreen,
   Account,
@@ -24,14 +26,15 @@ export const Routes = memo(({ prevPath }: RoutesProps) => {
     <OriginalRoutes>
       <Route path="/" element={<Layout />}>
         <Route index element={<Life />} />
-        <Route path="settings" element={<Settings prevPath={prevPath} />}>
+        <Route path={PAGE_NAMES.FRIENDS} element={<Friends />} />
+        <Route path={PAGE_NAMES.SETTINGS} element={<Settings prevPath={prevPath} />}>
           <Route index element={<MainSettingsScreen />} />
-          <Route path="account" element={<Account />} />
-          <Route path="storage" element={<Storage />} />
-          <Route path="appearance" element={<Appearance />} />
-          <Route path="language" element={<Language />} />
-          <Route path="premium" element={<Premium />} />
-          <Route path="about" element={<About />} />
+          <Route path={PAGE_NAMES.ACCOUNT} element={<Account />} />
+          <Route path={PAGE_NAMES.STORAGE} element={<Storage />} />
+          <Route path={PAGE_NAMES.APPEARANCE} element={<Appearance />} />
+          <Route path={PAGE_NAMES.LANGUAGE} element={<Language />} />
+          <Route path={PAGE_NAMES.PREMIUM} element={<Premium />} />
+          <Route path={PAGE_NAMES.ABOUT} element={<About />} />
         </Route>
         <Route path="*" element={<div>Need beautiful page</div>} />
       </Route>

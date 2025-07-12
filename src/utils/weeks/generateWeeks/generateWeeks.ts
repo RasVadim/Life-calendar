@@ -38,7 +38,6 @@ export const generateWeeks = (
   lifeSpanYears: number = DEFAULT_LIFE_SPAN_YEARS,
   deathDateISO?: string,
 ) => {
-  console.log('generateWeeks!!!', birthDateISO, lifeSpanYears, deathDateISO);
   const weeks = [];
   const birthDate = startOfDay(new Date(birthDateISO));
   let deathDate: Date;

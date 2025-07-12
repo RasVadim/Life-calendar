@@ -6,6 +6,8 @@ export {} from './footer/Footer';
 
 export { TabBar } from './tabBar/TabBar';
 
+export { LifeGrid } from './lifeGrid/LifeGrid';
+
 export { LifeCalendar } from './lifeCalendar/LifeCalendar';
 
 export { Settings } from './settings/Settings';

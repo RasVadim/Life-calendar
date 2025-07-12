@@ -3,6 +3,7 @@ import React, { useRef, useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Routes, Route, useLocation } from 'react-router-dom';
 
+import { PAGE_NAMES } from '@/constants/paths';
 import { getDepth } from '@/utils';
 
 import { MainSettingsScreen } from './components';
@@ -44,12 +45,12 @@ export const Settings: React.FC<SettingsProps> = ({ prevPath }) => {
         className={s.motionWrap}
       >
         <Routes location={location} key={location.key || location.pathname}>
-          <Route path="account" element={<Account />} />
-          <Route path="storage" element={<Storage />} />
-          <Route path="appearance" element={<Appearance />} />
-          <Route path="language" element={<Language />} />
-          <Route path="premium" element={<Premium />} />
-          <Route path="about" element={<About />} />
+          <Route path={PAGE_NAMES.ACCOUNT} element={<Account />} />
+          <Route path={PAGE_NAMES.STORAGE} element={<Storage />} />
+          <Route path={PAGE_NAMES.APPEARANCE} element={<Appearance />} />
+          <Route path={PAGE_NAMES.LANGUAGE} element={<Language />} />
+          <Route path={PAGE_NAMES.PREMIUM} element={<Premium />} />
+          <Route path={PAGE_NAMES.ABOUT} element={<About />} />
           <Route path="*" element={<MainSettingsScreen />} />
         </Routes>
       </motion.div>

@@ -20,7 +20,7 @@ export const LifeCalendar: FC<PropsType> = ({ weeks }) => {
   const userData = useDBUserData();
   const [lifeMode] = useLifeGridMode();
   const { todayWeekId } = useDBTodayWeek();
-  const zodiacIconSet = useZodiacIconSet();
+  const zodiacIconSet = useZodiacIconSet({ jsx: true });
 
   const isByWidth = Boolean(
     (userData?.lifeExpectancy && userData.lifeExpectancy < 90) || lifeMode !== LIFE_MODES.YEARS,
@@ -37,7 +37,7 @@ export const LifeCalendar: FC<PropsType> = ({ weeks }) => {
           offsetBegin={offsetBegin}
           isByWidth={isByWidth}
           todayWeekId={todayWeekId || ''}
-          zodiacIconSet={zodiacIconSet ?? ({} as TZodiacIconSet)}
+          zodiacIconSet={(zodiacIconSet ?? {}) as TZodiacIconSet}
         />
       )}
 
@@ -47,7 +47,7 @@ export const LifeCalendar: FC<PropsType> = ({ weeks }) => {
           offsetBegin={offsetBegin}
           isByWidth={isByWidth}
           todayWeekId={todayWeekId || ''}
-          zodiacIconSet={zodiacIconSet ?? ({} as TZodiacIconSet)}
+          zodiacIconSet={(zodiacIconSet ?? {}) as TZodiacIconSet}
         />
       )}
 
@@ -56,7 +56,7 @@ export const LifeCalendar: FC<PropsType> = ({ weeks }) => {
           weeks={weeks || []}
           isByWidth={isByWidth}
           lifeMode={lifeMode}
-          zodiacIconSet={zodiacIconSet ?? ({} as TZodiacIconSet)}
+          zodiacIconSet={(zodiacIconSet ?? {}) as TZodiacIconSet}
         />
       )}
       {lifeMode !== LIFE_MODES.YEARS && <div className={s.bottomPadding} />}

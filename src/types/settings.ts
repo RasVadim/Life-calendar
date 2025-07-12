@@ -18,4 +18,6 @@ export enum EZodiacMode {
   OFF = 'off',
 }
 
-export type TZodiacIconSet = Record<TWeekZodiac, FC<{ size?: string; color?: string }>>;
+export type TZodiacIconSet =
+  | Record<TWeekZodiac, FC<{ size?: string; color?: string }>>
+  | Record<TWeekZodiac, string>;
