@@ -12,7 +12,7 @@ type TResizeAppProps = {
   gap?: number;
   isMedium?: boolean;
   mode: TLifeMode;
-  zodiacIconSet: TZodiacIconSet;
+  zodiacIconSet?: TZodiacIconSet;
 };
 
 /**
