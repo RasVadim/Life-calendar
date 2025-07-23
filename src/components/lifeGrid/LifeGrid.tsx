@@ -10,7 +10,7 @@ import { useLifeGridMode } from '@/store/atoms';
 import { useThemeMode } from '@/store/atoms/themeMode/useThemeMode';
 import { IWeek } from '@/store/clientDB';
 
-import { renderWeekList } from './renders';
+import { renderLife } from './renders';
 import { initPixi, getHandleWheel } from './utils';
 
 import s from './s.module.styl';
@@ -81,13 +81,13 @@ export const LifeGrid: React.FC<TProps> = ({ weeks }) => {
     if (!appRef.current) return;
     const width = appRef.current.renderer.width;
     const height = appRef.current.renderer.height;
-    const scrollContainer = renderWeekList({
+    const scrollContainer = renderLife({
       weeks,
       theme,
       width,
       height,
       zodiacIconSet,
-      stage: appRef.current.stage,
+      app: appRef.current,
       isMedium,
       mode: lifeMode,
     });

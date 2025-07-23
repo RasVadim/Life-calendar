@@ -6,6 +6,8 @@ export { getBGColor } from './getBGColor';
 
 export { getBorderColor } from './getBorderColor';
 
+export { colorizeSvg } from './colorizeSvg';
+
 export { normalizeHex } from './normalizeHex';
 
 export { getHandleWheel } from './getHandleWheel';

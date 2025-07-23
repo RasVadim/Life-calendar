@@ -1,4 +1,4 @@
-import { Container } from 'pixi.js';
+import { Application, Color } from 'pixi.js';
 
 import { LIFE_MODES } from '@/constants';
 import { IWeek } from '@/store/clientDB';
@@ -7,13 +7,15 @@ import { TLifeMode, TZodiacIconSet } from '@/types';
 import { renderSeasonList } from './renderSeasosLIst';
 import { renderYearList } from './renderYearList';
 
+let cachedBackgroundColor: string | null = null;
+
 type TRenderWeekListProps = {
   weeks: IWeek[];
   theme: Record<string, string>;
   width: number;
   height: number;
   gap?: number;
-  stage: Container;
+  app: Application;
   isMedium?: boolean;
   mode: TLifeMode;
   zodiacIconSet?: TZodiacIconSet;
@@ -28,22 +30,28 @@ type TRenderWeekListProps = {
  * @param gap - Gap between cells
  * @param stage - PixiJS Container (usually app.stage)
  */
-export function renderWeekList({
+export function renderLife({
   weeks,
   theme,
   width,
   height,
   gap = 1.5,
-  stage,
+  app,
   isMedium,
   mode,
   zodiacIconSet,
 }: TRenderWeekListProps) {
   // clear stage before rendering a new grid, to avoid artifacts
-  if (stage && stage.removeChildren) {
-    stage.removeChildren(); // remove all old elements
+  if (app.stage && app.stage.removeChildren) {
+    app.stage.removeChildren(); // remove all old elements
   }
   if (!weeks.length) return;
+
+  if (cachedBackgroundColor !== theme.background) {
+    const backgroundColor = new Color(theme.background);
+    app.renderer.background.color = backgroundColor.toNumber();
+    cachedBackgroundColor = theme.background;
+  }
 
   if (mode === LIFE_MODES.SEASONS) {
     const scrollContainer = renderSeasonList({
@@ -57,7 +65,7 @@ export function renderWeekList({
     });
 
     // add scrollable container to stage
-    stage.addChild(scrollContainer);
+    app.stage.addChild(scrollContainer);
     // Important: scrollContainer.y can be changed for scrolling (wheel/touch processing — outside this function)
     return scrollContainer;
   }
@@ -70,7 +78,7 @@ export function renderWeekList({
     height,
     gap,
     isMedium,
-    stage,
+    stage: app.stage,
     mode,
     zodiacIconSet,
   });

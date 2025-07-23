@@ -1,15 +1,16 @@
-import { Container, Graphics, Text } from 'pixi.js';
+import { Color, Container, Text } from 'pixi.js';
 
 import { IWeek } from '@/store/clientDB';
 import { TLifeMode, TWeekZodiac, TZodiacIconSet } from '@/types';
 
+import { renderIcon } from './renderIcon';
 import { renderWeek } from './renderWeek';
+import { ZODIAC_ICON_SIZE } from '../constants';
 
 const LABEL_PADDING = 5;
 const LABEL_GAP = 4;
 const LABEL_FONT_SIZE = 13;
 const ROW_GAP = 40;
-const ZODIAC_ICON_SIZE = 14;
 const ZODIAC_ICON_OFFSET = 29;
 
 export type TRenderSeasonParams = {
@@ -70,13 +71,14 @@ export const renderSeason = ({
   if (firstWeek && firstWeek.dateSeason) {
     const year = firstWeek.dateYear;
     const season = firstWeek.dateSeason.charAt(0).toUpperCase() + firstWeek.dateSeason.slice(1);
+    const textColor = new Color(theme.text);
     const yearText = new Text({
       text: year,
       style: {
         fontFamily: 'Montserrat, sans-serif',
         fontSize: LABEL_FONT_SIZE,
         fontWeight: '400',
-        fill: parseInt(theme.text.replace('#', ''), 16) || 0xffffff,
+        fill: textColor,
         align: 'left',
       },
     });
@@ -88,13 +90,15 @@ export const renderSeason = ({
     yearText.x = colGap + cellWidth / 2 + leftOffset;
     yearText.y = offsetY + ROW_GAP / 2 - LABEL_PADDING;
 
+    const primaryColor = new Color(theme.primary);
+
     const seasonText = new Text({
       text: ` ${season}`,
       style: {
         fontFamily: 'Montserrat, sans-serif',
         fontSize: LABEL_FONT_SIZE,
         fontWeight: '400',
-        fill: parseInt(theme.primary.replace('#', ''), 16) || 0x7fd4ff,
+        fill: primaryColor,
         align: 'left',
       },
     });
@@ -105,22 +109,16 @@ export const renderSeason = ({
 
     // Add zodiac icon
     if (hasZodiacIcon) {
-      const iconPath = zodiacIconSet[zodiac as TWeekZodiac];
-      if (typeof iconPath === 'string') {
-        const primaryColor = theme.primary;
-        fetch(iconPath)
-          .then((res) => res.text())
-          .then((svgString) => {
-            const coloredSvg = svgString.replace(/fill="[^"]*"/g, `fill="${primaryColor}"`);
-            const graphics = new Graphics().svg(coloredSvg);
-            const iconSize = ZODIAC_ICON_SIZE;
-            graphics.width = iconSize;
-            graphics.height = iconSize;
-            graphics.y = yearText.y + (yearText.height - iconSize) / 2;
-            graphics.x = colGap + cellWidth / 2 + LABEL_PADDING;
-            container.addChild(graphics);
-          });
-      }
+      renderIcon({
+        primaryColor: primaryColor.toNumber(),
+        container,
+        position: {
+          x: colGap + cellWidth / 2 + LABEL_PADDING,
+          y: yearText.y + (yearText.height - ZODIAC_ICON_SIZE) / 2,
+        },
+        zodiac,
+        zodiacIconSet,
+      });
     }
   }
   for (let colIdx = 0; colIdx < seasonWeeks.length; colIdx++) {

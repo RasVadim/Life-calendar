@@ -9,7 +9,7 @@ export const MonkeyIcon: FC<PropsType> = ({ size = '20', color = '#9DB2CE' }) =>
   <svg
     width={size}
     height={size}
-    viewBox="0 0 700.711 700.711"
+    viewBox="-55 -55 720 720"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
   >
