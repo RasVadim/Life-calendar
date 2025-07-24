@@ -4,7 +4,6 @@ import { LIFE_MODES } from '@/constants';
 
 import { renderSeasonList } from './renderSeasosLIst';
 import { renderYearList } from './renderYearList';
-import { GRID_GAP } from '../constants';
 import { TLifeGridState } from '../types';
 
 let cachedBackgroundColor: string | null = null;
@@ -13,7 +12,7 @@ let cachedBackgroundColor: string | null = null;
  * Renders weeks grid on the given PixiJS stage.
  */
 export const renderLife = (state: TLifeGridState) => {
-  const { app, weeks, theme, lifeMode, zodiacIconSet, isMedium } = state;
+  const { app, weeks, theme, lifeMode } = state;
 
   if (!app) return;
 
@@ -30,15 +29,7 @@ export const renderLife = (state: TLifeGridState) => {
   }
 
   if (lifeMode === LIFE_MODES.SEASONS) {
-    const scrollContainer = renderSeasonList({
-      weeks,
-      theme,
-      width: app.renderer.width,
-      gap: GRID_GAP,
-      isMedium,
-      mode: lifeMode,
-      zodiacIconSet,
-    });
+    const scrollContainer = renderSeasonList(state);
 
     // add scrollable container to stage
     app.stage.addChild(scrollContainer);

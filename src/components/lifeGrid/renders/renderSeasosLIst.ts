@@ -1,31 +1,17 @@
 import { Container, Graphics } from 'pixi.js';
 
 import { IWeek } from '@/store/clientDB';
-import { TLifeMode, TZodiacIconSet } from '@/types';
 
 import { renderSeason } from './renderSeason';
+import { GRID_GAP } from '../constants';
+import { TLifeGridState } from '../types';
 
 const ROW_GAP = 40;
 
-type TRenderSeasonsProps = {
-  weeks: IWeek[];
-  theme: Record<string, string>;
-  width: number;
-  gap?: number;
-  isMedium?: boolean;
-  mode: TLifeMode;
-  zodiacIconSet?: TZodiacIconSet;
-};
+export const renderSeasonList = (state: TLifeGridState) => {
+  const { weeks, theme, isMedium, lifeMode, zodiacIconSet } = state;
+  const width = state.app?.renderer.width || 0;
 
-export const renderSeasonList = ({
-  weeks,
-  theme,
-  width,
-  gap = 1.5,
-  isMedium,
-  mode,
-  zodiacIconSet,
-}: TRenderSeasonsProps) => {
   // --- Grouping by seasons ---
   const grouped: Record<string, IWeek[]> = {};
   weeks.forEach((week) => {
@@ -59,7 +45,7 @@ export const renderSeasonList = ({
   // Top extra space
   const topExtraSpace = maxCellHeight * 2 + ROW_GAP;
   const gTop = new Graphics();
-  gTop.rect(0, 0, (maxCellHeight + gap) * maxCols, topExtraSpace);
+  gTop.rect(0, 0, (maxCellHeight + GRID_GAP) * maxCols, topExtraSpace);
   gTop.fill({ color: 0x000000, alpha: 0 });
   // Add top offset for all seasons
   const TOP_OFFSET = 14; // px, можно подправить по вкусу
@@ -89,16 +75,15 @@ export const renderSeasonList = ({
     const isLast = key === lastSeasonKey;
     let presentColIdx: number | undefined = undefined;
     const { container, cellHeight, cols } = renderSeason({
-      seasonWeeks,
       theme,
-      width,
-      gap,
-      offsetY,
       isMedium,
-      mode,
+      zodiacIconSet,
+      lifeMode,
+      seasonWeeks,
+      width,
+      offsetY,
       isFirst,
       isLast,
-      zodiacIconSet,
       presentWeekId: presentWeek ? presentWeek.id : undefined,
       onPresentWeek: (colIdx) => {
         presentColIdx = colIdx;
@@ -110,16 +95,15 @@ export const renderSeasonList = ({
     // If presentWeek in this season — render separately
     if (presentWeek && presentColIdx !== undefined && rowIdx === presentRow) {
       renderSeason({
-        seasonWeeks: [presentWeek],
         theme,
-        width,
-        gap,
-        offsetY,
         isMedium,
-        mode,
+        zodiacIconSet,
+        lifeMode,
+        seasonWeeks: [presentWeek],
+        width,
+        offsetY,
         isFirst,
         isLast,
-        zodiacIconSet,
         presentWeekId: undefined,
         onPresentWeek: undefined,
       });
@@ -131,7 +115,7 @@ export const renderSeasonList = ({
   scrollContainer.addChild(gTop);
   const extraSpace = maxCellHeight * 4 + ROW_GAP * 2;
   const g = new Graphics();
-  g.rect(0, offsetY, (maxCellHeight + gap) * maxCols, extraSpace);
+  g.rect(0, offsetY, (maxCellHeight + GRID_GAP) * maxCols, extraSpace);
   g.fill({ color: 0x000000, alpha: 0 });
   scrollContainer.addChild(g);
   return scrollContainer;

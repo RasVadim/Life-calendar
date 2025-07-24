@@ -29,7 +29,7 @@ type TRenderWeekProps = {
   isMedium: boolean;
   isPresent: boolean;
   stage?: Container;
-  lifeMode: TLifeMode;
+  lifeMode?: TLifeMode;
 };
 
 /**

@@ -5,7 +5,7 @@ import { TLifeMode, TWeekZodiac, TZodiacIconSet } from '@/types';
 
 import { renderIcon } from './renderIcon';
 import { renderWeek } from './renderWeek';
-import { ZODIAC_ICON_SIZE } from '../constants';
+import { GRID_GAP, ZODIAC_ICON_SIZE } from '../constants';
 
 const LABEL_PADDING = 5;
 const LABEL_GAP = 4;
@@ -17,10 +17,9 @@ export type TRenderSeasonParams = {
   seasonWeeks: IWeek[];
   theme: Record<string, string>;
   width: number;
-  gap: number;
   offsetY: number;
   isMedium?: boolean;
-  mode: TLifeMode;
+  lifeMode?: TLifeMode;
   isFirst: boolean;
   isLast: boolean;
   zodiacIconSet?: TZodiacIconSet;
@@ -32,10 +31,9 @@ export const renderSeason = ({
   seasonWeeks,
   theme,
   width,
-  gap,
   offsetY,
   isMedium,
-  mode,
+  lifeMode,
   isFirst,
   isLast,
   zodiacIconSet,
@@ -45,13 +43,13 @@ export const renderSeason = ({
   let cols = seasonWeeks.length;
   let cellWidth: number;
   let cellHeight: number;
-  const colGap = gap;
+  const colGap = GRID_GAP;
   let offsetX = 0;
 
   // Special behavior for the first and last season
   if ((isFirst || isLast) && cols < 13) {
     cols = 13;
-    cellWidth = (width - gap * (cols + 1)) / cols;
+    cellWidth = (width - GRID_GAP * (cols + 1)) / cols;
     cellHeight = cellWidth;
     if (isFirst) {
       // Align to the right
@@ -61,7 +59,7 @@ export const renderSeason = ({
       offsetX = 0;
     }
   } else {
-    cellWidth = (width - gap * (cols + 1)) / cols;
+    cellWidth = (width - GRID_GAP * (cols + 1)) / cols;
     cellHeight = cellWidth;
   }
   const container = new Container();
@@ -140,7 +138,7 @@ export const renderSeason = ({
       isMedium: isMedium || false,
       isPresent: !!isPresent,
       stage: container,
-      mode,
+      lifeMode,
     });
   }
   return { container, cellHeight, cellWidth, cols, offsetX };
