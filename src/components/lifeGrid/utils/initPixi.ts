@@ -1,19 +1,11 @@
-import { Application, Container } from 'pixi.js';
-
-import { THEMES } from '@/constants/themes';
-import { IWeek } from '@/store/clientDB';
-import { TLifeMode, TZodiacIconSet } from '@/types';
+import { Application } from 'pixi.js';
 
 import { resizeApp } from './resizeApp';
+import { TLifeGridState } from '../types';
 
 type TInitPixiOptions = {
-  container: HTMLDivElement;
-  weeks: IWeek[];
-  theme: (typeof THEMES)[keyof typeof THEMES];
+  state: TLifeGridState;
   onDestroy?: () => void;
-  isMedium?: boolean;
-  mode: TLifeMode;
-  zodiacIconSet?: TZodiacIconSet;
 };
 
 /**
@@ -21,9 +13,8 @@ type TInitPixiOptions = {
  * @param options - Container, weeks data, theme and cleanup callback
  * @returns Promise<Application|null>
  */
-export async function initPixi(options: TInitPixiOptions) {
-  const { container, weeks, theme, onDestroy, isMedium, mode, zodiacIconSet } = options;
-
+export async function initPixi({ state, onDestroy }: TInitPixiOptions) {
+  const { container } = state;
   try {
     const app = new Application();
     await app.init({
@@ -35,15 +26,18 @@ export async function initPixi(options: TInitPixiOptions) {
     });
 
     // Add canvas to container
-    container.appendChild(app.canvas);
+    container?.appendChild(app.canvas);
+
+    // Update state with new app
+    state.app = app;
 
     // Initial resize
-    let scrollContainer: Container | null = null;
     const handleResize = () => {
-      const width = container.clientWidth;
-      const height = container.clientHeight;
+      const width = container?.clientWidth || 0;
+      const height = container?.clientHeight || 0;
       app.renderer.resize(width, height);
-      scrollContainer = resizeApp({ app, weeks, theme, isMedium, mode, zodiacIconSet }) || null;
+
+      state.scrollContainer = resizeApp(state) || null;
     };
 
     handleResize();
@@ -58,7 +52,7 @@ export async function initPixi(options: TInitPixiOptions) {
       onDestroy?.();
     };
 
-    return { app, cleanup, scrollContainer };
+    return { cleanup };
   } catch (e) {
     console.error('PixiJS init error:', e);
     return null;

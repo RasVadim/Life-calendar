@@ -28,8 +28,8 @@ type TRenderWeekProps = {
   cellHeight: number;
   isMedium: boolean;
   isPresent: boolean;
-  stage: Container;
-  mode: TLifeMode;
+  stage?: Container;
+  lifeMode: TLifeMode;
 };
 
 /**
@@ -54,11 +54,11 @@ export const renderWeek = ({
   isMedium,
   isPresent,
   stage,
-  mode = LIFE_MODES.YEARS,
+  lifeMode = LIFE_MODES.YEARS,
 }: TRenderWeekProps) => {
-  const borderRadius = BORDER_RADIUS_MAP[mode][isMedium ? 'small' : 'large'];
+  const borderRadius = BORDER_RADIUS_MAP[lifeMode][isMedium ? 'small' : 'large'];
 
-  const borderWidth = borderWidthMap[mode][isMedium ? 'small' : 'large'];
+  const borderWidth = borderWidthMap[lifeMode][isMedium ? 'small' : 'large'];
 
   const bgColorStr = normalizeHex(getBGColor(week.holidays, theme));
   const borderColorStr = normalizeHex(getBorderColor(week.type, theme));
@@ -90,5 +90,5 @@ export const renderWeek = ({
     ];
   }
 
-  stage.addChild(g);
+  stage?.addChild(g);
 };

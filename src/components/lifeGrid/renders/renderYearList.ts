@@ -1,37 +1,19 @@
-import { Container } from 'pixi.js';
-
 import { IWeek } from '@/store/clientDB';
-import { TLifeMode, TZodiacIconSet } from '@/types';
 
 import { renderWeek } from './renderWeek';
+import { GRID_GAP } from '../constants';
+import { TLifeGridState } from '../types';
 
 const PADDING_TOP = 45;
 const PADDING_BOTTOM = 74;
 
-type TRenderYearsProps = {
-  weeks: IWeek[];
-  theme: Record<string, string>;
-  width: number;
-  height: number;
-  gap?: number;
-  isMedium?: boolean;
-  stage: Container;
-  mode: TLifeMode;
-  zodiacIconSet?: TZodiacIconSet;
-};
-
-export const renderYearList = ({
-  weeks,
-  theme,
-  width,
-  height,
-  gap = 1.5,
-  isMedium,
-  stage,
-  mode,
-}: TRenderYearsProps) => {
+export const renderYearList = (state: TLifeGridState) => {
+  const { app, weeks, theme, isMedium, lifeMode } = state;
   // --- mode: years (default) ---
   // Group weeks by years
+  const width = app?.renderer.width || 0;
+  const height = app?.renderer.height || 0;
+
   const yearsMap: Record<number, IWeek[]> = {};
   let minYear = Infinity;
   let maxYear = -Infinity;
@@ -61,13 +43,13 @@ export const renderYearList = ({
 
   const availableHeight = height - paddingTop - paddingBottom;
   if (rows < minRows) {
-    cellHeight = (availableHeight - gap * (minRows + 1)) / minRows;
+    cellHeight = (availableHeight - GRID_GAP * (minRows + 1)) / minRows;
     actualGap = (availableHeight - cellHeight * rows) / (rows + 1);
   } else {
-    cellHeight = (availableHeight - gap * (rows + 1)) / rows;
-    actualGap = gap;
+    cellHeight = (availableHeight - GRID_GAP * (rows + 1)) / rows;
+    actualGap = GRID_GAP;
   }
-  const cellWidth = (width - gap * (cols + 1)) / cols;
+  const cellWidth = (width - GRID_GAP * (cols + 1)) / cols;
 
   // For quick search of present week
   let presentWeek: IWeek | null = null;
@@ -86,7 +68,7 @@ export const renderYearList = ({
         presentCol = x;
         continue;
       }
-      const px = x * (cellWidth + gap) + gap;
+      const px = x * (cellWidth + GRID_GAP) + GRID_GAP;
       const py = paddingTop + y * (cellHeight + actualGap) + actualGap;
       renderWeek({
         week,
@@ -97,15 +79,15 @@ export const renderYearList = ({
         cellHeight,
         isMedium: isMedium || false,
         isPresent: false,
-        stage,
-        mode,
+        stage: app?.stage,
+        lifeMode,
       });
     }
   }
 
   // Render present week last
   if (presentWeek) {
-    const px = presentCol * (cellWidth + gap) + gap;
+    const px = presentCol * (cellWidth + GRID_GAP) + GRID_GAP;
     const py = paddingTop + presentRow * (cellHeight + actualGap) + actualGap;
     renderWeek({
       week: presentWeek,
@@ -116,8 +98,8 @@ export const renderYearList = ({
       cellHeight,
       isMedium: isMedium || false,
       isPresent: true,
-      stage,
-      mode,
+      stage: app?.stage,
+      lifeMode,
     });
   }
 };

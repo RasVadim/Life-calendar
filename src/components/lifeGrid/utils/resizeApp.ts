@@ -1,49 +1,15 @@
-import { Application } from 'pixi.js';
-
-import { IWeek } from '@/store/clientDB';
-import { TLifeMode, TZodiacIconSet } from '@/types';
-
 import { renderLife } from '../renders';
-
-type TResizeAppProps = {
-  app: Application;
-  weeks: IWeek[];
-  theme: Record<string, string>;
-  gap?: number;
-  isMedium?: boolean;
-  mode: TLifeMode;
-  zodiacIconSet?: TZodiacIconSet;
-};
+import { TLifeGridState } from '../types';
 
 /**
  * Resizes PixiJS application and redraws weeks grid.
- * @param app - PixiJS Application
- * @param weeks - Array of week objects
- * @param theme - Theme palette
- * @param gap - Gap between cells
+ * @param state - Current life grid state
  */
-export const resizeApp = ({
-  app,
-  weeks,
-  theme,
-  gap,
-  isMedium,
-  mode,
-  zodiacIconSet,
-}: TResizeAppProps) => {
-  const width = app.renderer.width;
-  const height = app.renderer.height;
-  app.stage.removeChildren();
-  const scrollContainer = renderLife({
-    weeks,
-    theme,
-    width,
-    height,
-    gap,
-    app,
-    isMedium,
-    mode,
-    zodiacIconSet,
-  });
+export const resizeApp = (state: TLifeGridState) => {
+  if (!state.app) return null;
+  if (!state.app.stage) return null;
+
+  state.app.stage.removeChildren();
+  const scrollContainer = renderLife(state);
   return scrollContainer;
 };

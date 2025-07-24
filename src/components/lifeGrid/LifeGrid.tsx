@@ -1,8 +1,5 @@
 import React, { useEffect, useRef } from 'react';
 
-import { Application } from 'pixi.js';
-import { Container } from 'pixi.js';
-
 import { THEMES } from '@/constants/themes';
 import { useDevice, useZodiacIconSet } from '@/hooks';
 import { useLifeGridMode } from '@/store/atoms';
@@ -10,6 +7,7 @@ import { useThemeMode } from '@/store/atoms/themeMode/useThemeMode';
 import { IWeek } from '@/store/clientDB';
 
 import { renderLife } from './renders';
+import { TLifeGridState } from './types';
 import { initPixi, getHandleWheel } from './utils';
 
 import s from './s.module.styl';
@@ -25,25 +23,45 @@ export const LifeGrid: React.FC<TProps> = ({ weeks }) => {
   const theme = THEMES[themeMode];
   const zodiacIconSet = useZodiacIconSet();
 
-  const pixiContainer = useRef<HTMLDivElement>(null);
-  const appRef = useRef<Application | null>(null);
-  const scrollContainerRef = useRef<Container | null>(null);
+  const pixiContainerRef = useRef<HTMLDivElement>(null);
   const cleanupRef = useRef<(() => void) | null>(null);
+
+  // state
+  const stateRef = useRef<TLifeGridState>({
+    weeks,
+    theme,
+    isMedium,
+    lifeMode,
+    zodiacIconSet,
+    container: null,
+    app: null,
+    scrollContainer: null,
+  });
+
+  const render = () => {
+    // update state
+    stateRef.current.weeks = weeks;
+    stateRef.current.theme = theme;
+    stateRef.current.isMedium = isMedium;
+    stateRef.current.lifeMode = lifeMode;
+    stateRef.current.zodiacIconSet = zodiacIconSet;
+
+    // rerender
+    stateRef.current.scrollContainer = renderLife(stateRef.current) || null;
+  };
 
   // 1. Initialize PixiJS
   useEffect(() => {
-    if (!pixiContainer.current || appRef.current) return;
+    if (!pixiContainerRef.current || stateRef.current.app) return;
     let destroyed = false;
 
     const setup = async () => {
       try {
+        // Update state with current container
+        stateRef.current.container = pixiContainerRef.current;
+
         const result = await initPixi({
-          container: pixiContainer.current!,
-          weeks,
-          isMedium,
-          theme,
-          zodiacIconSet,
-          mode: lifeMode,
+          state: stateRef.current,
           onDestroy: () => {
             if (destroyed) return;
           },
@@ -52,9 +70,13 @@ export const LifeGrid: React.FC<TProps> = ({ weeks }) => {
           console.error('Failed to initialize PixiJS application');
           return;
         }
-        appRef.current = result.app;
         cleanupRef.current = result.cleanup;
-        scrollContainerRef.current = result.scrollContainer || null;
+
+        // Trigger initial render if we have weeks
+        if (weeks.length > 0) {
+          render();
+        }
+
         if (destroyed) {
           result.cleanup();
           return;
@@ -70,44 +92,33 @@ export const LifeGrid: React.FC<TProps> = ({ weeks }) => {
         cleanupRef.current();
         cleanupRef.current = null;
       }
-      appRef.current = null;
-      scrollContainerRef.current = null;
+      stateRef.current.app = null;
+      stateRef.current.scrollContainer = null;
     };
   }, [weeks?.length]);
 
   // 2. Rerender weeks on parameters change
   useEffect(() => {
-    if (!appRef.current) return;
-    const width = appRef.current.renderer.width;
-    const height = appRef.current.renderer.height;
-    const scrollContainer = renderLife({
-      weeks,
-      theme,
-      width,
-      height,
-      zodiacIconSet,
-      app: appRef.current,
-      isMedium,
-      mode: lifeMode,
-    });
-    scrollContainerRef.current = scrollContainer || null;
+    if (!stateRef.current.app) return;
+
+    render();
   }, [weeks, theme, isMedium, lifeMode, zodiacIconSet]);
 
   // wheel scroll for seasons mode
   useEffect(() => {
-    if (!pixiContainer.current) return;
-    const canvas = pixiContainer.current.querySelector('canvas');
+    if (!pixiContainerRef.current) return;
+    const canvas = pixiContainerRef.current.querySelector('canvas');
     if (!canvas) return;
     const handleWheel = getHandleWheel({
       lifeMode,
-      scrollContainerRef,
-      appRef,
+      scrollContainer: stateRef.current.scrollContainer,
+      app: stateRef.current.app,
     });
     canvas.addEventListener('wheel', handleWheel, { passive: false });
     return () => {
       canvas.removeEventListener('wheel', handleWheel);
     };
-  }, [lifeMode, scrollContainerRef.current]);
+  }, [lifeMode]);
 
-  return <div ref={pixiContainer} className={s.container} />;
+  return <div ref={pixiContainerRef} className={s.container} />;
 };

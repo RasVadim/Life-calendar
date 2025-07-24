@@ -1,46 +1,22 @@
-import { Application, Color } from 'pixi.js';
+import { Color } from 'pixi.js';
 
 import { LIFE_MODES } from '@/constants';
-import { IWeek } from '@/store/clientDB';
-import { TLifeMode, TZodiacIconSet } from '@/types';
 
 import { renderSeasonList } from './renderSeasosLIst';
 import { renderYearList } from './renderYearList';
+import { GRID_GAP } from '../constants';
+import { TLifeGridState } from '../types';
 
 let cachedBackgroundColor: string | null = null;
 
-type TRenderWeekListProps = {
-  weeks: IWeek[];
-  theme: Record<string, string>;
-  width: number;
-  height: number;
-  gap?: number;
-  app: Application;
-  isMedium?: boolean;
-  mode: TLifeMode;
-  zodiacIconSet?: TZodiacIconSet;
-};
-
 /**
  * Renders weeks grid on the given PixiJS stage.
- * @param weeks - Array of week objects
- * @param theme - Theme palette
- * @param width - Width of the canvas
- * @param height - Height of the canvas
- * @param gap - Gap between cells
- * @param stage - PixiJS Container (usually app.stage)
  */
-export const renderLife = ({
-  weeks,
-  theme,
-  width,
-  height,
-  gap = 1.5,
-  app,
-  isMedium,
-  mode,
-  zodiacIconSet,
-}: TRenderWeekListProps) => {
+export const renderLife = (state: TLifeGridState) => {
+  const { app, weeks, theme, lifeMode, zodiacIconSet, isMedium } = state;
+
+  if (!app) return;
+
   // clear stage before rendering a new grid, to avoid artifacts
   if (app.stage && app.stage.removeChildren) {
     app.stage.removeChildren(); // remove all old elements
@@ -53,14 +29,14 @@ export const renderLife = ({
     cachedBackgroundColor = theme.background;
   }
 
-  if (mode === LIFE_MODES.SEASONS) {
+  if (lifeMode === LIFE_MODES.SEASONS) {
     const scrollContainer = renderSeasonList({
       weeks,
       theme,
-      width,
-      gap,
+      width: app.renderer.width,
+      gap: GRID_GAP,
       isMedium,
-      mode,
+      mode: lifeMode,
       zodiacIconSet,
     });
 
@@ -71,15 +47,5 @@ export const renderLife = ({
   }
 
   // --- mode: years (default) ---
-  renderYearList({
-    weeks,
-    theme,
-    width,
-    height,
-    gap,
-    isMedium,
-    stage: app.stage,
-    mode,
-    zodiacIconSet,
-  });
+  renderYearList(state);
 };
