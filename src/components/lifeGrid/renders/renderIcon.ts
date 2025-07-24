@@ -1,9 +1,8 @@
-import { Assets, Container, Graphics } from 'pixi.js';
+import { Assets, Container, Sprite } from 'pixi.js';
 
 import { TWeekZodiac, TZodiacIconSet } from '@/types';
 
 import { ZODIAC_ICON_SIZE } from '../constants';
-import { colorizeSvg } from '../utils';
 
 let cachedPrimaryColor: number | null = null;
 
@@ -29,21 +28,20 @@ export const renderIcon = async ({
       await Assets.reset();
       cachedPrimaryColor = primaryColor;
     }
-    const svgContext = await Assets.load({
+    const iconTexture = await Assets.load({
       key: iconPath,
       src: iconPath,
-      data: { parseAsGraphicsContext: true },
     });
 
-    console.log('svgContext', svgContext);
-    const svgData = colorizeSvg(svgContext, primaryColor);
-    const graphics = new Graphics(svgData);
+    const icon = new Sprite(iconTexture);
 
     // Calculate scale to fit within ZODIAC_ICON_SIZE while preserving aspect ratio
-    const scale = Math.min(ZODIAC_ICON_SIZE / graphics.width, ZODIAC_ICON_SIZE / graphics.height);
+    const scale = ZODIAC_ICON_SIZE / icon.height;
 
-    graphics.scale.set(scale, scale);
-    graphics.position.set(position.x, position.y);
-    container.addChild(graphics);
+    icon.scale.set(scale, scale);
+    icon.position.set(position.x, position.y);
+
+    icon.tint = primaryColor;
+    container.addChild(icon);
   }
 };

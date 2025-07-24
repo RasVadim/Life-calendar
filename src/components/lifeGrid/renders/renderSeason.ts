@@ -11,7 +11,7 @@ const LABEL_PADDING = 5;
 const LABEL_GAP = 4;
 const LABEL_FONT_SIZE = 13;
 const ROW_GAP = 40;
-const ZODIAC_ICON_OFFSET = 29;
+const ZODIAC_ICON_OFFSET = 26;
 
 export type TRenderSeasonParams = {
   seasonWeeks: IWeek[];

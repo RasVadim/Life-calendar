@@ -22,7 +22,7 @@ type TResizeAppProps = {
  * @param theme - Theme palette
  * @param gap - Gap between cells
  */
-export function resizeApp({
+export const resizeApp = ({
   app,
   weeks,
   theme,
@@ -30,7 +30,7 @@ export function resizeApp({
   isMedium,
   mode,
   zodiacIconSet,
-}: TResizeAppProps) {
+}: TResizeAppProps) => {
   const width = app.renderer.width;
   const height = app.renderer.height;
   app.stage.removeChildren();
@@ -46,4 +46,4 @@ export function resizeApp({
     zodiacIconSet,
   });
   return scrollContainer;
-}
+};

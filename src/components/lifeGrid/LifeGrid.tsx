@@ -1,6 +1,5 @@
 import React, { useEffect, useRef } from 'react';
 
-import cx from 'classnames';
 import { Application } from 'pixi.js';
 import { Container } from 'pixi.js';
 
@@ -110,12 +109,5 @@ export const LifeGrid: React.FC<TProps> = ({ weeks }) => {
     };
   }, [lifeMode, scrollContainerRef.current]);
 
-  return (
-    <div
-      ref={pixiContainer}
-      className={cx(s.container, {
-        [s.wide_mode]: !isMedium,
-      })}
-    />
-  );
+  return <div ref={pixiContainer} className={s.container} />;
 };

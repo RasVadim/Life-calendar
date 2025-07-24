@@ -5,6 +5,9 @@ import { TLifeMode, TZodiacIconSet } from '@/types';
 
 import { renderWeek } from './renderWeek';
 
+const PADDING_TOP = 45;
+const PADDING_BOTTOM = 74;
+
 type TRenderYearsProps = {
   weeks: IWeek[];
   theme: Record<string, string>;
@@ -53,9 +56,10 @@ export const renderYearList = ({
   let cellHeight: number;
   let actualGap: number;
   // Padding for header and navbar in years mode
-  const PADDING_TOP = 45;
-  const PADDING_BOTTOM = 74;
-  const availableHeight = height - PADDING_TOP - PADDING_BOTTOM;
+  const paddingTop = isMedium ? PADDING_TOP : 10;
+  const paddingBottom = isMedium ? PADDING_BOTTOM : 10;
+
+  const availableHeight = height - paddingTop - paddingBottom;
   if (rows < minRows) {
     cellHeight = (availableHeight - gap * (minRows + 1)) / minRows;
     actualGap = (availableHeight - cellHeight * rows) / (rows + 1);
@@ -83,7 +87,7 @@ export const renderYearList = ({
         continue;
       }
       const px = x * (cellWidth + gap) + gap;
-      const py = PADDING_TOP + y * (cellHeight + actualGap) + actualGap;
+      const py = paddingTop + y * (cellHeight + actualGap) + actualGap;
       renderWeek({
         week,
         theme,
@@ -102,7 +106,7 @@ export const renderYearList = ({
   // Render present week last
   if (presentWeek) {
     const px = presentCol * (cellWidth + gap) + gap;
-    const py = PADDING_TOP + presentRow * (cellHeight + actualGap) + actualGap;
+    const py = paddingTop + presentRow * (cellHeight + actualGap) + actualGap;
     renderWeek({
       week: presentWeek,
       theme,

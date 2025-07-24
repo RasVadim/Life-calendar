@@ -30,7 +30,7 @@ type TRenderWeekListProps = {
  * @param gap - Gap between cells
  * @param stage - PixiJS Container (usually app.stage)
  */
-export function renderLife({
+export const renderLife = ({
   weeks,
   theme,
   width,
@@ -40,7 +40,7 @@ export function renderLife({
   isMedium,
   mode,
   zodiacIconSet,
-}: TRenderWeekListProps) {
+}: TRenderWeekListProps) => {
   // clear stage before rendering a new grid, to avoid artifacts
   if (app.stage && app.stage.removeChildren) {
     app.stage.removeChildren(); // remove all old elements
@@ -82,4 +82,4 @@ export function renderLife({
     mode,
     zodiacIconSet,
   });
-}
+};

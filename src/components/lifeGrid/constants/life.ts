@@ -1,1 +1,1 @@
-export const ZODIAC_ICON_SIZE = 14;
+export const ZODIAC_ICON_SIZE = 16;
