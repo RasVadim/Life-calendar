@@ -9,6 +9,10 @@ import {
   EZodiacMode,
   EThemeMode,
   TLanguage,
+  TDay,
+  TWeekIndxsMap,
+  ESegmentsWeekIndxsValues,
+  EYearsWeekIndxsValues,
 } from '@/types';
 
 // Тип праздника
@@ -24,33 +28,37 @@ export interface IWeek {
   dateStart: string;
   dateEnd: string;
   type: EWeekType;
-  month: number;
-  year: number;
-  dateYear: string;
-  dateMonth: string;
-  dateSeason: ESeason | null;
-  numberOfDays: number;
-  isFirst: boolean;
-  isLast: boolean;
-  isFirstInYear: boolean;
-  isLastInYear: boolean;
-  isFirstInMonth: boolean;
-  isLastInMonth: boolean;
-  isExpandedByYear: boolean;
-  isExpandedByDateSeason: boolean;
-  isExpandedByDateMonth: boolean;
-  isPartialByYear: boolean;
-  isPartialByDateSeason: boolean;
-  isPartialByDateMonth: boolean;
+  month: string;
+  secondMonth: string | null;
+  season: ESeason;
+  secondSeason: ESeason | null;
+  year: string;
+  secondYear: string | null;
+  lifeYear: number;
+  lifeMonth: number;
   isLeapYear: boolean;
+  isSeasonPreview: boolean;
+  isMonthPreview: boolean;
   holidays: THolidayName[] | null;
   yearZodiacLabel: TWeekZodiac | null;
   photoUrl?: string;
-  photoLocal?: string;
+  photoLocalPath?: string;
+  comments: string | null;
+  description: string | null;
+  days: TDay[];
+}
+
+export interface IDrawWeekIndexes {
+  yearsIndxs: TWeekIndxsMap<EYearsWeekIndxsValues>;
+  seasonsIndxs: TWeekIndxsMap<ESegmentsWeekIndxsValues>;
+  monthsIndxs: TWeekIndxsMap<ESegmentsWeekIndxsValues>;
+  holidaysIndxs: TWeekIndxsMap<THolidayName>;
+  seasonOffset: number;
+  monthOffset: number;
 }
 
 // Type for user data entity
-export interface UserDataEntity {
+export interface IUserData {
   id: string; // unique id, for example 'main' or user id
   birthDate: string | null; // user's birth date (ISO string)
   lifeExpectancy: number | null; // expected lifespan in years
@@ -58,14 +66,16 @@ export interface UserDataEntity {
 }
 
 // Meta entity for storing global app info
-export interface MetaEntity {
+export interface IMeta {
   id: string;
   todayWeekId: string;
   todayWeekIndex: number;
+  todayDayId: string;
+  todayDayIndex: number;
 }
 
 // Type for user settings entity
-export interface Settings {
+export interface ISettings {
   id: string; // unique id, for example 'main' or user id
   theme: EThemeMode;
   language: TLanguage;
@@ -75,10 +85,10 @@ export interface Settings {
 // Dexie database class
 export class LifeCalendarDB extends Dexie {
   weeks!: Table<IWeek, string>;
-  userData!: Table<UserDataEntity, string>;
-  settings!: Table<Settings, string>;
+  userData!: Table<IUserData, string>;
+  settings!: Table<ISettings, string>;
   holidays!: Table<IHoliday, string>;
-  meta!: Table<MetaEntity, string>;
+  meta!: Table<IMeta, string>;
 
   constructor() {
     super('LifeCalendarDB'); // Name of the database in IndexedDB

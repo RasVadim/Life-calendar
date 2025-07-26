@@ -1,6 +1,6 @@
 export { LifeCalendarDB, lifeCalendarDB } from './lifeCalendarDB';
 
-export type { IWeek } from './lifeCalendarDB';
+export type { IWeek, IDrawWeekIndexes, IHoliday } from './lifeCalendarDB';
 
 // Mutations
 export { saveDBWeeks } from './mutations/life/saveDBWeeks';

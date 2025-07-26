@@ -10,13 +10,10 @@ import {
 } from 'date-fns';
 
 import { DEFAULT_LIFE_SPAN_YEARS, ISO_DATE_FORMAT } from '@/constants';
-import { IWeek } from '@/store/clientDB/lifeCalendarDB';
+import { IDrawWeekIndexes, IWeek } from '@/store/clientDB';
 import { EWeekType } from '@/types/life';
 
-import { getWeekHolidays } from './getWeekHolidays';
-import { getWeekMeta } from './getWeekMeta';
-import { getWeekType } from './getWeekType';
-import { getZodiac } from './getZodiac';
+import { getWeekHolidays, getWeekMeta, getWeekNumber, getWeekType, getZodiac } from './helpers';
 
 export interface IGenerateWeeksResult {
   weeks: IWeek[];
@@ -38,12 +35,20 @@ export const generateWeeks = (
   lifeSpanYears: number = DEFAULT_LIFE_SPAN_YEARS,
   deathDateISO?: string,
 ) => {
-  const weeks = [];
+  const weeks: IWeek[] = [];
   const birthDate = startOfDay(new Date(birthDateISO));
   let deathDate: Date;
   let yearsToGenerate: number;
   let todayWeekId: string = '';
   let todayWeekIndex: number = 0;
+  const drawWeekIndexes: IDrawWeekIndexes = {
+    yearsIndxs: {},
+    seasonsIndxs: {},
+    monthsIndxs: {},
+    holidaysIndxs: {},
+    seasonOffset: 0,
+    monthOffset: 0,
+  };
 
   if (deathDateISO) {
     const parsedDeath = new Date(deathDateISO);
@@ -93,7 +98,6 @@ export const generateWeeks = (
       weeksInYear.push({
         weekStart,
         weekEnd: nextWeekEnd,
-        isExpandedByYear: true,
       });
       weekStart = addDays(nextWeekEnd, 1);
       weekIndex++;
@@ -101,7 +105,6 @@ export const generateWeeks = (
       weeksInYear.push({
         weekStart,
         weekEnd: firstWeekEnd,
-        isExpandedByYear: false,
       });
       weekStart = addDays(firstWeekEnd, 1);
       weekIndex++;
@@ -111,7 +114,7 @@ export const generateWeeks = (
     while (weekIndex < 51 && weekStart < yearEnd) {
       let weekEnd = addDays(weekStart, 6);
       if (weekEnd > yearEnd) weekEnd = yearEnd;
-      weeksInYear.push({ weekStart, weekEnd, isExpandedByYear: false });
+      weeksInYear.push({ weekStart, weekEnd });
       weekStart = addDays(weekEnd, 1);
       weekIndex++;
     }
@@ -119,8 +122,7 @@ export const generateWeeks = (
     // Last week: all remaining days until the end of the life year
     if (weekStart < yearEnd) {
       const weekEnd = yearEnd;
-      const isExpanded = differenceInDays(weekEnd, weekStart) + 1 > 7;
-      weeksInYear.push({ weekStart, weekEnd, isExpandedByYear: isExpanded });
+      weeksInYear.push({ weekStart, weekEnd });
     }
 
     // Ensure exactly 52 weeks per life year
@@ -136,13 +138,19 @@ export const generateWeeks = (
         last.weekEnd = weeksInYear[i].weekEnd;
       }
       weeksInYear = weeksInYear.slice(0, 52);
-      last.isExpandedByYear = true;
     }
 
     // Calculate additional fields for each week
     for (let i = 0; i < weeksInYear.length; i++) {
-      const { weekStart, weekEnd, isExpandedByYear } = weeksInYear[i];
-      const meta = getWeekMeta(weekStart, weekEnd, yearOfLife, i, weeksInYear.length);
+      const { weekStart, weekEnd } = weeksInYear[i];
+      const meta = getWeekMeta({
+        weekStart,
+        weekEnd,
+        yearOfLife,
+        weekIndex: i,
+        birthDate,
+        previousWeek: weeks[i - 1] || null,
+      });
       const type = getWeekType(weekStart, weekEnd);
       const holidays = getWeekHolidays(weekStart, weekEnd, birthDate, yearOfLife);
       // Efficient calculation of life month
@@ -160,7 +168,7 @@ export const generateWeeks = (
       }
       const lifeMonth = monthsFromBirth + 1;
 
-      const weekId = `w${String(meta.year).padStart(3, '0')}_${String(i + 1).padStart(2, '0')}`;
+      const weekId = `${String(meta.lifeYear).padStart(3, '0')}_w${getWeekNumber(i)}`;
 
       if (type === EWeekType.Present) {
         todayWeekId = weekId;
@@ -172,32 +180,25 @@ export const generateWeeks = (
         dateStart: format(weekStart, ISO_DATE_FORMAT),
         dateEnd: format(weekEnd, ISO_DATE_FORMAT),
         type,
-        month: lifeMonth,
+        lifeMonth,
+        lifeYear: meta.lifeYear,
         year: meta.year,
-        dateYear: meta.dateYear,
-        dateMonth: meta.dateMonth,
-        dateSeason: meta.dateSeason,
-        numberOfDays: meta.days.length,
-        isFirst: meta.isFirst,
-        isLast: meta.isLast,
-        isFirstInYear: meta.isFirstInYear,
-        isLastInYear: meta.isLastInYear,
-        isFirstInMonth: meta.isFirstInMonth,
-        isLastInMonth: meta.isLastInMonth,
-        isExpandedByYear,
-        isExpandedByDateSeason:
-          (meta.isFirstInSeason || meta.isLastInSeason) && meta.days.length > 7,
-        isExpandedByDateMonth: (meta.isFirstInMonth || meta.isLastInMonth) && meta.days.length > 7,
-        isPartialByYear: (meta.isFirst || meta.isLast) && meta.days.length < 7,
-        isPartialByDateSeason:
-          (meta.isFirstInSeason || meta.isLastInSeason) && meta.days.length < 7,
-        isPartialByDateMonth: (meta.isFirstInMonth || meta.isLastInMonth) && meta.days.length < 7,
-        isLeapYear: meta.isLeap,
+        secondYear: meta.secondYear,
+        month: meta.month,
+        secondMonth: meta.secondMonth,
+        season: meta.season,
+        secondSeason: meta.secondSeason,
+        isLeapYear: meta.isLeapYear,
+        isSeasonPreview: meta.isSeasonPreview,
+        isMonthPreview: meta.isMonthPreview,
         holidays,
         yearZodiacLabel: getZodiac(getYear(weekStart)),
+        days: meta.days,
+        comments: null,
+        description: null,
       });
     }
   }
 
-  return { weeks, todayWeekId, todayWeekIndex };
+  return { weeks, todayWeekId, todayWeekIndex, drawWeekIndexes };
 };

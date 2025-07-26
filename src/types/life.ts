@@ -22,6 +22,35 @@ export enum EHolidayType {
   Other = 'other',
 }
 
+export enum EDayOfWeek {
+  Sunday = 'sunday',
+  Monday = 'monday',
+  Tuesday = 'tuesday',
+  Wednesday = 'wednesday',
+  Thursday = 'thursday',
+  Friday = 'friday',
+  Saturday = 'saturday',
+}
+
+export enum EDateSegment {
+  Year = 'year',
+  Month = 'month',
+  Season = 'season',
+}
+
+export type TDay = {
+  id: string;
+  date: string;
+  dayOfWeek: EDayOfWeek;
+  isWeekPreview: boolean;
+  holidays: THolidayName[] | null;
+  lifeDay: number;
+  comments: string | null;
+  description: string | null;
+  photoUrl?: string;
+  photoLocalPath?: string;
+};
+
 export type THolidayName = (typeof HOLIDAY_NAMES)[keyof typeof HOLIDAY_NAMES];
 
 export type TWeekZodiac =
