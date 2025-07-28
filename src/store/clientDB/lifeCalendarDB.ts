@@ -35,6 +35,7 @@ export interface IWeek {
   year: string;
   secondYear: string | null;
   lifeYear: number;
+  secondLifeYear: number | null;
   lifeMonth: number;
   isLeapYear: boolean;
   isSeasonPreview: boolean;
@@ -49,12 +50,15 @@ export interface IWeek {
 }
 
 export interface IDrawWeekIndexes {
+  id: string;
   yearsIndxs: TWeekIndxsMap<EYearsWeekIndxsValues>;
   seasonsIndxs: TWeekIndxsMap<ESegmentsWeekIndxsValues>;
   monthsIndxs: TWeekIndxsMap<ESegmentsWeekIndxsValues>;
   holidaysIndxs: TWeekIndxsMap<THolidayName>;
   seasonOffset: number;
   monthOffset: number;
+  yearRows: number;
+  lastWeekIndex: number;
 }
 
 // Type for user data entity
@@ -85,6 +89,7 @@ export interface ISettings {
 // Dexie database class
 export class LifeCalendarDB extends Dexie {
   weeks!: Table<IWeek, string>;
+  drawWeekIndexes!: Table<IDrawWeekIndexes, string>;
   userData!: Table<IUserData, string>;
   settings!: Table<ISettings, string>;
   holidays!: Table<IHoliday, string>;
@@ -94,6 +99,7 @@ export class LifeCalendarDB extends Dexie {
     super('LifeCalendarDB'); // Name of the database in IndexedDB
     this.version(1).stores({
       weeks: 'id, dateStart, dateEnd, type', // Create 'weeks' table with primary key 'id' and indexes on 'dateStart', 'dateEnd', 'type'
+      drawWeekIndexes: 'id', // Create 'drawWeekIndexes' table with primary key 'id'
       userData: 'id', // Create 'userData' table with primary key 'id'
       settings: 'id', // Create 'settings' table with primary key 'id'
       holidays: 'name', // Create 'holidays' table with primary key 'name'

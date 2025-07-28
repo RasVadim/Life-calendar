@@ -1,37 +1,23 @@
-import { IWeek } from '@/store/clientDB';
+import { EWeekType, EYearsWeekIndxsValues, THolidayName } from '@/types';
 
 import { renderWeek } from './renderWeek';
 import { GRID_GAP } from '../constants';
-import { TLifeGridState } from '../types';
+import { ESide, TLifeGridState } from '../types';
 
 const PADDING_TOP = 45;
 const PADDING_BOTTOM = 74;
 
 export const renderYearList = (state: TLifeGridState) => {
-  const { app, weeks, theme, isMedium, lifeMode } = state;
-  // --- mode: years (default) ---
-  // Group weeks by years
+  const { app, drawWeekIndexes, theme, isMedium, lifeMode, today } = state;
+
+  const { lastWeekIndex, yearsIndxs, yearRows } = drawWeekIndexes;
+
   const width = app?.renderer.width || 0;
   const height = app?.renderer.height || 0;
 
-  const yearsMap: Record<number, IWeek[]> = {};
-  let minYear = Infinity;
-  let maxYear = -Infinity;
-  weeks.forEach((week) => {
-    if (!yearsMap[week.year]) yearsMap[week.year] = [];
-    yearsMap[week.year].push(week);
-    if (week.year < minYear) minYear = week.year;
-    if (week.year > maxYear) maxYear = week.year;
-  });
-
-  // Define the maximum number of weeks in a year (columns)
-  let maxWeeksInYear = 0;
-  Object.values(yearsMap).forEach((arr) => {
-    if (arr.length > maxWeeksInYear) maxWeeksInYear = arr.length;
-  });
-
-  const rows = maxYear - minYear + 1;
-  const cols = maxWeeksInYear;
+  // Fixed number of elements per row (53)
+  const cols = 53;
+  const rows = yearRows;
 
   // --- Quadratic and adaptive gap ---
   const minRows = 90;
@@ -51,55 +37,77 @@ export const renderYearList = (state: TLifeGridState) => {
   }
   const cellWidth = (width - GRID_GAP * (cols + 1)) / cols;
 
-  // For quick search of present week
-  let presentWeek: IWeek | null = null;
-  let presentRow = 0;
-  let presentCol = 0;
+  let currentRow = 0;
+  let currentCol = 0;
 
-  // Render all weeks
-  for (let y = 0; y < rows; y++) {
-    const year = minYear + y;
-    const weeksOfYear = yearsMap[year] || [];
-    for (let x = 0; x < weeksOfYear.length; x++) {
-      const week = weeksOfYear[x];
-      if (week.type === 'present') {
-        presentWeek = week;
-        presentRow = y;
-        presentCol = x;
-        continue;
-      }
-      const px = x * (cellWidth + GRID_GAP) + GRID_GAP;
-      const py = paddingTop + y * (cellHeight + actualGap) + actualGap;
+  const getPosition = () => ({
+    x: currentCol * (cellWidth + GRID_GAP) + GRID_GAP,
+    y: paddingTop + currentRow * (cellHeight + actualGap) + actualGap,
+  });
+
+  const baseProps = {
+    theme,
+    cellWidth,
+    cellHeight,
+    isMedium: isMedium || false,
+    stage: app?.stage,
+    lifeMode,
+    weekType: EWeekType.Present,
+    holiday: null as THolidayName | null,
+  };
+
+  for (let i = 0; i < lastWeekIndex; i++) {
+    const drawType = yearsIndxs[i];
+
+    const holiday = drawWeekIndexes.holidaysIndxs[i];
+    const weekType =
+      i > today.todayWeekIndex
+        ? EWeekType.Future
+        : i === today.todayWeekIndex
+          ? EWeekType.Present
+          : EWeekType.Past;
+
+    baseProps.holiday = holiday;
+    baseProps.weekType = weekType;
+
+    const render = (half: false | ESide) => {
       renderWeek({
-        week,
-        theme,
-        x: px,
-        y: py,
-        cellWidth,
-        cellHeight,
-        isMedium: isMedium || false,
-        isPresent: false,
-        stage: app?.stage,
-        lifeMode,
+        ...baseProps,
+        ...getPosition(),
+        half,
       });
-    }
-  }
+    };
 
-  // Render present week last
-  if (presentWeek) {
-    const px = presentCol * (cellWidth + GRID_GAP) + GRID_GAP;
-    const py = paddingTop + presentRow * (cellHeight + actualGap) + actualGap;
-    renderWeek({
-      week: presentWeek,
-      theme,
-      x: px,
-      y: py,
-      cellWidth,
-      cellHeight,
-      isMedium: isMedium || false,
-      isPresent: true,
-      stage: app?.stage,
-      lifeMode,
-    });
+    switch (drawType) {
+      case EYearsWeekIndxsValues.Half:
+        if (i === 0) {
+          render(ESide.Right);
+        } else if (i === lastWeekIndex - 1) {
+          render(ESide.Left);
+        } else {
+          currentCol++;
+          render(ESide.Left);
+          currentRow++;
+          currentCol = 0;
+          render(ESide.Right);
+        }
+        break;
+
+      case EYearsWeekIndxsValues.HalfLeap:
+        currentRow++;
+        currentCol = 0;
+        render(ESide.Right);
+        break;
+
+      case EYearsWeekIndxsValues.FullFirst:
+        currentRow++;
+        currentCol = 0;
+        render(false);
+        break;
+
+      default:
+        currentCol++;
+        render(false);
+    }
   }
 };

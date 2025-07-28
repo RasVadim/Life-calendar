@@ -8,7 +8,13 @@ import { ISO_DATE_FORMAT, DEFAULT_BIRTH_DATE } from '@/constants';
 import { useTranslation } from '@/hooks';
 import { OutlineProfileIcon } from '@/icons';
 import { useSetOpenDrawerKey, useSetPageLoading, useSetSyncPending } from '@/store/atoms';
-import { resetDBWeeks, saveDBWeeks, updateDBUserData, updateDBTodayWeek } from '@/store/clientDB';
+import {
+  resetDBWeeks,
+  saveDBWeeks,
+  updateDBUserData,
+  updateDBTodayWeek,
+  saveDrawWeekIndexes,
+} from '@/store/clientDB';
 import { useDBUserData } from '@/store/clientDB';
 import { EModalKeys } from '@/types';
 import { Button, Drawer, WheelDatePicker } from '@/ui-kit';
@@ -68,7 +74,6 @@ export const BirthDateDrawer = () => {
   };
 
   const calculateLifeExpectancy = async () => {
-    console.log('calculateLifeExpectancy!!!', birthDate, lifeExpectancy);
     setDrawerKey(null);
 
     if (birthDate) {
@@ -87,15 +92,16 @@ export const BirthDateDrawer = () => {
           deathDate,
         });
         // --- Web Worker helper ---
-        const { weeks, todayWeekId, todayWeekIndex } = await generateWeeksInWorker(
+        const { weeks, today, drawWeekIndexes } = await generateWeeksInWorker(
           birthDate,
           lifeExpectancy,
         );
 
         await resetDBWeeks();
         await saveDBWeeks(weeks);
+        await saveDrawWeekIndexes(drawWeekIndexes);
 
-        await updateDBTodayWeek({ todayWeekId, todayWeekIndex });
+        await updateDBTodayWeek(today);
       } catch (err) {
         console.error('generate weeks not finished, error: ', err);
       } finally {

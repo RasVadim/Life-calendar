@@ -3,32 +3,18 @@ import { addDays, isLeapYear } from 'date-fns';
 import { IWeek } from '@/store/clientDB';
 import { EDateSegment, EDayOfWeek, ESeason, TDay } from '@/types';
 
-import { generateDay } from '../generateDay';
-import { getDateSegment } from './getDateSegment';
+import { generateDay } from '../../generateDay';
+import { getDateSegment } from '../../helpers/getDateSegment';
+import { TWeekMeta } from '../../types';
 
 type TGetWeekMetaParams = {
   weekStart: Date;
   weekEnd: Date;
-  yearOfLife: number;
+  lifeYear: number;
   birthDate: Date;
   weekIndex: number;
   previousWeek: IWeek | null;
 };
-
-type TGetWeekMetaResult = Pick<
-  IWeek,
-  | 'lifeYear'
-  | 'isLeapYear'
-  | 'isSeasonPreview'
-  | 'isMonthPreview'
-  | 'days'
-  | 'month'
-  | 'secondMonth'
-  | 'year'
-  | 'secondYear'
-  | 'season'
-  | 'secondSeason'
->;
 
 /**
  * Returns meta info for the week
@@ -42,14 +28,13 @@ type TGetWeekMetaResult = Pick<
 export const getWeekMeta = ({
   weekStart,
   weekEnd,
-  yearOfLife,
   weekIndex,
   birthDate,
   previousWeek,
-}: TGetWeekMetaParams): TGetWeekMetaResult => {
+}: TGetWeekMetaParams): TWeekMeta => {
   const days: TDay[] = [];
   for (let d = weekStart; d <= weekEnd; d = addDays(d, 1)) {
-    const day = generateDay({ date: d, weekStart, weekIndex, birthDate, yearOfLife });
+    const day = generateDay({ date: d, weekStart, weekIndex, birthDate });
     days.push(day);
   }
 
@@ -60,7 +45,6 @@ export const getWeekMeta = ({
   const secondMonth = getDateSegment(weekEnd, EDateSegment.Month);
   const season = getDateSegment(weekStart, EDateSegment.Season) as ESeason;
   const secondSeason = getDateSegment(weekEnd, EDateSegment.Season) as ESeason;
-  const lifeYear = yearOfLife + 1;
   const isLeap = isLeapYear(weekStart);
 
   // Check if week starts on Monday (day 1) and is the first week of a new season
@@ -79,7 +63,6 @@ export const getWeekMeta = ({
     secondYear: year === secondYear ? null : secondYear,
     season,
     secondSeason: season === secondSeason ? null : secondSeason,
-    lifeYear,
     isLeapYear: isLeap,
     isMonthPreview,
     isSeasonPreview,

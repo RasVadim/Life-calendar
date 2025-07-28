@@ -1,0 +1,1 @@
+export { generateDay } from './generateDay';

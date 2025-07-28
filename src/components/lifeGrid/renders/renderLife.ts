@@ -12,7 +12,7 @@ let cachedBackgroundColor: string | null = null;
  * Renders weeks grid on the given PixiJS stage.
  */
 export const renderLife = (state: TLifeGridState) => {
-  const { app, weeks, theme, lifeMode } = state;
+  const { app, drawWeekIndexes, theme, lifeMode } = state;
 
   if (!app) return;
 
@@ -20,7 +20,7 @@ export const renderLife = (state: TLifeGridState) => {
   if (app.stage && app.stage.removeChildren) {
     app.stage.removeChildren(); // remove all old elements
   }
-  if (!weeks.length) return;
+  if (!drawWeekIndexes.lastWeekIndex) return;
 
   if (cachedBackgroundColor !== theme.background) {
     const backgroundColor = new Color(theme.background);

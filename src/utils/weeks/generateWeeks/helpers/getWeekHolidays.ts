@@ -12,20 +12,14 @@ export const getWeekHolidays = (
   weekStart: Date,
   weekEnd: Date,
   birthDate: Date,
-  yearOfLife: number,
 ): (typeof HOLIDAY_NAMES)[keyof typeof HOLIDAY_NAMES][] => {
   const holidays: (typeof HOLIDAY_NAMES)[keyof typeof HOLIDAY_NAMES][] = [];
   // Birthday
   const birthDay = birthDate.getDate();
   const birthMonth = birthDate.getMonth() + 1;
-  const birthYear = birthDate.getFullYear();
-  const currentLifeYear = birthYear + yearOfLife;
+
   for (let d = weekStart; d <= weekEnd; d = new Date(d.getTime() + 86400000)) {
-    if (
-      d.getDate() === birthDay &&
-      d.getMonth() + 1 === birthMonth &&
-      d.getFullYear() === currentLifeYear
-    ) {
+    if (d.getDate() === birthDay && d.getMonth() + 1 === birthMonth) {
       holidays.push(HOLIDAY_NAMES.birthday);
       break;
     }

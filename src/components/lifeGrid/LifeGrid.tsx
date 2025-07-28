@@ -4,7 +4,8 @@ import { THEMES } from '@/constants/themes';
 import { useDevice, useZodiacIconSet } from '@/hooks';
 import { useLifeGridMode } from '@/store/atoms';
 import { useThemeMode } from '@/store/atoms/themeMode/useThemeMode';
-import { IWeek } from '@/store/clientDB';
+import { IDrawWeekIndexes } from '@/store/clientDB';
+import { TTodayData } from '@/types';
 
 import { renderLife } from './renders';
 import { TLifeGridState } from './types';
@@ -13,10 +14,11 @@ import { initPixi, getHandleWheel } from './utils';
 import s from './s.module.styl';
 
 type TProps = {
-  weeks: IWeek[];
+  drawWeekIndexes: IDrawWeekIndexes;
+  today: TTodayData;
 };
 
-export const LifeGrid: React.FC<TProps> = ({ weeks }) => {
+export const LifeGrid: React.FC<TProps> = ({ drawWeekIndexes, today }) => {
   const { isMedium } = useDevice();
   const [lifeMode] = useLifeGridMode();
   const [themeMode] = useThemeMode();
@@ -28,7 +30,8 @@ export const LifeGrid: React.FC<TProps> = ({ weeks }) => {
 
   // state
   const stateRef = useRef<TLifeGridState>({
-    weeks,
+    drawWeekIndexes,
+    today,
     theme,
     isMedium,
     lifeMode,
@@ -40,7 +43,8 @@ export const LifeGrid: React.FC<TProps> = ({ weeks }) => {
 
   const render = () => {
     // update state
-    stateRef.current.weeks = weeks;
+    stateRef.current.drawWeekIndexes = drawWeekIndexes;
+    stateRef.current.today = today;
     stateRef.current.theme = theme;
     stateRef.current.isMedium = isMedium;
     stateRef.current.lifeMode = lifeMode;
@@ -72,8 +76,8 @@ export const LifeGrid: React.FC<TProps> = ({ weeks }) => {
         }
         cleanupRef.current = result.cleanup;
 
-        // Trigger initial render if we have weeks
-        if (weeks.length > 0) {
+        // Trigger initial render
+        if (drawWeekIndexes.lastWeekIndex > 0) {
           render();
         }
 
@@ -95,14 +99,21 @@ export const LifeGrid: React.FC<TProps> = ({ weeks }) => {
       stateRef.current.app = null;
       stateRef.current.scrollContainer = null;
     };
-  }, [weeks?.length]);
+  }, [drawWeekIndexes.lastWeekIndex]);
 
   // 2. Rerender weeks on parameters change
   useEffect(() => {
     if (!stateRef.current.app) return;
 
     render();
-  }, [weeks, theme, isMedium, lifeMode, zodiacIconSet]);
+  }, [
+    drawWeekIndexes.lastWeekIndex,
+    theme,
+    isMedium,
+    lifeMode,
+    zodiacIconSet,
+    today.todayWeekIndex,
+  ]);
 
   // wheel scroll for seasons mode
   useEffect(() => {

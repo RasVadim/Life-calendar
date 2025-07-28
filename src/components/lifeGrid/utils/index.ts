@@ -6,6 +6,4 @@ export { getBGColor } from './getBGColor';
 
 export { getBorderColor } from './getBorderColor';
 
-export { normalizeHex } from './normalizeHex';
-
 export { getHandleWheel } from './getHandleWheel';

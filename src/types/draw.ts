@@ -1,3 +1,5 @@
+import { IDrawWeekIndexes } from '@/store/clientDB';
+
 export type TWeekIndxsMap<T = string> = { [k: number]: T };
 
 export enum EYearsWeekIndxsValues {
@@ -13,3 +15,5 @@ export enum ESegmentsWeekIndxsValues {
   Split = 'split',
   SplitPreview = 'splitPreview',
 }
+
+export type TDrawWeekIndexes = Omit<IDrawWeekIndexes, 'id'>;

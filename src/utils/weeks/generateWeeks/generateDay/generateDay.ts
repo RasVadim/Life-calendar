@@ -3,7 +3,7 @@ import { differenceInDays, format } from 'date-fns';
 import { ISO_DATE_FORMAT } from '@/constants';
 import { EDayOfWeek, TDay } from '@/types';
 
-import { getWeekHolidays } from './helpers';
+import { getWeekHolidays } from '../helpers';
 
 // Mapping array for day of week (0 = Sunday, 1 = Monday, etc.)
 const DAY_OF_WEEK_MAP: EDayOfWeek[] = [
@@ -21,7 +21,6 @@ type TGenerateDayParams = {
   weekStart: Date;
   weekIndex: number;
   birthDate: Date;
-  yearOfLife: number;
 };
 
 export const generateDay = ({
@@ -29,7 +28,6 @@ export const generateDay = ({
   weekStart,
   weekIndex,
   birthDate,
-  yearOfLife,
 }: TGenerateDayParams): TDay => {
   // Calculate day index in week (0-6)
   const dayIndexInWeek = date.getDay();
@@ -47,7 +45,7 @@ export const generateDay = ({
   const dayOfWeek = DAY_OF_WEEK_MAP[dayIndexInWeek];
 
   // Get holidays for this week
-  const dayHolidays = getWeekHolidays(date, date, birthDate, yearOfLife);
+  const dayHolidays = getWeekHolidays(date, date, birthDate);
 
   return {
     id,

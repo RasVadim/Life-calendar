@@ -1,10 +1,11 @@
 import { Application, Container } from 'pixi.js';
 
-import { IWeek } from '@/store/clientDB';
-import { TZodiacIconSet } from '@/types';
+import { IDrawWeekIndexes } from '@/store/clientDB';
+import { TTodayData, TZodiacIconSet } from '@/types';
 
 export type TLifeGridState = {
-  weeks: IWeek[];
+  drawWeekIndexes: IDrawWeekIndexes;
+  today: TTodayData;
   theme: Record<string, string>;
   isMedium: boolean;
   lifeMode: string;
@@ -13,3 +14,8 @@ export type TLifeGridState = {
   app: Application | null;
   scrollContainer: Container | null;
 };
+
+export enum ESide {
+  Left = 'left',
+  Right = 'right',
+}

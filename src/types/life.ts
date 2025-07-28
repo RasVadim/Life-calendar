@@ -1,5 +1,6 @@
 import { HOLIDAY_NAMES, LIFE_MODES } from '@/constants';
 import type { IWeek } from '@/store/clientDB';
+import { IMeta } from '@/store/clientDB/lifeCalendarDB';
 
 export enum EWeekType {
   Past = 'past',
@@ -73,3 +74,8 @@ export type TYear = {
 };
 
 export type TLifeMode = (typeof LIFE_MODES)[keyof typeof LIFE_MODES];
+
+export type TTodayData = Pick<
+  IMeta,
+  'todayWeekId' | 'todayWeekIndex' | 'todayDayId' | 'todayDayIndex'
+>;
