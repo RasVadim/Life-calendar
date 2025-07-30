@@ -7,3 +7,5 @@ export { getSeason } from './getSeason';
 export { getWeekHolidays } from './getWeekHolidays';
 
 export { getDeathDate } from './getDeathDate';
+
+export { getIsDateEarly } from './getIsDateEarly';

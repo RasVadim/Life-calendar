@@ -14,8 +14,3 @@ export type TLifeGridState = {
   app: Application | null;
   scrollContainer: Container | null;
 };
-
-export enum ESide {
-  Left = 'left',
-  Right = 'right',
-}

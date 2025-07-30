@@ -77,5 +77,5 @@ export type TLifeMode = (typeof LIFE_MODES)[keyof typeof LIFE_MODES];
 
 export type TTodayData = Pick<
   IMeta,
-  'todayWeekId' | 'todayWeekIndex' | 'todayDayId' | 'todayDayIndex'
+  'todayWeekId' | 'todayWeekIndex' | 'todayDayId' | 'todayDayIndex' | 'todayWeekHalf'
 >;

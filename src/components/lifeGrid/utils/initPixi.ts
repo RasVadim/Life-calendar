@@ -18,8 +18,6 @@ export async function initPixi({ state, onDestroy }: TInitPixiOptions) {
   try {
     const app = new Application();
     await app.init({
-      width: 100,
-      height: 100,
       antialias: true,
       resolution: window.devicePixelRatio || 1,
       autoDensity: true,

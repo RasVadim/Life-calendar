@@ -1,8 +1,8 @@
-import { EWeekType, EYearsWeekIndxsValues, THolidayName } from '@/types';
+import { ESide, EWeekType, EYearsWeekIndxsValues, THolidayName } from '@/types';
 
 import { renderWeek } from './renderWeek';
 import { GRID_GAP } from '../constants';
-import { ESide, TLifeGridState } from '../types';
+import { TLifeGridState } from '../types';
 
 const PADDING_TOP = 45;
 const PADDING_BOTTOM = 74;
@@ -18,6 +18,7 @@ export const renderYearList = (state: TLifeGridState) => {
   // Fixed number of elements per row (53)
   const cols = 53;
   const rows = yearRows;
+  const gridGap = GRID_GAP[isMedium ? 'small' : 'large'];
 
   // --- Quadratic and adaptive gap ---
   const minRows = 90;
@@ -29,19 +30,19 @@ export const renderYearList = (state: TLifeGridState) => {
 
   const availableHeight = height - paddingTop - paddingBottom;
   if (rows < minRows) {
-    cellHeight = (availableHeight - GRID_GAP * (minRows + 1)) / minRows;
+    cellHeight = (availableHeight - gridGap * (minRows + 1)) / minRows;
     actualGap = (availableHeight - cellHeight * rows) / (rows + 1);
   } else {
-    cellHeight = (availableHeight - GRID_GAP * (rows + 1)) / rows;
-    actualGap = GRID_GAP;
+    cellHeight = (availableHeight - gridGap * (rows + 1)) / rows;
+    actualGap = gridGap;
   }
-  const cellWidth = (width - GRID_GAP * (cols + 1)) / cols;
+  const cellWidth = (width - gridGap * (cols + 1)) / cols;
 
   let currentRow = 0;
   let currentCol = 0;
 
   const getPosition = () => ({
-    x: currentCol * (cellWidth + GRID_GAP) + GRID_GAP,
+    x: currentCol * (cellWidth + gridGap) + gridGap,
     y: paddingTop + currentRow * (cellHeight + actualGap) + actualGap,
   });
 
@@ -70,7 +71,11 @@ export const renderYearList = (state: TLifeGridState) => {
     baseProps.holiday = holiday;
     baseProps.weekType = weekType;
 
-    const render = (half: false | ESide) => {
+    const render = (half: false | ESide, weekType?: EWeekType | null) => {
+      // console.log('weekType', weekType);
+      if (weekType) {
+        baseProps.weekType = weekType;
+      }
       renderWeek({
         ...baseProps,
         ...getPosition(),
@@ -85,11 +90,21 @@ export const renderYearList = (state: TLifeGridState) => {
         } else if (i === lastWeekIndex - 1) {
           render(ESide.Left);
         } else {
+          let leftWeekType: EWeekType | null = null;
+          let rightWeekType: EWeekType | null = null;
+
+          if (i === today.todayWeekIndex) {
+            console.log('today.todayWeekHalf', today.todayWeekHalf);
+            leftWeekType = today.todayWeekHalf === ESide.Left ? EWeekType.Present : EWeekType.Past;
+            rightWeekType =
+              today.todayWeekHalf === ESide.Right ? EWeekType.Present : EWeekType.Future;
+          }
+
           currentCol++;
-          render(ESide.Left);
+          render(ESide.Left, leftWeekType);
           currentRow++;
           currentCol = 0;
-          render(ESide.Right);
+          render(ESide.Right, rightWeekType);
         }
         break;
 
@@ -100,8 +115,10 @@ export const renderYearList = (state: TLifeGridState) => {
         break;
 
       case EYearsWeekIndxsValues.FullFirst:
-        currentRow++;
-        currentCol = 0;
+        if (i !== 0) {
+          currentRow++;
+          currentCol = 0;
+        }
         render(false);
         break;
 

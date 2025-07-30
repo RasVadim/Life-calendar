@@ -1,26 +1,25 @@
 import { GlowFilter } from 'pixi-filters';
-import { Color, Container, Graphics, Texture } from 'pixi.js';
+import { Color, Container, Graphics, FillGradient } from 'pixi.js';
 
 import { LIFE_MODES } from '@/constants';
-import { EWeekType, THolidayName, TLifeMode } from '@/types';
+import { ESide, EWeekType, THolidayName, TLifeMode } from '@/types';
 
-import { ESide } from '../types';
 import { getBGColor, getBorderColor } from '../utils';
 
-// Cache for gradient textures
-const gradientTextures = new Map<string, Texture>();
-
 const BORDER_RADIUS_MAP = {
-  [LIFE_MODES.YEARS]: { small: 2, large: 4 },
+  [LIFE_MODES.YEARS]: { small: 2, large: 3 },
   [LIFE_MODES.SEASONS]: { small: 4, large: 6 },
   [LIFE_MODES.MONTHS]: { small: 14, large: 22 },
 };
 
-const borderWidthMap = {
-  [LIFE_MODES.YEARS]: { small: 1, large: 2 },
+const BORDER_WIDTH_MAP = {
+  [LIFE_MODES.YEARS]: { small: 1, large: 1 },
   [LIFE_MODES.SEASONS]: { small: 1, large: 2 },
   [LIFE_MODES.MONTHS]: { small: 2, large: 3 },
 };
+
+// Cache for gradient objects
+const gradientCache = new Map<string, FillGradient>();
 
 type TRenderWeekProps = {
   theme: Record<string, string>;
@@ -63,7 +62,7 @@ export const renderWeek = ({
 }: TRenderWeekProps) => {
   const borderRadius = BORDER_RADIUS_MAP[lifeMode][isMedium ? 'small' : 'large'];
 
-  const borderWidth = borderWidthMap[lifeMode][isMedium ? 'small' : 'large'];
+  const borderWidth = BORDER_WIDTH_MAP[lifeMode][isMedium ? 'small' : 'large'];
 
   const borderColor = new Color(getBorderColor(weekType, theme));
   const bgColor = new Color(getBGColor(theme, holiday));
@@ -77,44 +76,49 @@ export const renderWeek = ({
 
   // Handle half week rendering
   if (half === ESide.Left || half === true || half === ESide.Right) {
-    // Use cached gradient textures
-    const textureKey = `${bgColor}-${half}-${cellWidth}-${cellHeight}`;
-    let texture = gradientTextures.get(textureKey);
+    // Use cached gradient objects
+    const gradientKey = `${bgColor}-${half}-${cellWidth}-${cellHeight}`;
+    let gradient = gradientCache.get(gradientKey);
 
-    if (!texture) {
-      // Create canvas with gradient (only once)
-      const canvas = document.createElement('canvas');
-      canvas.width = cellWidth;
-      canvas.height = cellHeight;
-      const ctx = canvas.getContext('2d')!;
+    if (!gradient) {
+      // Create gradient using PixiJS native FillGradient
+      const bgColorRgb = bgColor.toRgb();
+      const bgColorString = bgColor.toRgbaString();
+      const transparentColor = `rgba(${bgColorRgb.r}, ${bgColorRgb.g}, ${bgColorRgb.b}, 0.4)`;
 
-      // Create gradient
-      const gradient = ctx.createLinearGradient(0, 0, cellWidth, 0);
       if (half === ESide.Left || half === true) {
         // Left to right fade
-        const bgColorRgb = bgColor.toRgb();
-        gradient.addColorStop(0.3, bgColor.toRgbaString());
-        gradient.addColorStop(1, `rgba(${bgColorRgb.r}, ${bgColorRgb.g}, ${bgColorRgb.b}, 0.4)`);
+        gradient = new FillGradient({
+          type: 'linear',
+          start: { x: 0, y: 0 },
+          end: { x: 1, y: 0 },
+          colorStops: [
+            { offset: 0.3, color: bgColorString },
+            { offset: 1, color: transparentColor },
+          ],
+          textureSpace: 'local',
+        });
       } else {
         // Right to left fade
-        const bgColorRgb = bgColor.toRgb();
-        gradient.addColorStop(0, `rgba(${bgColorRgb.r}, ${bgColorRgb.g}, ${bgColorRgb.b}, 0.4)`);
-        gradient.addColorStop(0.7, bgColor.toRgbaString());
+        gradient = new FillGradient({
+          type: 'linear',
+          start: { x: 0, y: 0 },
+          end: { x: 1, y: 0 },
+          colorStops: [
+            { offset: 0, color: transparentColor },
+            { offset: 0.7, color: bgColorString },
+          ],
+          textureSpace: 'local',
+        });
       }
 
-      // Fill canvas with gradient
-      ctx.fillStyle = gradient;
-      ctx.fillRect(0, 0, cellWidth, cellHeight);
-
-      // Create and cache texture
-      texture = Texture.from(canvas);
-      gradientTextures.set(textureKey, texture);
+      gradientCache.set(gradientKey, gradient);
     }
 
-    // Draw with cached texture
+    // Draw with cached gradient
     g.clear();
     g.roundRect(x, y, cellWidth, cellHeight, finalRadius);
-    g.fill({ texture });
+    g.fill({ fill: gradient });
     g.stroke();
   } else {
     // Draw full week
@@ -128,10 +132,10 @@ export const renderWeek = ({
     g.filters = [
       new GlowFilter({
         color: borderColor,
-        distance: 10,
-        outerStrength: 3,
+        distance: 8,
+        outerStrength: 2,
         innerStrength: 0,
-        quality: 10,
+        quality: 1,
       }),
     ];
     g.zIndex = 1000; // High z-index to appear above other weeks

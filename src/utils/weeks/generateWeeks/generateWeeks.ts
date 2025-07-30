@@ -2,10 +2,10 @@ import { addDays, format, startOfDay } from 'date-fns';
 
 import { DEFAULT_LIFE_SPAN_YEARS, ISO_DATE_FORMAT } from '@/constants';
 import { IWeek } from '@/store/clientDB';
-import { EWeekType, TDrawWeekIndexes } from '@/types';
+import { ESide, EWeekType, TDrawWeekIndexes } from '@/types';
 
 import { generateWeek } from './generateWeek';
-import { getDeathDate } from './helpers';
+import { getDeathDate, getIsDateEarly } from './helpers';
 
 export interface IGenerateWeeksResult {
   weeks: IWeek[];
@@ -14,6 +14,7 @@ export interface IGenerateWeeksResult {
     todayWeekIndex: number;
     todayDayId: string;
     todayDayIndex: number;
+    todayWeekHalf: ESide | null;
   };
   drawWeekIndexes: TDrawWeekIndexes;
 }
@@ -37,6 +38,7 @@ export const generateWeeks = (
   const today = {
     todayWeekId: '',
     todayWeekIndex: 0,
+    todayWeekHalf: null as ESide | null,
     todayDayId: '',
     todayDayIndex: 0,
   };
@@ -104,6 +106,11 @@ export const generateWeeks = (
       const todayDayIndex = week.days.findIndex(
         (day) => day.date === format(new Date(), ISO_DATE_FORMAT),
       );
+
+      if (week.secondLifeYear) {
+        const todayDate = new Date(week.days[todayDayIndex].date);
+        today.todayWeekHalf = getIsDateEarly(todayDate, birthDate) ? ESide.Left : ESide.Right;
+      }
 
       today.todayDayId = todayDayIndex !== -1 ? week.days[todayDayIndex].id : '';
       today.todayDayIndex = todayDayIndex !== -1 ? todayDayIndex : 0;

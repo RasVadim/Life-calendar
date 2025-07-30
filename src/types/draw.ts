@@ -17,3 +17,8 @@ export enum ESegmentsWeekIndxsValues {
 }
 
 export type TDrawWeekIndexes = Omit<IDrawWeekIndexes, 'id'>;
+
+export enum ESide {
+  Left = 'left',
+  Right = 'right',
+}

@@ -13,6 +13,7 @@ import {
   TWeekIndxsMap,
   ESegmentsWeekIndxsValues,
   EYearsWeekIndxsValues,
+  ESide,
 } from '@/types';
 
 // Тип праздника
@@ -74,6 +75,7 @@ export interface IMeta {
   id: string;
   todayWeekId: string;
   todayWeekIndex: number;
+  todayWeekHalf: ESide | null;
   todayDayId: string;
   todayDayIndex: number;
 }

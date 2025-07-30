@@ -1,4 +1,5 @@
 import { lifeCalendarDB } from '@/store/clientDB';
+import { ESide } from '@/types';
 
 const DEFAULT_TODAY_DATA = {
   id: 'main',
@@ -6,6 +7,7 @@ const DEFAULT_TODAY_DATA = {
   todayWeekIndex: 0,
   todayDayId: '',
   todayDayIndex: 0,
+  todayWeekHalf: null,
 };
 
 /**
@@ -17,6 +19,7 @@ export const updateDBTodayWeek = async (newData: {
   todayWeekIndex?: number;
   todayDayId?: string;
   todayDayIndex?: number;
+  todayWeekHalf?: ESide | null;
 }) => {
   let prev = await lifeCalendarDB.meta.get('main');
 
