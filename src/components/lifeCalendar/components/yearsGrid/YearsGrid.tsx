@@ -100,9 +100,9 @@ export const YearsGrid = ({ weeks, isByWidth, lifeMode, zodiacIconSet }: PropsTy
   return (
     <>
       <VirtualRow
-        weekId={zoomCentralWeekId || undefined}
+        weekId={'w034_26' || undefined}
         weeks={weeks}
-        isVisible={!!zoomCentralWeekId}
+        isVisible={!!'w034_26'}
         lifeMode={lifeMode}
       />
       <div ref={containerRef} className={s.container}>
