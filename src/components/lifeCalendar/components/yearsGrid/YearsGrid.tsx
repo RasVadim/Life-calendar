@@ -3,7 +3,7 @@ import { useRef, useEffect } from 'react';
 import { useDevice } from '@/hooks';
 import { useZoomCentralWeek } from '@/store/atoms';
 import { IWeek } from '@/store/clientDB';
-import { TLifeMode, TZodiacIconSet } from '@/types';
+import { ELifeMode, type TZodiacIconSet } from '@/types';
 
 import { GridLabels } from './components';
 import { VirtualRow } from '../virtaulRow/VirtaulRow';
@@ -16,7 +16,7 @@ const DEBOUNCE_TIMEOUT = 200; // finish user scroll after this delay means the e
 type PropsType = {
   weeks: IWeek[];
   isByWidth: boolean;
-  lifeMode: TLifeMode;
+  lifeMode: ELifeMode;
   zodiacIconSet: TZodiacIconSet;
 };
 

@@ -1,6 +1,6 @@
 import { Color } from 'pixi.js';
 
-import { LIFE_MODES } from '@/constants';
+import { ELifeMode } from '@/types';
 
 import { renderSeasonList } from './renderSeasosLIst';
 import { renderYearList } from './renderYearList';
@@ -28,7 +28,7 @@ export const renderLife = (state: TLifeGridState) => {
     cachedBackgroundColor = theme.background;
   }
 
-  if (lifeMode === LIFE_MODES.SEASONS) {
+  if (lifeMode === ELifeMode.Seasons) {
     const scrollContainer = renderSeasonList(state);
 
     // add scrollable container to stage

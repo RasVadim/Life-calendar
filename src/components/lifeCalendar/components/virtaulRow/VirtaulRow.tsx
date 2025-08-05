@@ -3,7 +3,7 @@ import { FC, useMemo } from 'react';
 import cx from 'classnames';
 
 import { IWeek } from '@/store/clientDB';
-import { TLifeMode } from '@/types/life';
+import { ELifeMode } from '@/types/life';
 
 import { Week } from '../week/Week';
 
@@ -13,7 +13,7 @@ type TProps = {
   weekId?: string;
   weeks?: IWeek[];
   isVisible?: boolean;
-  lifeMode?: TLifeMode;
+  lifeMode?: ELifeMode;
 };
 
 function getDateYearRange(weeks: IWeek[]): string {

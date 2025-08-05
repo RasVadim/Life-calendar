@@ -2,9 +2,8 @@ import { FC } from 'react';
 
 import cx from 'classnames';
 
-import { LIFE_MODES } from '@/constants';
 import { IWeek } from '@/store/clientDB';
-import { EWeekType, TLifeMode } from '@/types';
+import { ELifeMode, EWeekType } from '@/types';
 
 import { getBGColor, getBorderColor } from './utils';
 
@@ -14,7 +13,7 @@ type PropsType = {
   id: string;
   week: IWeek;
   isByWidth?: boolean;
-  lifeMode: TLifeMode;
+  lifeMode: ELifeMode;
 };
 
 export const Week: FC<PropsType> = ({ id, week, isByWidth, lifeMode }) => {
@@ -29,8 +28,8 @@ export const Week: FC<PropsType> = ({ id, week, isByWidth, lifeMode }) => {
       className={cx(s.week, {
         [s.present]: isPresent,
         [s.byWidth]: isByWidth,
-        [s.seasonsMode]: lifeMode === LIFE_MODES.SEASONS,
-        [s.monthsMode]: lifeMode === LIFE_MODES.MONTHS,
+        [s.seasonsMode]: lifeMode === ELifeMode.Seasons,
+        [s.monthsMode]: lifeMode === ELifeMode.Months,
       })}
       style={{ backgroundColor: bGColor, borderColor: borderColor }}
     >

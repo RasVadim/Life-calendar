@@ -1,8 +1,7 @@
 import { atom } from 'jotai';
 
-import { LIFE_MODES } from '@/constants';
-import { TLifeMode } from '@/types';
+import { ELifeMode } from '@/types';
 
-const defaultMode = LIFE_MODES.YEARS;
+const defaultMode = ELifeMode.Years;
 
-export const LifeGridMode = atom<TLifeMode>(defaultMode);
+export const LifeGridMode = atom<ELifeMode>(defaultMode);

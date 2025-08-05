@@ -1,3 +1,5 @@
+import { Container } from 'pixi.js';
+
 import { ESide, EWeekType, EYearsWeekIndxsValues, THolidayName } from '@/types';
 
 import { renderWeek } from './renderWeek';
@@ -6,6 +8,8 @@ import { TLifeGridState } from '../types';
 
 const PADDING_TOP = 45;
 const PADDING_BOTTOM = 74;
+
+type TRenderProps = { half: ESide | false; weekType?: EWeekType | null; stage?: Container | null };
 
 export const renderYearList = (state: TLifeGridState) => {
   const { app, drawWeekIndexes, theme, isMedium, lifeMode, today } = state;
@@ -71,14 +75,12 @@ export const renderYearList = (state: TLifeGridState) => {
     baseProps.holiday = holiday;
     baseProps.weekType = weekType;
 
-    const render = (half: false | ESide, weekType?: EWeekType | null) => {
-      // console.log('weekType', weekType);
-      if (weekType) {
-        baseProps.weekType = weekType;
-      }
+    const render = ({ half, weekType, stage }: TRenderProps) => {
       renderWeek({
         ...baseProps,
         ...getPosition(),
+        ...(weekType ? { weekType } : {}),
+        ...(stage ? { stage } : {}),
         half,
       });
     };
@@ -86,32 +88,35 @@ export const renderYearList = (state: TLifeGridState) => {
     switch (drawType) {
       case EYearsWeekIndxsValues.Half:
         if (i === 0) {
-          render(ESide.Right);
+          render({ half: ESide.Right });
         } else if (i === lastWeekIndex - 1) {
-          render(ESide.Left);
+          render({ half: ESide.Left });
         } else {
           let leftWeekType: EWeekType | null = null;
           let rightWeekType: EWeekType | null = null;
 
           if (i === today.todayWeekIndex) {
-            console.log('today.todayWeekHalf', today.todayWeekHalf);
             leftWeekType = today.todayWeekHalf === ESide.Left ? EWeekType.Present : EWeekType.Past;
             rightWeekType =
               today.todayWeekHalf === ESide.Right ? EWeekType.Present : EWeekType.Future;
           }
 
+          // Create container for two weeks that will be positioned separately
+          const twoWeekHalfsContainer = new Container();
+          app?.stage.addChild(twoWeekHalfsContainer);
+
           currentCol++;
-          render(ESide.Left, leftWeekType);
+          render({ half: ESide.Left, weekType: leftWeekType, stage: twoWeekHalfsContainer });
           currentRow++;
           currentCol = 0;
-          render(ESide.Right, rightWeekType);
+          render({ half: ESide.Right, weekType: rightWeekType, stage: twoWeekHalfsContainer });
         }
         break;
 
       case EYearsWeekIndxsValues.HalfLeap:
         currentRow++;
         currentCol = 0;
-        render(ESide.Right);
+        render({ half: ESide.Right });
         break;
 
       case EYearsWeekIndxsValues.FullFirst:
@@ -119,12 +124,12 @@ export const renderYearList = (state: TLifeGridState) => {
           currentRow++;
           currentCol = 0;
         }
-        render(false);
+        render({ half: false });
         break;
 
       default:
         currentCol++;
-        render(false);
+        render({ half: false });
     }
   }
 };

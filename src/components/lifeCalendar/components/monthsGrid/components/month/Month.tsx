@@ -1,10 +1,9 @@
 import { FC } from 'react';
 
 import { Week } from '@/components/lifeCalendar/components/week/Week';
-import { LIFE_MODES } from '@/constants';
 import { useTranslation } from '@/hooks';
 import { IWeek } from '@/store/clientDB';
-import { TWeekZodiac, TZodiacIconSet } from '@/types';
+import { ELifeMode, TWeekZodiac, TZodiacIconSet } from '@/types';
 
 import s from './s.module.styl';
 
@@ -50,7 +49,7 @@ export const Month: FC<TProps> = ({
               id={week.id}
               week={week}
               isByWidth={isByWidth}
-              lifeMode={LIFE_MODES.MONTHS}
+              lifeMode={ELifeMode.Months}
             />
           );
         })}

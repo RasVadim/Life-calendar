@@ -1,21 +1,20 @@
 import { GlowFilter } from 'pixi-filters';
 import { Color, Container, Graphics, FillGradient } from 'pixi.js';
 
-import { LIFE_MODES } from '@/constants';
-import { ESide, EWeekType, THolidayName, TLifeMode } from '@/types';
+import { ELifeMode, ESide, EWeekType, THolidayName } from '@/types';
 
 import { getBGColor, getBorderColor } from '../utils';
 
 const BORDER_RADIUS_MAP = {
-  [LIFE_MODES.YEARS]: { small: 2, large: 3 },
-  [LIFE_MODES.SEASONS]: { small: 4, large: 6 },
-  [LIFE_MODES.MONTHS]: { small: 14, large: 22 },
+  [ELifeMode.Years]: { small: 2, large: 3 },
+  [ELifeMode.Seasons]: { small: 4, large: 6 },
+  [ELifeMode.Months]: { small: 14, large: 22 },
 };
 
 const BORDER_WIDTH_MAP = {
-  [LIFE_MODES.YEARS]: { small: 1, large: 1 },
-  [LIFE_MODES.SEASONS]: { small: 1, large: 2 },
-  [LIFE_MODES.MONTHS]: { small: 2, large: 3 },
+  [ELifeMode.Years]: { small: 1, large: 1 },
+  [ELifeMode.Seasons]: { small: 1, large: 2 },
+  [ELifeMode.Months]: { small: 2, large: 3 },
 };
 
 // Cache for gradient objects
@@ -29,7 +28,7 @@ type TRenderWeekProps = {
   cellHeight: number;
   isMedium: boolean;
   stage?: Container;
-  lifeMode?: TLifeMode;
+  lifeMode?: ELifeMode;
   weekType: EWeekType;
   holiday: THolidayName | null;
   half: boolean | ESide;
@@ -55,7 +54,7 @@ export const renderWeek = ({
   cellHeight,
   isMedium,
   stage,
-  lifeMode = LIFE_MODES.YEARS,
+  lifeMode = ELifeMode.Years,
   weekType,
   holiday,
   half,

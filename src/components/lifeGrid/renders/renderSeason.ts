@@ -1,7 +1,7 @@
 import { Color, Container, Text } from 'pixi.js';
 
 import { IWeek } from '@/store/clientDB';
-import { TLifeMode, TWeekZodiac, TZodiacIconSet } from '@/types';
+import { ELifeMode, TWeekZodiac, TZodiacIconSet } from '@/types';
 
 import { renderIcon } from './renderIcon';
 import { renderWeek } from './renderWeek';
@@ -19,7 +19,7 @@ export type TRenderSeasonParams = {
   width: number;
   offsetY: number;
   isMedium?: boolean;
-  lifeMode?: TLifeMode;
+  lifeMode?: ELifeMode;
   isFirst: boolean;
   isLast: boolean;
   zodiacIconSet?: TZodiacIconSet;

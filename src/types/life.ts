@@ -1,4 +1,4 @@
-import { HOLIDAY_NAMES, LIFE_MODES } from '@/constants';
+import { HOLIDAY_NAMES } from '@/constants';
 import type { IWeek } from '@/store/clientDB';
 import { IMeta } from '@/store/clientDB/lifeCalendarDB';
 
@@ -73,7 +73,11 @@ export type TYear = {
   weeks: IWeek[];
 };
 
-export type TLifeMode = (typeof LIFE_MODES)[keyof typeof LIFE_MODES];
+export enum ELifeMode {
+  Months = 'months',
+  Seasons = 'seasons',
+  Years = 'years',
+}
 
 export type TTodayData = Pick<
   IMeta,

@@ -1,11 +1,10 @@
 import { FC } from 'react';
 
-import { LIFE_MODES } from '@/constants';
 import { useZodiacIconSet } from '@/hooks';
 import { useLifeGridMode } from '@/store/atoms';
 import { IWeek, useDBUserData } from '@/store/clientDB';
 import { useDBTodayWeek } from '@/store/clientDB';
-import { TZodiacIconSet } from '@/types';
+import { ELifeMode, TZodiacIconSet } from '@/types';
 
 import { MonthsGrid, SeasonsGrid, YearsGrid } from './components';
 import { getOffsetBegin } from './utils';
@@ -23,7 +22,7 @@ export const LifeCalendar: FC<PropsType> = ({ weeks }) => {
   const zodiacIconSet = useZodiacIconSet({ jsx: true });
 
   const isByWidth = Boolean(
-    (userData?.lifeExpectancy && userData.lifeExpectancy < 90) || lifeMode !== LIFE_MODES.YEARS,
+    (userData?.lifeExpectancy && userData.lifeExpectancy < 90) || lifeMode !== ELifeMode.Years,
   );
 
   // 14 weeks = season + 1 week
@@ -31,7 +30,7 @@ export const LifeCalendar: FC<PropsType> = ({ weeks }) => {
 
   return (
     <div className={s.calendar}>
-      {lifeMode === LIFE_MODES.MONTHS && (
+      {lifeMode === ELifeMode.Months && (
         <MonthsGrid
           weeks={weeks || []}
           offsetBegin={offsetBegin}
@@ -41,7 +40,7 @@ export const LifeCalendar: FC<PropsType> = ({ weeks }) => {
         />
       )}
 
-      {lifeMode === LIFE_MODES.SEASONS && (
+      {lifeMode === ELifeMode.Seasons && (
         <SeasonsGrid
           weeks={weeks || []}
           offsetBegin={offsetBegin}
@@ -51,7 +50,7 @@ export const LifeCalendar: FC<PropsType> = ({ weeks }) => {
         />
       )}
 
-      {lifeMode === LIFE_MODES.YEARS && (
+      {lifeMode === ELifeMode.Years && (
         <YearsGrid
           weeks={weeks || []}
           isByWidth={isByWidth}
@@ -59,7 +58,7 @@ export const LifeCalendar: FC<PropsType> = ({ weeks }) => {
           zodiacIconSet={(zodiacIconSet ?? {}) as TZodiacIconSet}
         />
       )}
-      {lifeMode !== LIFE_MODES.YEARS && <div className={s.bottomPadding} />}
+      {lifeMode !== ELifeMode.Years && <div className={s.bottomPadding} />}
     </div>
   );
 };

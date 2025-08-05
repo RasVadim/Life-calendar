@@ -31,7 +31,7 @@ export const ZODIAC_CIRCLES_ICONS: Record<TWeekZodiac, FC<{ size?: string; color
   pig: PigCircleIcon,
 };
 
-export const ZODIAC_CIRCLES_SVG_PATHS: Record<TWeekZodiac, string> = {
+export const ZODIAC_CIRCLES_PNG_PATHS: Record<TWeekZodiac, string> = {
   rat: '/icons/zodiac/circles/Rat.png',
   ox: '/icons/zodiac/circles/Bull.png',
   tiger: '/icons/zodiac/circles/Tiger.png',

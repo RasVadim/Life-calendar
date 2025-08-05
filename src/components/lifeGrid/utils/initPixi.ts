@@ -21,6 +21,7 @@ export async function initPixi({ state, onDestroy }: TInitPixiOptions) {
       antialias: true,
       resolution: window.devicePixelRatio || 1,
       autoDensity: true,
+      resizeTo: container!,
     });
 
     // Add canvas to container

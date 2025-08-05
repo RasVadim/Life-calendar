@@ -1,0 +1,1 @@
+export { createLifeGrid } from './createLifeGrid';
