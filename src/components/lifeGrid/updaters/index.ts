@@ -1,0 +1,1 @@
+export { resizeYearsGrid } from './resizeYearsGrid';

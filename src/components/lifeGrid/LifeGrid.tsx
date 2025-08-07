@@ -1,7 +1,8 @@
 import React, { useEffect, useRef } from 'react';
 
+import { DEVICE_SCREEN_WIDTH } from '@/constants';
 import { THEMES } from '@/constants/themes';
-import { useDevice, useZodiacIconSet } from '@/hooks';
+import { useZodiacIconSet } from '@/hooks';
 import { useLifeGridMode } from '@/store/atoms';
 import { useThemeMode } from '@/store/atoms/themeMode/useThemeMode';
 import { IDrawWeekIndexes } from '@/store/clientDB';
@@ -9,7 +10,8 @@ import { TTodayData } from '@/types';
 
 import { renderLife } from './renders';
 import { TLifeGridState } from './types';
-import { initPixi, getHandleWheel } from './utils';
+import { resizeYearsGrid } from './updaters';
+import { initPixi } from './utils';
 
 import s from './s.module.styl';
 
@@ -19,21 +21,19 @@ type TProps = {
 };
 
 export const LifeGrid: React.FC<TProps> = ({ drawWeekIndexes, today }) => {
-  const { isMedium } = useDevice();
   const [lifeMode] = useLifeGridMode();
   const [themeMode] = useThemeMode();
-  const theme = THEMES[themeMode];
   const zodiacIconSet = useZodiacIconSet();
+  const theme = THEMES[themeMode];
 
   const pixiContainerRef = useRef<HTMLDivElement>(null);
-  const cleanupRef = useRef<(() => void) | null>(null);
 
   // state
   const stateRef = useRef<TLifeGridState>({
     drawWeekIndexes,
     today,
     theme,
-    isMedium,
+    isScreenMedium: window.innerWidth < DEVICE_SCREEN_WIDTH.medium,
     lifeMode,
     zodiacIconSet,
     container: null,
@@ -46,7 +46,6 @@ export const LifeGrid: React.FC<TProps> = ({ drawWeekIndexes, today }) => {
     stateRef.current.drawWeekIndexes = drawWeekIndexes;
     stateRef.current.today = today;
     stateRef.current.theme = theme;
-    stateRef.current.isMedium = isMedium;
     stateRef.current.lifeMode = lifeMode;
     stateRef.current.zodiacIconSet = zodiacIconSet;
 
@@ -56,80 +55,71 @@ export const LifeGrid: React.FC<TProps> = ({ drawWeekIndexes, today }) => {
 
   // 1. Initialize PixiJS
   useEffect(() => {
-    if (!pixiContainerRef.current || stateRef.current.app) return;
-    let destroyed = false;
+    if (!pixiContainerRef.current) return;
 
-    const setup = async () => {
-      try {
-        // Update state with current container
-        stateRef.current.container = pixiContainerRef.current;
+    const initApp = async () => {
+      // Initialize PixiJS
+      const app = await initPixi(pixiContainerRef.current!);
+      stateRef.current.app = app;
 
-        const result = await initPixi({
-          state: stateRef.current,
-          onDestroy: () => {
-            if (destroyed) return;
-          },
-        });
-        if (!result) {
-          console.error('Failed to initialize PixiJS application');
-          return;
-        }
-        cleanupRef.current = result.cleanup;
-
-        // Trigger initial render
-        if (drawWeekIndexes.lastWeekIndex > 0) {
-          render();
-        }
-
-        if (destroyed) {
-          result.cleanup();
-          return;
-        }
-      } catch (e) {
-        console.error('PixiJS setup error:', e);
-      }
+      // Add canvas to DOM
+      pixiContainerRef.current!.appendChild(app.canvas);
+      stateRef.current.container = pixiContainerRef.current;
+      render();
     };
-    setup();
+
+    initApp();
+
+    const onResizeGrid = () => {
+      resizeYearsGrid(stateRef.current);
+    };
+
+    // Add resize listener
+    window.addEventListener('resize', onResizeGrid);
+
+    // Cleanup
     return () => {
-      destroyed = true;
-      if (cleanupRef.current) {
-        cleanupRef.current();
-        cleanupRef.current = null;
+      window.removeEventListener('resize', onResizeGrid);
+      if (stateRef.current.app) {
+        stateRef.current.app.destroy(true, { children: true });
       }
-      stateRef.current.app = null;
-      stateRef.current.scrollContainer = null;
     };
-  }, [drawWeekIndexes.lastWeekIndex]);
+  }, []);
 
   // 2. Rerender weeks on parameters change
   useEffect(() => {
     if (!stateRef.current.app) return;
 
     render();
-  }, [
-    drawWeekIndexes.lastWeekIndex,
-    theme,
-    isMedium,
-    lifeMode,
-    zodiacIconSet,
-    today.todayWeekIndex,
-  ]);
+  }, [drawWeekIndexes.lastWeekIndex, theme, lifeMode]);
+
+  useEffect(() => {
+    if (!stateRef.current.app) return;
+
+    render();
+  }, [zodiacIconSet]);
+
+  useEffect(() => {
+    if (!stateRef.current.app) return;
+
+    render();
+  }, [today.todayWeekIndex]);
 
   // wheel scroll for seasons mode
-  useEffect(() => {
-    if (!pixiContainerRef.current) return;
-    const canvas = pixiContainerRef.current.querySelector('canvas');
-    if (!canvas) return;
-    const handleWheel = getHandleWheel({
-      lifeMode,
-      scrollContainer: stateRef.current.scrollContainer,
-      app: stateRef.current.app,
-    });
-    canvas.addEventListener('wheel', handleWheel, { passive: false });
-    return () => {
-      canvas.removeEventListener('wheel', handleWheel);
-    };
-  }, [lifeMode]);
+  // useEffect(() => {
+  //   if (!pixiContainerRef.current) return;
+  //   const canvas = pixiContainerRef.current.querySelector('canvas');
+  //   if (!canvas) return;
+  //   const handleWheel = getHandleWheel({
+  //     lifeMode,
+  //     scrollContainer: stateRef.current.scrollContainer,
+  //     app: stateRef.current.app,
+  //   });
+  //   canvas.addEventListener('wheel', handleWheel, { passive: false });
+  //   return () => {
+  //     canvas.removeEventListener('wheel', handleWheel);
+  //   };
+  // }, [lifeMode]);
 
   return <div ref={pixiContainerRef} className={s.container} />;
 };

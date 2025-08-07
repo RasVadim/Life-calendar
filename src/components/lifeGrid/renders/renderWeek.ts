@@ -1,21 +1,10 @@
 import { GlowFilter } from 'pixi-filters';
-import { Color, Container, Graphics, FillGradient } from 'pixi.js';
+import { Container, Graphics, FillGradient } from 'pixi.js';
 
 import { ELifeMode, ESide, EWeekType, THolidayName } from '@/types';
 
-import { getBGColor, getBorderColor } from '../utils';
-
-const BORDER_RADIUS_MAP = {
-  [ELifeMode.Years]: { small: 2, large: 3 },
-  [ELifeMode.Seasons]: { small: 4, large: 6 },
-  [ELifeMode.Months]: { small: 14, large: 22 },
-};
-
-const BORDER_WIDTH_MAP = {
-  [ELifeMode.Years]: { small: 1, large: 1 },
-  [ELifeMode.Seasons]: { small: 1, large: 2 },
-  [ELifeMode.Months]: { small: 2, large: 3 },
-};
+import { BORDER_RADIUS_MAP, BORDER_WIDTH_MAP } from '../constants';
+import { getBGColor, getBorderColor, getCachedColor } from '../utils';
 
 // Cache for gradient objects
 const gradientCache = new Map<string, FillGradient>();
@@ -26,7 +15,7 @@ type TRenderWeekProps = {
   y: number;
   cellWidth: number;
   cellHeight: number;
-  isMedium: boolean;
+  isScreenMedium: boolean;
   stage?: Container;
   lifeMode?: ELifeMode;
   weekType: EWeekType;
@@ -36,13 +25,12 @@ type TRenderWeekProps = {
 
 /**
  * Renders a single week on the given PixiJS stage.
- * @param week - Week object to render
  * @param theme - Theme palette
  * @param x - X position of the week
  * @param y - Y position of the week
  * @param cellWidth - Width of the cell
  * @param cellHeight - Height of the cell
- * @param isMedium - Whether to use medium size styling
+ * @param isScreenMedium - Whether to use medium size styling
  * @param isPresent - Whether this is the present week (for glow effect)
  * @param stage - PixiJS Container
  */
@@ -52,26 +40,26 @@ export const renderWeek = ({
   y,
   cellWidth,
   cellHeight,
-  isMedium,
+  isScreenMedium,
   stage,
   lifeMode = ELifeMode.Years,
   weekType,
   holiday,
   half,
 }: TRenderWeekProps) => {
-  const borderRadius = BORDER_RADIUS_MAP[lifeMode][isMedium ? 'small' : 'large'];
+  const screenSize = isScreenMedium ? 'small' : 'large';
 
-  const borderWidth = BORDER_WIDTH_MAP[lifeMode][isMedium ? 'small' : 'large'];
+  const borderRadius = BORDER_RADIUS_MAP[lifeMode][screenSize];
+  const borderWidth = BORDER_WIDTH_MAP[lifeMode][screenSize];
 
-  const borderColor = new Color(getBorderColor(weekType, theme));
-  const bgColor = new Color(getBGColor(theme, holiday));
+  const borderColor = getCachedColor(getBorderColor(weekType, theme));
+  const bgColor = getCachedColor(getBGColor(theme, holiday));
 
   const isPresent = weekType === EWeekType.Present;
 
   const g = new Graphics();
+  g.position.set(x, y);
   g.setStrokeStyle({ width: borderWidth, color: borderColor });
-
-  const finalRadius = isPresent ? borderRadius + 1 : borderRadius;
 
   // Handle half week rendering
   if (half === ESide.Left || half === true || half === ESide.Right) {
@@ -116,13 +104,13 @@ export const renderWeek = ({
 
     // Draw with cached gradient
     g.clear();
-    g.roundRect(x, y, cellWidth, cellHeight, finalRadius);
+    g.roundRect(0, 0, cellWidth, cellHeight, borderRadius);
     g.fill({ fill: gradient });
     g.stroke();
   } else {
     // Draw full week
     g.clear();
-    g.roundRect(x, y, cellWidth, cellHeight, finalRadius);
+    g.roundRect(0, 0, cellWidth, cellHeight, borderRadius);
     g.fill({ color: bgColor });
     g.stroke();
   }
@@ -137,7 +125,7 @@ export const renderWeek = ({
         quality: 1,
       }),
     ];
-    g.zIndex = 1000; // High z-index to appear above other weeks
+    // g.zIndex = 1000;
   }
 
   stage?.addChild(g);

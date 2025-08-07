@@ -1,9 +1,11 @@
 import { Container, Graphics } from 'pixi.js';
 
+import { DEVICE_SCREEN_WIDTH } from '@/constants';
 import { ELifeMode } from '@/types';
 
 import {
   BORDER_WIDTH_MAP,
+  CONTAINER_LABELS,
   GRID_GAP,
   PADDING_BOTTOM,
   PADDING_DESKTOP,
@@ -12,13 +14,17 @@ import {
 } from '../constants';
 import { TLifeGridState } from '../types';
 
-export const resizeGrid = ({ app, drawWeekIndexes, isScreenMedium }: TLifeGridState) => {
+export const resizeYearsGrid = (state: TLifeGridState) => {
+  const { app, container, isScreenMedium, drawWeekIndexes } = state;
+
   if (!app?.stage) return;
+
+  state.isScreenMedium = window.innerWidth < DEVICE_SCREEN_WIDTH.medium;
 
   const { yearRows } = drawWeekIndexes;
 
-  const width = app.renderer.width;
-  const height = app.renderer.height;
+  const width = container?.clientWidth || app.renderer.width;
+  const height = container?.clientHeight || app.renderer.height;
   const screenSize = isScreenMedium ? 'small' : 'large';
 
   // Fixed number of elements per row (53)
@@ -35,29 +41,30 @@ export const resizeGrid = ({ app, drawWeekIndexes, isScreenMedium }: TLifeGridSt
 
   const weekBorderWidth = BORDER_WIDTH_MAP[ELifeMode.Years][screenSize];
 
-  const cellHeight = (availableHeight - gridGap * (rows + 1)) / rows + weekBorderWidth;
-  const cellWidth = (width - gridGap * (cols + 1)) / cols + weekBorderWidth;
+  const cellHeight = (availableHeight - gridGap * (rows + 1)) / rows;
+  const cellWidth = (width - gridGap * (cols + 1)) / cols;
   const actualGap = isMoreThanQuadratic
     ? gridGap
-    : (availableHeight - (cellHeight - weekBorderWidth) * rows) / (rows + 1);
+    : (availableHeight - cellHeight * rows) / (rows + 1);
 
   let currentRow = 0;
   let currentCol = 0;
   let previousX = 0;
 
   const getPosition = () => ({
-    x: currentCol * (cellWidth - weekBorderWidth + gridGap) + gridGap,
-    y: paddingTop + currentRow * (cellHeight - weekBorderWidth + actualGap) + actualGap,
+    x: currentCol * (cellWidth + gridGap) + gridGap,
+    y: paddingTop + currentRow * (cellHeight + actualGap) + actualGap,
   });
 
-  const weeks = app.stage.children;
+  const weeks = app.stage.getChildByLabel(CONTAINER_LABELS.weeks)?.children || [];
 
-  for (let i = 0; i < weeks.length - 1; i++) {
+  for (let i = 0; i < weeks.length; i++) {
     const weekEl = weeks[i];
 
     const changeWeek = (week: Container | Graphics) => {
       previousX = week.position.x;
-      week.setSize(cellWidth, cellHeight);
+      // width and height of week should be with week Border Width
+      week.setSize(cellWidth + weekBorderWidth, cellHeight + weekBorderWidth);
 
       const position = getPosition();
       week.position.set(position.x, position.y);

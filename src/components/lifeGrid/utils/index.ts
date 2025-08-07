@@ -1,6 +1,6 @@
 export { initPixi } from './initPixi';
 
-export { resizeApp } from './resizeApp';
+export { getCachedColor } from './colorCache';
 
 export { getBGColor } from './getBGColor';
 

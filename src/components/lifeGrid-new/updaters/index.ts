@@ -1,1 +1,0 @@
-export { resizeGrid } from './resizeGrid';

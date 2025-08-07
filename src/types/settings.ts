@@ -5,7 +5,7 @@ import { TWeekZodiac } from './life';
 export enum EThemeMode {
   LIGHT = 'light',
   DARK = 'dark',
-  EXPEREMENTAL = 'experimental',
+  EXPERIMENTAL = 'experimental',
   CUSTOM = 'custom',
   FUTURE = 'future',
 }

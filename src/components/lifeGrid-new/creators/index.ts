@@ -1,1 +1,0 @@
-export { createLifeGrid } from './createLifeGrid';

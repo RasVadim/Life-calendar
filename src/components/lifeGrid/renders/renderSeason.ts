@@ -1,4 +1,4 @@
-import { Color, Container, Text } from 'pixi.js';
+import { Container, Text } from 'pixi.js';
 
 import { IWeek } from '@/store/clientDB';
 import { ELifeMode, TWeekZodiac, TZodiacIconSet } from '@/types';
@@ -6,6 +6,7 @@ import { ELifeMode, TWeekZodiac, TZodiacIconSet } from '@/types';
 import { renderIcon } from './renderIcon';
 import { renderWeek } from './renderWeek';
 import { GRID_GAP, ZODIAC_ICON_SIZE } from '../constants';
+import { getCachedColor } from '../utils';
 
 const LABEL_PADDING = 5;
 const LABEL_GAP = 4;
@@ -69,7 +70,7 @@ export const renderSeason = ({
   if (firstWeek && firstWeek.dateSeason) {
     const year = firstWeek.dateYear;
     const season = firstWeek.dateSeason.charAt(0).toUpperCase() + firstWeek.dateSeason.slice(1);
-    const textColor = new Color(theme.text);
+    const textColor = getCachedColor(theme.text);
     const yearText = new Text({
       text: year,
       style: {
@@ -88,7 +89,7 @@ export const renderSeason = ({
     yearText.x = colGap + cellWidth / 2 + leftOffset;
     yearText.y = offsetY + ROW_GAP / 2 - LABEL_PADDING;
 
-    const primaryColor = new Color(theme.primary);
+    const primaryColor = getCachedColor(theme.primary);
 
     const seasonText = new Text({
       text: ` ${season}`,

@@ -1,10 +1,12 @@
-import { Color } from 'pixi.js';
+import { Container } from 'pixi.js';
 
 import { ELifeMode } from '@/types';
 
 import { renderSeasonList } from './renderSeasosLIst';
 import { renderYearList } from './renderYearList';
+import { CONTAINER_LABELS } from '../constants';
 import { TLifeGridState } from '../types';
+import { getCachedColor } from '../utils';
 
 let cachedBackgroundColor: string | null = null;
 
@@ -23,10 +25,14 @@ export const renderLife = (state: TLifeGridState) => {
   if (!drawWeekIndexes.lastWeekIndex) return;
 
   if (cachedBackgroundColor !== theme.background) {
-    const backgroundColor = new Color(theme.background);
+    const backgroundColor = getCachedColor(theme.background);
     app.renderer.background.color = backgroundColor.toNumber();
     cachedBackgroundColor = theme.background;
   }
+  const weekContainer = new Container({
+    label: CONTAINER_LABELS.weeks,
+  });
+  app.stage.addChild(weekContainer);
 
   if (lifeMode === ELifeMode.Seasons) {
     const scrollContainer = renderSeasonList(state);

@@ -1,1 +1,0 @@
-export { usePixiLifeGridController } from './usePixiLifeGridController';
