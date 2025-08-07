@@ -1,1 +1,1 @@
-export { resizeYearsGrid } from './resizeYearsGrid';
+export { resizeYearsList } from './resizeYearsList';

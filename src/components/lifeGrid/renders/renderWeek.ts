@@ -53,7 +53,8 @@ export const renderWeek = ({
   const borderWidth = BORDER_WIDTH_MAP[lifeMode][screenSize];
 
   const borderColor = getCachedColor(getBorderColor(weekType, theme));
-  const bgColor = getCachedColor(getBGColor(theme, holiday));
+  const bgColorHex = getBGColor(theme, holiday);
+  const bgColor = getCachedColor(bgColorHex);
 
   const isPresent = weekType === EWeekType.Present;
 
@@ -64,14 +65,14 @@ export const renderWeek = ({
   // Handle half week rendering
   if (half === ESide.Left || half === true || half === ESide.Right) {
     // Use cached gradient objects
-    const gradientKey = `${bgColor}-${half}-${cellWidth}-${cellHeight}`;
+    const gradientKey = `${bgColorHex}-${half}-${theme.background}`;
+    console.log('gradientKey', gradientKey);
     let gradient = gradientCache.get(gradientKey);
 
     if (!gradient) {
       // Create gradient using PixiJS native FillGradient
-      const bgColorRgb = bgColor.toRgb();
       const bgColorString = bgColor.toRgbaString();
-      const transparentColor = `rgba(${bgColorRgb.r}, ${bgColorRgb.g}, ${bgColorRgb.b}, 0.4)`;
+      const canvasBgColor = getCachedColor(theme.background).toRgbaString();
 
       if (half === ESide.Left || half === true) {
         // Left to right fade
@@ -80,8 +81,8 @@ export const renderWeek = ({
           start: { x: 0, y: 0 },
           end: { x: 1, y: 0 },
           colorStops: [
-            { offset: 0.3, color: bgColorString },
-            { offset: 1, color: transparentColor },
+            { offset: 0.15, color: bgColorString },
+            { offset: 1, color: canvasBgColor },
           ],
           textureSpace: 'local',
         });
@@ -92,8 +93,8 @@ export const renderWeek = ({
           start: { x: 0, y: 0 },
           end: { x: 1, y: 0 },
           colorStops: [
-            { offset: 0, color: transparentColor },
-            { offset: 0.7, color: bgColorString },
+            { offset: 0, color: canvasBgColor },
+            { offset: 0.85, color: bgColorString },
           ],
           textureSpace: 'local',
         });

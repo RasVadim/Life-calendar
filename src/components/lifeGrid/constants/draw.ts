@@ -7,7 +7,7 @@ export const CONTAINER_LABELS = {
 export const ZODIAC_ICON_SIZE = 16;
 
 export const GRID_GAP = {
-  small: 2,
+  small: 1.5,
   large: 2,
 };
 
@@ -19,7 +19,7 @@ export const PADDING_DESKTOP = 3;
 
 // Week
 export const BORDER_RADIUS_MAP = {
-  [ELifeMode.Years]: { small: 1.5, large: 2 },
+  [ELifeMode.Years]: { small: 2, large: 3 },
   [ELifeMode.Seasons]: { small: 4, large: 6 },
   [ELifeMode.Months]: { small: 14, large: 22 },
 };

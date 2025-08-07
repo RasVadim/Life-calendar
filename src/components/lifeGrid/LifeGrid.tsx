@@ -10,7 +10,7 @@ import { TTodayData } from '@/types';
 
 import { renderLife } from './renders';
 import { TLifeGridState } from './types';
-import { resizeYearsGrid } from './updaters';
+import { resizeYearsList } from './updaters';
 import { initPixi } from './utils';
 
 import s from './s.module.styl';
@@ -71,7 +71,7 @@ export const LifeGrid: React.FC<TProps> = ({ drawWeekIndexes, today }) => {
     initApp();
 
     const onResizeGrid = () => {
-      resizeYearsGrid(stateRef.current);
+      resizeYearsList(stateRef.current);
     };
 
     // Add resize listener

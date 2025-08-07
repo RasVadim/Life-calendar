@@ -14,12 +14,13 @@ import {
 } from '../constants';
 import { TLifeGridState } from '../types';
 
-export const resizeYearsGrid = (state: TLifeGridState) => {
-  const { app, container, isScreenMedium, drawWeekIndexes } = state;
+export const resizeYearsList = (state: TLifeGridState) => {
+  const { app, container, drawWeekIndexes } = state;
 
   if (!app?.stage) return;
 
   state.isScreenMedium = window.innerWidth < DEVICE_SCREEN_WIDTH.medium;
+  const { isScreenMedium } = state;
 
   const { yearRows } = drawWeekIndexes;
 
