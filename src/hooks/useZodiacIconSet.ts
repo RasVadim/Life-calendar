@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 
-import { MAP_ZODIAC_JSX_SET, MAP_ZODIAC_PNG_SET } from '@/constants';
+import { MAP_ZODIAC_JSX_SET, MAP_ZODIAC_PNG_SET } from '@/constants/icons';
 import { useDBSettings } from '@/store/clientDB';
 import { TZodiacIconSet } from '@/types';
 
