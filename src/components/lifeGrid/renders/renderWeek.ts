@@ -66,7 +66,6 @@ export const renderWeek = ({
   if (half === ESide.Left || half === true || half === ESide.Right) {
     // Use cached gradient objects
     const gradientKey = `${bgColorHex}-${half}-${theme.background}`;
-    console.log('gradientKey', gradientKey);
     let gradient = gradientCache.get(gradientKey);
 
     if (!gradient) {
