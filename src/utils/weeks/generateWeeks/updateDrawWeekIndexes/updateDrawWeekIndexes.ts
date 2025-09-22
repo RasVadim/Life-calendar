@@ -1,7 +1,8 @@
+import { IWeek } from '@/store/clientDB';
 import { TDrawWeekIndexes, THolidayName } from '@/types';
 
 import { TWeekMeta } from '../types';
-import { updateHolidaysIndxs, updateYearWeekIndexes } from './helpers';
+import { updateHolidaysIndxs, updateMonthWeekIndexes, updateYearWeekIndexes } from './helpers';
 
 type TUpdateDrawWeekIndexesParams = {
   drawWeekIndexes: TDrawWeekIndexes;
@@ -12,6 +13,7 @@ type TUpdateDrawWeekIndexesParams = {
   weekTimePoints: { weekStart: Date; weekEnd: Date }[];
   currentWeekIndex: number;
   holidays: THolidayName[];
+  previousWeek: IWeek | null;
 };
 
 /**
@@ -27,6 +29,7 @@ export const updateDrawWeekIndexes = ({
   weekTimePoints,
   currentWeekIndex,
   holidays,
+  previousWeek,
 }: TUpdateDrawWeekIndexesParams) => {
   // Calculate week duration in days
   const weekDuration = meta.days.length;
@@ -41,6 +44,14 @@ export const updateDrawWeekIndexes = ({
     weekIndex,
     weekTimePoints,
     meta,
+  });
+
+  updateMonthWeekIndexes({
+    drawWeekIndexes,
+    currentWeekIndex,
+    weekTimePoints,
+    meta,
+    previousWeek,
   });
 
   updateHolidaysIndxs({

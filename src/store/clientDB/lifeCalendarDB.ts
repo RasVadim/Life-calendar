@@ -13,6 +13,7 @@ import {
   TWeekIndxsMap,
   ESegmentsWeekIndxsValues,
   EYearsWeekIndxsValues,
+  EMonthsWeekIndxsValues,
   ESide,
 } from '@/types';
 
@@ -54,7 +55,7 @@ export interface IDrawWeekIndexes {
   id: string;
   yearsIndxs: TWeekIndxsMap<EYearsWeekIndxsValues>;
   seasonsIndxs: TWeekIndxsMap<ESegmentsWeekIndxsValues>;
-  monthsIndxs: TWeekIndxsMap<ESegmentsWeekIndxsValues>;
+  monthsIndxs: TWeekIndxsMap<EMonthsWeekIndxsValues>;
   holidaysIndxs: TWeekIndxsMap<THolidayName>;
   seasonOffset: number;
   monthOffset: number;

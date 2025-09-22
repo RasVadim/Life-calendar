@@ -48,6 +48,7 @@ export const generateWeek = ({
     weekTimePoints,
     currentWeekIndex: weeks.length,
     holidays,
+    previousWeek,
   });
 
   // Efficient calculation of life month

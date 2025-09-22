@@ -16,6 +16,15 @@ export enum ESegmentsWeekIndxsValues {
   SplitPreview = 'splitPreview',
 }
 
+export enum EMonthsWeekIndxsValues {
+  Border = 'border',
+  BorderEnd = 'borderEnd',
+  First4 = 'first4',
+  First5 = 'first5',
+  FirstFull4 = 'firstFull4',
+  FirstFull5 = 'firstFull5',
+}
+
 export type TDrawWeekIndexes = Omit<IDrawWeekIndexes, 'id'>;
 
 export enum ESide {
