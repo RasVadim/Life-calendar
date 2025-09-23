@@ -29,3 +29,5 @@ export const BORDER_WIDTH_MAP = {
   [ELifeMode.Seasons]: { small: 1, large: 2 },
   [ELifeMode.Months]: { small: 2, large: 3 },
 };
+
+export const LARGE_MONTH_WEEK_SIZE_MULTIPLIER = 1.3; // Size multiplier for large weeks

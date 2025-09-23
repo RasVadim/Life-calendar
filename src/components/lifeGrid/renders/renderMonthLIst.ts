@@ -3,68 +3,19 @@ import { Container } from 'pixi.js';
 import { EMonthsWeekIndxsValues, EWeekType, THolidayName } from '@/types';
 
 import { renderWeek } from './renderWeek';
-import { CONTAINER_LABELS, PADDING_DESKTOP, PADDING_TOP } from '../constants/draw';
+import {
+  CONTAINER_LABELS,
+  LARGE_MONTH_WEEK_SIZE_MULTIPLIER,
+  PADDING_DESKTOP,
+  PADDING_TOP,
+} from '../constants/draw';
 import { TLifeGridState } from '../types';
+import { calculateMonthWeekXPosition, getMonthDynamicWeekWidth } from './utils';
 
 // Constants for months mode
 const ROW_GAP = 80; // Gap between month rows (reduced from 30)
 const WEEK_GAP = 8; // Gap between weeks in the same row (increased from 12)
-const LARGE_WEEK_SIZE_MULTIPLIER = 1.5; // Size multiplier for large weeks
 const MONTHS_MODE_WEEK_COUNT = 50; // Number of weeks to show in months mode
-
-// Calculate total width of a row including large weeks
-const calculateRowWidth = (
-  startIndex: number,
-  weeksPerRow: number,
-  weekWidth: number,
-  weekGap: number,
-  drawWeekIndexes: TLifeGridState['drawWeekIndexes'],
-  media: TLifeGridState['media'],
-): number => {
-  let totalWidth = 0;
-  const gaps = (weeksPerRow - 1) * weekGap;
-
-  for (let j = 0; j < weeksPerRow; j++) {
-    const weekIndex = startIndex + j;
-    if (weekIndex >= MONTHS_MODE_WEEK_COUNT) break;
-
-    const mediaKey = drawWeekIndexes.mediaIndxs[weekIndex];
-    const weekMedia = mediaKey ? media[mediaKey] : null;
-    const isLarge = weekMedia?.isMonthPreview === true;
-
-    totalWidth += isLarge ? weekWidth * LARGE_WEEK_SIZE_MULTIPLIER : weekWidth;
-  }
-
-  return totalWidth + gaps;
-};
-
-// Calculate X position with proper centering
-interface CalculateWeekXPositionWithCenteringParams {
-  currentCol: number;
-  weekWidth: number;
-  weekGap: number;
-  containerWidth: number;
-  accumulatedOffsetX: number;
-  totalRowWidth: number;
-}
-
-const calculateWeekXPositionWithCentering = ({
-  currentCol,
-  weekWidth,
-  weekGap,
-  containerWidth,
-  accumulatedOffsetX,
-  totalRowWidth,
-}: CalculateWeekXPositionWithCenteringParams): number => {
-  // Center the row based on its actual width
-  const rowStartX = (containerWidth - totalRowWidth) / 2;
-
-  // Calculate base position for current column
-  const baseX = rowStartX + currentCol * (weekWidth + weekGap);
-
-  // Add accumulated offset from large weeks that came before this position
-  return baseX + accumulatedOffsetX;
-};
 
 export const renderMonthList = (state: TLifeGridState) => {
   const { app, drawWeekIndexes, theme, isScreenMedium, lifeMode, today, container, media } = state;
@@ -81,15 +32,12 @@ export const renderMonthList = (state: TLifeGridState) => {
   // Padding for header and navbar in months mode
   const paddingTop = isScreenMedium ? PADDING_TOP + ROW_GAP : PADDING_DESKTOP;
 
-  // Calculate week dimensions for months mode
-  // For 5-week row with one large week: 4 normal + 1 large (1.5x) + 4 gaps
-  // Total width = 4 * weekWidth + 1.5 * weekWidth + 4 * WEEK_GAP = 5.5 * weekWidth + 4 * WEEK_GAP
-  // Solve: width = 5.5 * weekWidth + 4 * WEEK_GAP + 2 * WEEK_GAP (side margins)
-  const totalGapsFor5Weeks = 6 * WEEK_GAP; // 4 gaps between weeks + 2 side margins
-  const totalWeekWidthMultiplier = 5.5; // 4 normal + 1.5 large
-  const weekWidth = (width - totalGapsFor5Weeks) / totalWeekWidthMultiplier;
+  // Calculate ONE fixed week size based on full 5-week row (with side margins)
+  // This size will be used for ALL normal weeks regardless of row configuration
+  const weekWidth = getMonthDynamicWeekWidth(5, width, WEEK_GAP);
   const weekHeight = weekWidth; // Square weeks
-  const largeWeekHeight = weekHeight * LARGE_WEEK_SIZE_MULTIPLIER;
+  const largeWeekWidth = weekWidth * LARGE_MONTH_WEEK_SIZE_MULTIPLIER;
+  const largeWeekHeight = largeWeekWidth;
 
   // Hide weeks beyond the first 100 by moving them off-screen
   const hideOffsetY = 10000; // Move off-screen
@@ -122,7 +70,6 @@ export const renderMonthList = (state: TLifeGridState) => {
 
   // Track current row state
   let accumulatedOffsetX = 0; // Accumulated offset from large weeks in current row
-  let totalRowWidth = 0; // Actual width of current row including large weeks
 
   for (let i = 0; i < Math.min(MONTHS_MODE_WEEK_COUNT, lastWeekIndex); i++) {
     const monthFlag = monthsIndxs[i];
@@ -142,9 +89,9 @@ export const renderMonthList = (state: TLifeGridState) => {
     const weekMedia = mediaKey ? media[mediaKey] : null;
     const isMonthPreview = weekMedia?.isMonthPreview === true;
 
-    // Determine week position and size based on flag
-    let cellHeight = weekHeight;
-    let cellWidth = weekWidth;
+    // Week dimensions will be calculated dynamically below
+    let cellHeight: number;
+    let cellWidth: number;
 
     // Check if this is a first week (starts new row) or first week of all
     if (
@@ -169,42 +116,42 @@ export const renderMonthList = (state: TLifeGridState) => {
         weeksPerRow = 5;
       }
 
-      // Calculate total row width including large weeks for proper centering
-      totalRowWidth = calculateRowWidth(
-        i,
-        weeksPerRow,
-        weekWidth,
-        WEEK_GAP,
-        drawWeekIndexes,
-        media,
-      );
+      // No pre-scanning needed - dynamic centering will handle it
     } else {
       // Continue current row
       currentCol++;
     }
 
-    // Make month preview weeks larger
+    // Use fixed sizes - all normal weeks same size, all large weeks same size
     if (isMonthPreview) {
+      cellWidth = largeWeekWidth;
       cellHeight = largeWeekHeight;
-      cellWidth = cellHeight;
+    } else {
+      cellWidth = weekWidth;
+      cellHeight = weekHeight;
     }
 
-    // Calculate position using proper centering with total row width
-    const x = calculateWeekXPositionWithCentering({
+    // Calculate position using flex-like behavior
+    const x = calculateMonthWeekXPosition({
       currentCol,
-      weekWidth,
       weekGap: WEEK_GAP,
       containerWidth: width,
       accumulatedOffsetX,
-      totalRowWidth,
+      weeksPerRow,
     });
 
     // Update accumulated offset for next weeks in the same row
     if (isMonthPreview) {
-      accumulatedOffsetX += weekWidth * LARGE_WEEK_SIZE_MULTIPLIER - weekWidth;
+      accumulatedOffsetX += largeWeekWidth - weekWidth;
     }
 
-    const y = paddingTop + (currentRow - 1) * (weekHeight + ROW_GAP);
+    // Calculate Y position with vertical centering for large weeks
+    const baseY = paddingTop + (currentRow - 1) * (weekHeight + ROW_GAP);
+
+    // Center large weeks vertically: offset by half the height difference
+    const verticalCenteringOffset = isMonthPreview ? -(cellHeight - weekHeight) / 2 : 0;
+
+    const y = baseY + verticalCenteringOffset;
 
     // Render the week
     renderWeek({
