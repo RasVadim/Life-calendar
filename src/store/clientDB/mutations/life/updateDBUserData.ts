@@ -12,7 +12,12 @@ const DEFAULT_USER_DATA = {
  * @param data - Partial user data fields to update
  */
 export const updateDBUserData = async (
-  data: Partial<{ birthDate: string; lifeExpectancy: number | null; deathDate: string | null }>,
+  data: Partial<{
+    birthDate: string;
+    lifeExpectancy: number | null;
+    deathDate: string | null;
+    timezone?: string | null;
+  }>,
 ) => {
   let prev = await lifeCalendarDB.userData.get('main');
   if (!prev) {

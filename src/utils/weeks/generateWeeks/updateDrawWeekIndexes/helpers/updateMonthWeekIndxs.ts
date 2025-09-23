@@ -1,3 +1,5 @@
+import { format } from 'date-fns';
+
 import { IWeek } from '@/store/clientDB';
 import {
   EMonthsWeekIndxsValues,
@@ -29,6 +31,18 @@ export const updateMonthWeekIndexes = ({
   previousWeek,
   media,
 }: TUpdateMonthWeekIndexesParams) => {
+  // Helper function to add media index for first full week of month
+  const addMediaIndex = () => {
+    const weekStartDate = format(weekTimePoints[currentWeekIndex].weekStart, 'yyyy-MM-dd');
+    media[weekStartDate] = { isMonthPreview: true };
+    drawWeekIndexes.mediaIndxs[currentWeekIndex] = weekStartDate;
+  };
+
+  // Helper function to set month index and add media
+  const setMonthIndexWithMedia = (monthIndexValue: EMonthsWeekIndxsValues) => {
+    drawWeekIndexes.monthsIndxs[currentWeekIndex] = monthIndexValue;
+    addMediaIndex();
+  };
   // Check if week spans across two months
   const isWeekInTwoMonths = !!meta.secondMonth;
 
@@ -73,21 +87,9 @@ export const updateMonthWeekIndexes = ({
       // If there are 4 full weeks and some remaining days -> FirstFull5
       // If there are exactly 4 full weeks with no remaining days -> FirstFull4
       if (fullWeeksInMonth === 4 && remainingDays > 0) {
-        drawWeekIndexes.monthsIndxs[currentWeekIndex] = EMonthsWeekIndxsValues.FirstFull5;
-        // Add media index for first full week of month
-        const weekStartDate = weekTimePoints[currentWeekIndex].weekStart
-          .toISOString()
-          .split('T')[0];
-        media[weekStartDate] = { isMonthPreview: true };
-        drawWeekIndexes.mediaIndxs[currentWeekIndex] = weekStartDate;
+        setMonthIndexWithMedia(EMonthsWeekIndxsValues.FirstFull5);
       } else if (fullWeeksInMonth === 4 && remainingDays === 0) {
-        drawWeekIndexes.monthsIndxs[currentWeekIndex] = EMonthsWeekIndxsValues.FirstFull4;
-        // Add media index for first full week of month
-        const weekStartDate = weekTimePoints[currentWeekIndex].weekStart
-          .toISOString()
-          .split('T')[0];
-        media[weekStartDate] = { isMonthPreview: true };
-        drawWeekIndexes.mediaIndxs[currentWeekIndex] = weekStartDate;
+        setMonthIndexWithMedia(EMonthsWeekIndxsValues.FirstFull4);
       }
       return;
     }
@@ -121,29 +123,11 @@ export const updateMonthWeekIndexes = ({
       // If there are exactly 4 full weeks with no remaining days -> First4
       // If there are 3 full weeks and some remaining days -> First4 (remaining days go to border week)
       if (fullWeeksLeft === 4 && remainingDays > 0) {
-        drawWeekIndexes.monthsIndxs[currentWeekIndex] = EMonthsWeekIndxsValues.First5;
-        // Add media index for first full week of month
-        const weekStartDate = weekTimePoints[currentWeekIndex].weekStart
-          .toISOString()
-          .split('T')[0];
-        media[weekStartDate] = { isMonthPreview: true };
-        drawWeekIndexes.mediaIndxs[currentWeekIndex] = weekStartDate;
+        setMonthIndexWithMedia(EMonthsWeekIndxsValues.First5);
       } else if (fullWeeksLeft === 4 && remainingDays === 0) {
-        drawWeekIndexes.monthsIndxs[currentWeekIndex] = EMonthsWeekIndxsValues.First4;
-        // Add media index for first full week of month
-        const weekStartDate = weekTimePoints[currentWeekIndex].weekStart
-          .toISOString()
-          .split('T')[0];
-        media[weekStartDate] = { isMonthPreview: true };
-        drawWeekIndexes.mediaIndxs[currentWeekIndex] = weekStartDate;
+        setMonthIndexWithMedia(EMonthsWeekIndxsValues.First4);
       } else if (fullWeeksLeft === 3 && remainingDays > 0) {
-        drawWeekIndexes.monthsIndxs[currentWeekIndex] = EMonthsWeekIndxsValues.First4;
-        // Add media index for first full week of month
-        const weekStartDate = weekTimePoints[currentWeekIndex].weekStart
-          .toISOString()
-          .split('T')[0];
-        media[weekStartDate] = { isMonthPreview: true };
-        drawWeekIndexes.mediaIndxs[currentWeekIndex] = weekStartDate;
+        setMonthIndexWithMedia(EMonthsWeekIndxsValues.First4);
       }
       return;
     }

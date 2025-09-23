@@ -69,6 +69,7 @@ export interface IUserData {
   birthDate: string | null; // user's birth date (ISO string)
   lifeExpectancy: number | null; // expected lifespan in years
   deathDate: string | null; // calculated death date (ISO string)
+  timezone?: string | null; // user's timezone (e.g. 'Europe/Moscow', 'America/New_York')
 }
 
 // Meta entity for storing global app info

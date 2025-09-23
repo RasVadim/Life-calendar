@@ -5,6 +5,7 @@ export { rgbToHex } from './common/rgbToHex';
 export { blendColors } from './common/blendColors';
 export { formatDateToUI } from './common/formatDateToUI';
 export { findWithIndex } from './common/findWithIndex';
+export { getUserTimezone, getUserTimezoneOffset } from './common/getUserTimezone';
 
 // mobile
 export { changeByDrawerStatusBarColor } from './mobile/changeByDrawerStatusBarColor';
