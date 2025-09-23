@@ -1,8 +1,8 @@
 import { getYear, format } from 'date-fns';
 
-import { ISO_DATE_FORMAT } from '@/constants';
+import { ISO_DATE_FORMAT, COMPACT_DATE_FORMAT } from '@/constants';
 import { IWeek } from '@/store/clientDB';
-import { TDrawWeekIndexes } from '@/types';
+import { TDrawWeekIndexes, TMediasWeekIndxsValues, TMediaDatesMap } from '@/types';
 
 import { getWeekHolidays, getLifeYear } from '../helpers';
 import { updateDrawWeekIndexes } from '../updateDrawWeekIndexes';
@@ -14,6 +14,7 @@ type TGenerateWeekParams = {
   birthDate: Date;
   weeks: IWeek[];
   drawWeekIndexes: TDrawWeekIndexes;
+  media: TMediaDatesMap<TMediasWeekIndxsValues>;
 };
 
 export const generateWeek = ({
@@ -22,6 +23,7 @@ export const generateWeek = ({
   birthDate,
   weeks,
   drawWeekIndexes,
+  media,
 }: TGenerateWeekParams) => {
   const { weekStart, weekEnd } = weekTimePoints[weekIndex];
   const lifeYear = getLifeYear(birthDate, weekStart);
@@ -49,6 +51,7 @@ export const generateWeek = ({
     currentWeekIndex: weeks.length,
     holidays,
     previousWeek,
+    media,
   });
 
   // Efficient calculation of life month
@@ -66,7 +69,7 @@ export const generateWeek = ({
   }
   const lifeMonth = monthsFromBirth + 1;
 
-  const weekId = `w${getWeekNumber(weekIndex)}_y${String(lifeYear).padStart(3, '0')}`;
+  const weekId = `${format(weekStart, COMPACT_DATE_FORMAT)}_${getWeekNumber(weekIndex)}`;
 
   return {
     id: weekId,

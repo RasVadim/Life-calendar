@@ -13,7 +13,8 @@ import {
   saveDBWeeks,
   updateDBUserData,
   updateDBTodayWeek,
-  saveDrawWeekIndexes,
+  saveDBDrawWeekIndexes,
+  safeUpdateDBMedia,
 } from '@/store/clientDB';
 import { useDBUserData } from '@/store/clientDB';
 import { EModalKeys } from '@/types';
@@ -92,14 +93,15 @@ export const BirthDateDrawer = () => {
           deathDate,
         });
         // --- Web Worker helper ---
-        const { weeks, today, drawWeekIndexes } = await generateWeeksInWorker(
+        const { weeks, today, drawWeekIndexes, media } = await generateWeeksInWorker(
           birthDate,
           lifeExpectancy,
         );
 
         await resetDBWeeks();
         await saveDBWeeks(weeks);
-        await saveDrawWeekIndexes(drawWeekIndexes);
+        await saveDBDrawWeekIndexes(drawWeekIndexes);
+        await safeUpdateDBMedia(media);
 
         await updateDBTodayWeek(today);
       } catch (err) {

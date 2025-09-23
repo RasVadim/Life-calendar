@@ -1,12 +1,22 @@
 export { LifeCalendarDB, lifeCalendarDB } from './lifeCalendarDB';
 
-export type { IWeek, IDrawWeekIndexes, IHoliday } from './lifeCalendarDB';
+export type {
+  IWeek,
+  IDrawWeekIndexes,
+  IHoliday,
+  IUserData,
+  ISettings,
+  IMeta,
+  IMedia,
+} from './interfaces';
 
 // Mutations
 export { saveDBWeeks } from './mutations/life/saveDBWeeks';
-export { saveDrawWeekIndexes } from './mutations/life/saveDrawWeekIndexes';
+export { saveDBDrawWeekIndexes } from './mutations/life/saveDBDrawWeekIndexes';
 export { resetDBWeeks } from './mutations/life/resetDBWeeks';
 export { updateDBWeek } from './mutations/life/updateDBWeek';
+export { updateDBMedia } from './mutations/life/updateDBMedia';
+export { safeUpdateDBMedia } from './mutations/life/safeUpdateDBMedia';
 export { updateDBTodayWeek } from './mutations/life/updateDBTodayWeek';
 export { updateDBUserData } from './mutations/life/updateDBUserData';
 export { updateDBSettings } from './mutations/settings/updateDBSettings';

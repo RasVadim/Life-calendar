@@ -13,3 +13,4 @@ export const LANGUAGE_LABELS: Record<string, string> = {
 
 export const ISO_DATE_FORMAT = 'yyyy-MM-dd';
 export const UI_DATE_FORMAT = 'yyyy.MM.dd';
+export const COMPACT_DATE_FORMAT = 'yyyyMMdd';

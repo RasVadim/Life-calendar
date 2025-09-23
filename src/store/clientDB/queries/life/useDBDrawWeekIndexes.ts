@@ -2,7 +2,7 @@ import { useLiveQuery } from 'dexie-react-hooks';
 
 import { lifeCalendarDB } from '@/store/clientDB';
 
-import { IDrawWeekIndexes } from '../../lifeCalendarDB';
+import { IDrawWeekIndexes } from '../../interfaces';
 
 /**
  * React hook to get week indexes for drawing from IndexedDB reactively

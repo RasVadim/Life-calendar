@@ -2,7 +2,7 @@ import { useLiveQuery } from 'dexie-react-hooks';
 
 import { lifeCalendarDB } from '@/store/clientDB';
 
-import { IUserData } from '../../lifeCalendarDB';
+import { IUserData } from '../../interfaces';
 
 /**
  * React hook to get user data from IndexedDB reactively

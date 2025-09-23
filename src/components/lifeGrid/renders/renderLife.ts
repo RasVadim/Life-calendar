@@ -2,6 +2,7 @@ import { Container } from 'pixi.js';
 
 import { ELifeMode } from '@/types';
 
+import { renderMonthList } from './renderMonthLIst';
 import { renderSeasonList } from './renderSeasosLIst';
 import { renderYearList } from './renderYearList';
 import { CONTAINER_LABELS } from '../constants';
@@ -37,12 +38,20 @@ export const renderLife = (state: TLifeGridState) => {
   if (lifeMode === ELifeMode.Seasons) {
     const scrollContainer = renderSeasonList(state);
 
+    if (!scrollContainer) return;
+
     // add scrollable container to stage
     app.stage.addChild(scrollContainer);
     // Important: scrollContainer.y can be changed for scrolling (wheel/touch processing — outside this function)
     return scrollContainer;
   }
 
-  // --- mode: years (default) ---
-  renderYearList(state);
+  if (lifeMode === ELifeMode.Years) {
+    // --- mode: years (default) ---
+    renderYearList(state);
+  }
+
+  if (lifeMode === ELifeMode.Months) {
+    renderMonthList(state);
+  }
 };

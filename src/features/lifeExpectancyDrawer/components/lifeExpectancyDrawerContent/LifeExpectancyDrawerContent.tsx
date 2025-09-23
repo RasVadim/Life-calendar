@@ -11,9 +11,10 @@ import { useSetOpenDrawerKey, useSetPageLoading, useSetSyncPending } from '@/sto
 import {
   resetDBWeeks,
   saveDBWeeks,
-  saveDrawWeekIndexes,
+  saveDBDrawWeekIndexes,
   updateDBTodayWeek,
   updateDBUserData,
+  safeUpdateDBMedia,
 } from '@/store/clientDB';
 import { useDBUserData } from '@/store/clientDB';
 import { WheelDatePicker, Select, Button } from '@/ui-kit';
@@ -100,14 +101,15 @@ export const LifeExpectancyDrawerContent = () => {
       try {
         await updateDBUserData({ deathDate, lifeExpectancy });
         // --- Web Worker helper ---
-        const { weeks, today, drawWeekIndexes } = await generateWeeksInWorker(
+        const { weeks, today, drawWeekIndexes, media } = await generateWeeksInWorker(
           userData?.birthDate || '',
           lifeExpectancy,
           deathDate || undefined,
         );
         await resetDBWeeks();
         await saveDBWeeks(weeks);
-        await saveDrawWeekIndexes(drawWeekIndexes);
+        await saveDBDrawWeekIndexes(drawWeekIndexes);
+        await safeUpdateDBMedia(media);
 
         await updateDBTodayWeek(today);
       } catch (err) {
