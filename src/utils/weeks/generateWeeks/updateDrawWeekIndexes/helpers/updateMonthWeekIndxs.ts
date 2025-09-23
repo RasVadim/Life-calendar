@@ -1,12 +1,7 @@
 import { format } from 'date-fns';
 
 import { IWeek } from '@/store/clientDB';
-import {
-  EMonthsWeekIndxsValues,
-  TDrawWeekIndexes,
-  TMediasWeekIndxsValues,
-  TMediaDatesMap,
-} from '@/types';
+import { EMonthsWeekIndxsValues, TDrawWeekIndexes, TMedia, TMediaDatesMap } from '@/types';
 
 import { TWeekMeta } from '../../types';
 
@@ -16,7 +11,7 @@ type TUpdateMonthWeekIndexesParams = {
   weekTimePoints: { weekStart: Date; weekEnd: Date }[];
   meta: TWeekMeta;
   previousWeek: IWeek | null;
-  media: TMediaDatesMap<TMediasWeekIndxsValues>;
+  media: TMediaDatesMap<TMedia>;
 };
 
 /**
@@ -35,7 +30,7 @@ export const updateMonthWeekIndexes = ({
   const addMediaIndex = () => {
     const weekStartDate = format(weekTimePoints[currentWeekIndex].weekStart, 'yyyy-MM-dd');
     media[weekStartDate] = { isMonthPreview: true };
-    drawWeekIndexes.mediaIndxs[currentWeekIndex] = weekStartDate;
+    drawWeekIndexes.mediaIndxs[currentWeekIndex + Math.floor(Math.random() * 4)] = weekStartDate;
   };
 
   // Helper function to set month index and add media
@@ -43,6 +38,12 @@ export const updateMonthWeekIndexes = ({
     drawWeekIndexes.monthsIndxs[currentWeekIndex] = monthIndexValue;
     addMediaIndex();
   };
+
+  // Special case: first week of life always gets media preview
+  if (currentWeekIndex === 0) {
+    addMediaIndex();
+  }
+
   // Check if week spans across two months
   const isWeekInTwoMonths = !!meta.secondMonth;
 

@@ -13,7 +13,7 @@ import {
   EYearsWeekIndxsValues,
   EMonthsWeekIndxsValues,
   ESide,
-  TMediasWeekIndxsValues,
+  TMedia,
   TMediaDatesMap,
 } from '@/types';
 
@@ -93,5 +93,5 @@ export interface ISettings {
 // Type for media entity
 export interface IMedia {
   id: string; // unique id, for example 'main' or user id
-  media: TMediaDatesMap<TMediasWeekIndxsValues>;
+  media: TMediaDatesMap<TMedia>;
 }

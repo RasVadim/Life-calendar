@@ -1,9 +1,9 @@
 import { lifeCalendarDB } from '@/store/clientDB';
-import { TMediasWeekIndxsValues, TMediaDatesMap } from '@/types';
+import { TMedia, TMediaDatesMap } from '@/types';
 
 const DEFAULT_MEDIA_DATA = {
   id: 'main',
-  media: {} as TMediaDatesMap<TMediasWeekIndxsValues>,
+  media: {} as TMediaDatesMap<TMedia>,
 };
 
 /**
@@ -11,7 +11,7 @@ const DEFAULT_MEDIA_DATA = {
  * Only updates values if the key doesn't exist or if existing value has no source field.
  * @param data - Media data to safely update
  */
-export const safeUpdateDBMedia = async (data: TMediaDatesMap<TMediasWeekIndxsValues>) => {
+export const safeUpdateDBMedia = async (data: TMediaDatesMap<TMedia>) => {
   let prev = await lifeCalendarDB.media.get('main');
   if (!prev) {
     // Create new media if not exists
@@ -19,7 +19,7 @@ export const safeUpdateDBMedia = async (data: TMediaDatesMap<TMediasWeekIndxsVal
   }
 
   // Create new media object with safe updates
-  const updatedMedia: TMediaDatesMap<TMediasWeekIndxsValues> = { ...prev.media };
+  const updatedMedia: TMediaDatesMap<TMedia> = { ...prev.media };
 
   // Process each key-value pair from incoming data
   Object.entries(data).forEach(([key, newValue]) => {

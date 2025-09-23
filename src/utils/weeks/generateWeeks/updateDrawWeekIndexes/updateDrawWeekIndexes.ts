@@ -1,5 +1,5 @@
 import { IWeek } from '@/store/clientDB';
-import { TDrawWeekIndexes, THolidayName, TMediasWeekIndxsValues, TMediaDatesMap } from '@/types';
+import { TDrawWeekIndexes, THolidayName, TMedia, TMediaDatesMap } from '@/types';
 
 import { TWeekMeta } from '../types';
 import { updateHolidaysIndxs, updateMonthWeekIndexes, updateYearWeekIndexes } from './helpers';
@@ -14,7 +14,7 @@ type TUpdateDrawWeekIndexesParams = {
   currentWeekIndex: number;
   holidays: THolidayName[];
   previousWeek: IWeek | null;
-  media: TMediaDatesMap<TMediasWeekIndxsValues>;
+  media: TMediaDatesMap<TMedia>;
 };
 
 /**

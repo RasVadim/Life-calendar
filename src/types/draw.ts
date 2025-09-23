@@ -27,14 +27,14 @@ export enum EMonthsWeekIndxsValues {
   FirstFull5 = 'firstFull5',
 }
 
-export type TMediasWeekIndxsValues = {
+export type TMedia = {
   url?: string;
   localPath?: string;
   isSeasonPreview?: boolean;
   isMonthPreview?: boolean;
   isVideo?: boolean;
   source?: 'LC' | 'Instagram' | 'Telegram' | 'Other';
-  // days?: Omit<TMediasWeekIndxsValues, 'days'>[];
+  // days?: Omit<TMedia, 'days'>[];
 } | null;
 
 export type TDrawWeekIndexes = Omit<IDrawWeekIndexes, 'id'>;

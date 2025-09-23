@@ -6,7 +6,7 @@ import { useZodiacIconSet } from '@/hooks';
 import { useLifeGridMode } from '@/store/atoms';
 import { useThemeMode } from '@/store/atoms/themeMode/useThemeMode';
 import { IDrawWeekIndexes } from '@/store/clientDB';
-import { TTodayData } from '@/types';
+import { TMediaDatesMap, TMedia, TTodayData } from '@/types';
 
 import { renderLife } from './renders';
 import { TLifeGridState } from './types';
@@ -17,10 +17,11 @@ import s from './s.module.styl';
 
 type TProps = {
   drawWeekIndexes: IDrawWeekIndexes;
+  media: TMediaDatesMap<TMedia>;
   today: TTodayData;
 };
 
-export const LifeGrid: React.FC<TProps> = ({ drawWeekIndexes, today }) => {
+export const LifeGrid: React.FC<TProps> = ({ drawWeekIndexes, today, media }) => {
   const [lifeMode] = useLifeGridMode();
   const [themeMode] = useThemeMode();
   const zodiacIconSet = useZodiacIconSet();
@@ -31,6 +32,7 @@ export const LifeGrid: React.FC<TProps> = ({ drawWeekIndexes, today }) => {
   // state
   const stateRef = useRef<TLifeGridState>({
     drawWeekIndexes,
+    media,
     today,
     theme,
     isScreenMedium: window.innerWidth < DEVICE_SCREEN_WIDTH.medium,
@@ -44,6 +46,7 @@ export const LifeGrid: React.FC<TProps> = ({ drawWeekIndexes, today }) => {
   const render = () => {
     // update state
     stateRef.current.drawWeekIndexes = drawWeekIndexes;
+    stateRef.current.media = media;
     stateRef.current.today = today;
     stateRef.current.theme = theme;
     stateRef.current.lifeMode = lifeMode;

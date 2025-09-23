@@ -2,7 +2,7 @@ import { getYear, format } from 'date-fns';
 
 import { ISO_DATE_FORMAT, COMPACT_DATE_FORMAT } from '@/constants';
 import { IWeek } from '@/store/clientDB';
-import { TDrawWeekIndexes, TMediasWeekIndxsValues, TMediaDatesMap } from '@/types';
+import { TDrawWeekIndexes, TMedia, TMediaDatesMap } from '@/types';
 
 import { getWeekHolidays, getLifeYear } from '../helpers';
 import { updateDrawWeekIndexes } from '../updateDrawWeekIndexes';
@@ -14,7 +14,7 @@ type TGenerateWeekParams = {
   birthDate: Date;
   weeks: IWeek[];
   drawWeekIndexes: TDrawWeekIndexes;
-  media: TMediaDatesMap<TMediasWeekIndxsValues>;
+  media: TMediaDatesMap<TMedia>;
 };
 
 export const generateWeek = ({

@@ -26,7 +26,7 @@ export { useDBWeeks } from './queries/life/useDBWeeks';
 export { useDBUserData } from './queries/life/useDBUserData';
 export { useDBTodayWeek } from './queries/life/useDBTodayWeek';
 export { useDBDrawWeekIndexes } from './queries/life/useDBDrawWeekIndexes';
-
+export { useDBMedia } from './queries/life/useDBMedia';
 export { useDBSettings } from './queries/settings/useDBSettings';
 
 // initializers

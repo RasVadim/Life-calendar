@@ -2,13 +2,7 @@ import { addDays, format, startOfDay } from 'date-fns';
 
 import { DEFAULT_LIFE_SPAN_YEARS, ISO_DATE_FORMAT } from '@/constants';
 import { IWeek } from '@/store/clientDB';
-import {
-  ESide,
-  EWeekType,
-  TDrawWeekIndexes,
-  TMediasWeekIndxsValues,
-  TMediaDatesMap,
-} from '@/types';
+import { ESide, EWeekType, TDrawWeekIndexes, TMedia, TMediaDatesMap } from '@/types';
 
 import { generateWeek } from './generateWeek';
 import { getDeathDate, getIsDateEarly } from './helpers';
@@ -23,7 +17,7 @@ export interface IGenerateWeeksResult {
     todayWeekHalf: ESide | null;
   };
   drawWeekIndexes: TDrawWeekIndexes;
-  media: TMediaDatesMap<TMediasWeekIndxsValues>;
+  media: TMediaDatesMap<TMedia>;
 }
 
 /**
@@ -62,7 +56,7 @@ export const generateWeeks = (
     lastWeekIndex: 0,
   };
 
-  const media: TMediaDatesMap<TMediasWeekIndxsValues> = {};
+  const media: TMediaDatesMap<TMedia> = {};
 
   const deathDate = getDeathDate({
     birthDate,
