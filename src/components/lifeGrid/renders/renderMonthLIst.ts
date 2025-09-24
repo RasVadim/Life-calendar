@@ -13,7 +13,11 @@ import {
 import { TLifeGridState } from '../types';
 import { calculateMonthWeekXPosition, getMonthDynamicWeekWidth } from './utils';
 import { getCachedColor } from '../utils';
-import { Size, layoutHStack } from '@/shared/layout/HStack';
+import { layoutHStack } from '@/shared/layout/StackLayout';
+import { Size } from '@/shared/layout/types';
+import { layoutContainer } from '@/shared/layout/ContainerLayout';
+import { HorizontalAlignment, VerticalAlignment } from '@/shared/layout/alignment';
+
 
 // Constants for months mode
 const ROW_GAP = 80; // Gap between month rows (reduced from 30)
@@ -423,17 +427,22 @@ export const renderMonthList2 = (state: TLifeGridState) => {
         if (weekRow.length > 0) {
 
             const layout = layoutHStack({
-                container: { width: width, height: plainWeekSize.height },
                 children: weekRow.map(week => week.cellSize),
-                spacing: { width: WEEK_GAP, height: 0 }
+                spacing: { width: WEEK_GAP, height: 0 },
+                alignment: VerticalAlignment.middle
+            })
+            const offset = layoutContainer({
+                container: { width: width, height: plainWeekSize.height },
+                child: layout.size,
+                alignment: HorizontalAlignment.center
             })
             for(const weekIndex in weekRow) {
                 const week = weekRow[weekIndex]
                 const rect = layout.children[weekIndex]
                 renderWeek({
                     ...week,
-                    x: rect.origin.x,
-                    y: rect.origin.y + week.baseY,
+                    x: rect.origin.x + offset.x,
+                    y: rect.origin.y + week.baseY + offset.y,
                     cellWidth: rect.size.width,
                     cellHeight: rect.size.height,
                 })

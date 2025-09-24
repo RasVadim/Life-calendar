@@ -1,12 +1,6 @@
-export type Size = { width: number, height: number }
-export type Origin = { x: number, y: number }
-export type Rect = { origin: Origin, size: Size }
-export type Axis = 'x' | 'y'
-
-export type StackAxisProps = {
-    axis: Axis
-    oppositeAxis: Axis
-}
+import { Axis, Size, Origin, Rect } from "./types"
+import { lengthAlongAxis } from "./lengthAlongAxis"
+import { alignmentAlongAxis, Alignment } from "./alignment"
 
 export const layoutHStack = (props: StackProps) => {
     return layoutStack({ ...props, axis: 'x', oppositeAxis: 'y' })
@@ -16,25 +10,26 @@ export const layoutVStack = (props: StackProps) => {
     return layoutStack({ ...props, axis: 'y', oppositeAxis: 'x' })
 }
 
-const lengthAlongAxis = (axis: Axis, size: Size) => {
-    return axis === 'x' ? size.width : size.height
+export type StackAxisProps = {
+    axis: Axis
+    oppositeAxis: Axis
 }
 
 // Input
 export type StackProps = {
-    container: Size
     children: Size[]
     spacing: Size
+    alignment: Alignment
 }
 
 // Output
 export type StackLayout = {
-    origin: Origin
     children: Rect[]
+    size: Size
 }
 
 const layoutStack = (props: StackProps & StackAxisProps): StackLayout => {
-    const { container, children, spacing, axis, oppositeAxis } = props
+    const { children, spacing,  axis, oppositeAxis } = props
 
     const childrenLength = children.reduce((acc, child) => acc + lengthAlongAxis(axis, child), 0)
     const spacingLength = lengthAlongAxis(axis, spacing)
@@ -42,25 +37,28 @@ const layoutStack = (props: StackProps & StackAxisProps): StackLayout => {
 
     const maxBreadth = children.reduce((acc, child) => Math.max(acc, lengthAlongAxis(oppositeAxis, child)), 0)
 
-    const containerLength = lengthAlongAxis(axis, container)
-    const containerBreadth = lengthAlongAxis(oppositeAxis, container)
-
-    // align to center on both axes
-    // optionally, you can add alignment to the props and handle it here
-    const origin = {
-        [axis]: (containerLength - totalLength) / 2, 
-        [oppositeAxis]: (containerBreadth - maxBreadth) / 2,
-    }
-
-    let position = origin[axis]
+    const alignment = alignmentAlongAxis(props.alignment, oppositeAxis)
+    let position = 0
     const childrenRects = children.map(child => {
+        let oppositeAxisPosition = 0
+        switch (alignment) {
+            case 'leading':
+                oppositeAxisPosition = 0
+                break
+            case 'center':
+                oppositeAxisPosition = (maxBreadth - lengthAlongAxis(oppositeAxis, child)) / 2
+                break
+            case 'trailing':
+                oppositeAxisPosition = maxBreadth - lengthAlongAxis(oppositeAxis, child)
+                break
+        }
         const childOrigin = {
             [axis]: position,
-            [oppositeAxis]: (containerBreadth - lengthAlongAxis(oppositeAxis, child)) / 2,
+            [oppositeAxis]: oppositeAxisPosition,
         }
         position += lengthAlongAxis(axis, child) + spacingLength
         return { origin: childOrigin as Origin, size: child }
     })
 
-    return { origin: origin as Origin, children: childrenRects }
+    return { children: childrenRects, size: { width: totalLength, height: maxBreadth } }
 }
