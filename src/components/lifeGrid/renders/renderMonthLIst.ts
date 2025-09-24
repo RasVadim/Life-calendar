@@ -1,5 +1,5 @@
 import i18n from 'i18next';
-import { Container, Text } from 'pixi.js';
+import { Container, Graphics, Text } from 'pixi.js';
 
 import { EMonthsWeekIndxsValues, EWeekType, THolidayName, TMonthsIndxsValue } from '@/types';
 
@@ -20,8 +20,16 @@ const WEEK_GAP = 8; // Gap between weeks in the same row (increased from 12)
 const MONTHS_MODE_WEEK_COUNT = 50; // Number of weeks to show in months mode
 
 // Constants for month labels
-const LABEL_FONT_SIZE = 16;
-const LABEL_MARGIN_BOTTOM = 16;
+const LABEL_FONT_SIZE = 13;
+const LABEL_MARGIN_BOTTOM = 20;
+const LABEL_GAP = 8;
+const LABEL_LEFT_MARGIN = 26;
+
+// Constants for thread lines
+const THREAD_HEIGHT = 1;
+const THREAD_MARGIN_TOP = 20; // Increased margin to position threads lower
+const THREAD_CIRCLE_RADIUS = 2;
+const THREAD_CIRCLE_GAP = 4; // Gap between two circles
 
 /**
  * Render month and year label for a row
@@ -35,22 +43,88 @@ const renderMonthLabel = (
   theme: Record<string, string>,
 ) => {
   const monthName = i18n.t(`life.${month}`);
-  const labelText = `${year} ${monthName}`;
 
-  const text = new Text({
-    text: labelText,
+  // Get month color based on alternating pattern starting from January
+  const monthNumber = parseInt(month, 10);
+  const isEvenMonth = monthNumber % 2 === 0;
+  const monthColor = isEvenMonth ? theme.primary2 : theme.primary;
+
+  // Create month text with alternating color
+  const monthText = new Text({
+    text: monthName,
     style: {
-      fontFamily: 'Arial, sans-serif',
+      fontFamily: 'Montserrat, sans-serif',
       fontSize: LABEL_FONT_SIZE,
-      fill: getCachedColor(theme.textPrimary).toNumber(),
-      fontWeight: '500',
+      fill: getCachedColor(monthColor).toNumber(),
+      fontWeight: '300',
     },
   });
 
-  text.x = x;
-  text.y = y - LABEL_MARGIN_BOTTOM - LABEL_FONT_SIZE;
+  // Create year text with text color
+  const yearText = new Text({
+    text: year,
+    style: {
+      fontFamily: 'Montserrat, sans-serif',
+      fontSize: LABEL_FONT_SIZE,
+      fill: getCachedColor(theme.text).toNumber(),
+      fontWeight: '300',
+    },
+  });
 
-  container.addChild(text);
+  // Position texts
+  yearText.x = x + LABEL_LEFT_MARGIN;
+  yearText.y = y - LABEL_MARGIN_BOTTOM - LABEL_FONT_SIZE;
+
+  monthText.x = yearText.x + yearText.width + LABEL_GAP; // 8px gap between year and month
+  monthText.y = y - LABEL_MARGIN_BOTTOM - LABEL_FONT_SIZE;
+
+  container.addChild(yearText);
+  container.addChild(monthText);
+};
+
+/**
+ * Render thread line under a row of weeks with two hollow circles at the end
+ */
+const renderRowThreadLine = (
+  container: Container,
+  startX: number,
+  endX: number,
+  y: number,
+  currentColor: string,
+  nextColor: string,
+  containerWidth: number,
+) => {
+  const currentColorNumber = getCachedColor(currentColor).toNumber();
+  const nextColorNumber = getCachedColor(nextColor).toNumber();
+
+  // Draw the line (shortened by circle radius to avoid overlap)
+  const lineEndX = endX - THREAD_CIRCLE_RADIUS;
+  const thread = new Graphics();
+  thread.rect(startX, y, lineEndX - startX, THREAD_HEIGHT).fill(currentColorNumber);
+  container.addChild(thread);
+
+  // Draw the first hollow circle (current month color)
+  const circle1 = new Graphics();
+  circle1
+    .circle(endX, y + THREAD_HEIGHT / 2, THREAD_CIRCLE_RADIUS)
+    .stroke({ color: currentColorNumber, width: THREAD_HEIGHT });
+  container.addChild(circle1);
+
+  // Draw the second hollow circle (next month color)
+  const circle2X = endX + THREAD_CIRCLE_RADIUS * 2 + THREAD_CIRCLE_GAP;
+  const circle2 = new Graphics();
+  circle2
+    .circle(circle2X, y + THREAD_HEIGHT / 2, THREAD_CIRCLE_RADIUS)
+    .stroke({ color: nextColorNumber, width: THREAD_HEIGHT });
+  container.addChild(circle2);
+
+  // Draw the second thread line from second circle to right edge of screen
+  const secondLineStartX = circle2X + THREAD_CIRCLE_RADIUS;
+  const secondThread = new Graphics();
+  secondThread
+    .rect(secondLineStartX, y, containerWidth - secondLineStartX, THREAD_HEIGHT)
+    .fill(nextColorNumber);
+  container.addChild(secondThread);
 };
 
 export const renderMonthList = (state: TLifeGridState) => {
@@ -208,5 +282,46 @@ export const renderMonthList = (state: TLifeGridState) => {
       cellWidth,
       cellHeight,
     });
+
+    // Render thread line for the first week of the row
+    if (currentCol === 0) {
+      // Calculate thread line position and colors
+      const threadY = baseY + weekHeight + THREAD_MARGIN_TOP;
+      const monthNumber = parseInt(monthData?.month || '1', 10);
+      const isEvenMonth = monthNumber % 2 === 0;
+      const currentThreadColor = isEvenMonth ? theme.primary2 : theme.primary;
+
+      // Calculate next month color (opposite of current)
+      const nextThreadColor = isEvenMonth ? theme.primary : theme.primary2;
+
+      // Calculate total accumulated offset for all weeks in the row
+      // We need to simulate the accumulated offset that will be at the last week
+      let totalAccumulatedOffset = 0;
+      if (isMonthPreview) {
+        totalAccumulatedOffset += largeWeekWidth - weekWidth; // First week offset
+      }
+
+      // Calculate position of the middle of the last week in the row
+      const lastWeekCol = weeksPerRow - 1;
+      const lastWeekX = calculateMonthWeekXPosition({
+        currentCol: lastWeekCol,
+        weekGap: WEEK_GAP,
+        containerWidth: width,
+        accumulatedOffsetX: totalAccumulatedOffset,
+        weeksPerRow,
+      });
+      const lastWeekCenterX = lastWeekX + weekWidth / 2;
+
+      // Render thread from left edge to middle of last week
+      renderRowThreadLine(
+        weekContainer,
+        0, // Start from left edge of screen
+        lastWeekCenterX,
+        threadY,
+        currentThreadColor,
+        nextThreadColor,
+        width,
+      );
+    }
   }
 };
