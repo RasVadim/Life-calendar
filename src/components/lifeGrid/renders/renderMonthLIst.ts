@@ -1,6 +1,7 @@
-import { Container } from 'pixi.js';
+import i18n from 'i18next';
+import { Container, Text } from 'pixi.js';
 
-import { EMonthsWeekIndxsValues, EWeekType, THolidayName } from '@/types';
+import { EMonthsWeekIndxsValues, EWeekType, THolidayName, TMonthsIndxsValue } from '@/types';
 
 import { renderWeek } from './renderWeek';
 import {
@@ -11,11 +12,46 @@ import {
 } from '../constants/draw';
 import { TLifeGridState } from '../types';
 import { calculateMonthWeekXPosition, getMonthDynamicWeekWidth } from './utils';
+import { getCachedColor } from '../utils';
 
 // Constants for months mode
 const ROW_GAP = 80; // Gap between month rows (reduced from 30)
 const WEEK_GAP = 8; // Gap between weeks in the same row (increased from 12)
 const MONTHS_MODE_WEEK_COUNT = 50; // Number of weeks to show in months mode
+
+// Constants for month labels
+const LABEL_FONT_SIZE = 16;
+const LABEL_MARGIN_BOTTOM = 16;
+
+/**
+ * Render month and year label for a row
+ */
+const renderMonthLabel = (
+  container: Container,
+  month: string,
+  year: string,
+  x: number,
+  y: number,
+  theme: Record<string, string>,
+) => {
+  const monthName = i18n.t(`life.${month}`);
+  const labelText = `${year} ${monthName}`;
+
+  const text = new Text({
+    text: labelText,
+    style: {
+      fontFamily: 'Arial, sans-serif',
+      fontSize: LABEL_FONT_SIZE,
+      fill: getCachedColor(theme.textPrimary).toNumber(),
+      fontWeight: '500',
+    },
+  });
+
+  text.x = x;
+  text.y = y - LABEL_MARGIN_BOTTOM - LABEL_FONT_SIZE;
+
+  container.addChild(text);
+};
 
 export const renderMonthList = (state: TLifeGridState) => {
   const { app, drawWeekIndexes, theme, isScreenMedium, lifeMode, today, container, media } = state;
@@ -72,7 +108,8 @@ export const renderMonthList = (state: TLifeGridState) => {
   let accumulatedOffsetX = 0; // Accumulated offset from large weeks in current row
 
   for (let i = 0; i < Math.min(MONTHS_MODE_WEEK_COUNT, lastWeekIndex); i++) {
-    const monthFlag = monthsIndxs[i];
+    const monthData: TMonthsIndxsValue = monthsIndxs[i];
+    const monthFlag = monthData?.type;
     const holiday = drawWeekIndexes.holidaysIndxs[i];
     const weekType =
       i > today.todayWeekIndex
@@ -84,10 +121,8 @@ export const renderMonthList = (state: TLifeGridState) => {
     baseProps.holiday = holiday;
     baseProps.weekType = weekType;
 
-    // Check if this week is a month preview week
-    const mediaKey = drawWeekIndexes.mediaIndxs[i];
-    const weekMedia = mediaKey ? media[mediaKey] : null;
-    const isMonthPreview = weekMedia?.isMonthPreview === true;
+    // Check if this week is a month preview week (has media in monthData)
+    const isMonthPreview = monthData?.media && media[monthData.media]?.isMonthPreview === true;
 
     // Week dimensions will be calculated dynamically below
     let cellHeight: number;
@@ -116,7 +151,19 @@ export const renderMonthList = (state: TLifeGridState) => {
         weeksPerRow = 5;
       }
 
-      // No pre-scanning needed - dynamic centering will handle it
+      // Render month/year label for new row
+      if (monthData?.month && monthData?.year) {
+        const rowY = paddingTop + (currentRow - 1) * (weekHeight + ROW_GAP);
+
+        renderMonthLabel(
+          weekContainer,
+          monthData.month,
+          monthData.year,
+          WEEK_GAP, // Left margin for label
+          rowY,
+          theme,
+        );
+      }
     } else {
       // Continue current row
       currentCol++;

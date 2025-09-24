@@ -7,15 +7,12 @@ import { renderSeasonList } from './renderSeasosLIst';
 import { renderYearList } from './renderYearList';
 import { CONTAINER_LABELS } from '../constants';
 import { TLifeGridState } from '../types';
-import { getCachedColor } from '../utils';
-
-let cachedBackgroundColor: string | null = null;
 
 /**
  * Renders weeks grid on the given PixiJS stage.
  */
 export const renderLife = (state: TLifeGridState) => {
-  const { app, drawWeekIndexes, theme, lifeMode } = state;
+  const { app, drawWeekIndexes, lifeMode } = state;
 
   if (!app) return;
 
@@ -25,11 +22,6 @@ export const renderLife = (state: TLifeGridState) => {
   }
   if (!drawWeekIndexes.lastWeekIndex) return;
 
-  if (cachedBackgroundColor !== theme.background) {
-    const backgroundColor = getCachedColor(theme.background);
-    app.renderer.background.color = backgroundColor.toNumber();
-    cachedBackgroundColor = theme.background;
-  }
   const weekContainer = new Container({
     label: CONTAINER_LABELS.weeks,
   });

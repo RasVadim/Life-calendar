@@ -27,6 +27,15 @@ export enum EMonthsWeekIndxsValues {
   FirstFull5 = 'firstFull5',
 }
 
+export enum EMonthsEndsIndxsValues {
+  FullBorder = 'fullBorder',
+  HalfBorder = 'halfBorder',
+  Full = 'full',
+  Half = 'half',
+  FullBorderEnd = 'fullBorderEnd',
+  HalfBorderEnd = 'halfBorderEnd',
+}
+
 export type TMedia = {
   url?: string;
   localPath?: string;
@@ -35,6 +44,13 @@ export type TMedia = {
   isVideo?: boolean;
   source?: 'LC' | 'Instagram' | 'Telegram' | 'Other';
   // days?: Omit<TMedia, 'days'>[];
+} | null;
+
+export type TMonthsIndxsValue = {
+  type: EMonthsWeekIndxsValues | EMonthsEndsIndxsValues;
+  media?: string;
+  month?: string;
+  year?: string;
 } | null;
 
 export type TDrawWeekIndexes = Omit<IDrawWeekIndexes, 'id'>;

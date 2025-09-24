@@ -124,5 +124,5 @@ export const LifeGrid: React.FC<TProps> = ({ drawWeekIndexes, today, media }) =>
   //   };
   // }, [lifeMode]);
 
-  return <div ref={pixiContainerRef} className={s.container} />;
+  return <div ref={pixiContainerRef} className={s.pixiContainer} />;
 };

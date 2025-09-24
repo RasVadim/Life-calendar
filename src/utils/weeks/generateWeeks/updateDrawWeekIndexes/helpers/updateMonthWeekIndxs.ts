@@ -1,7 +1,14 @@
 import { format } from 'date-fns';
 
 import { IWeek } from '@/store/clientDB';
-import { EMonthsWeekIndxsValues, TDrawWeekIndexes, TMedia, TMediaDatesMap } from '@/types';
+import {
+  EMonthsEndsIndxsValues,
+  EMonthsWeekIndxsValues,
+  TDrawWeekIndexes,
+  TMedia,
+  TMediaDatesMap,
+  TMonthsIndxsValue,
+} from '@/types';
 
 import { TWeekMeta } from '../../types';
 
@@ -26,22 +33,33 @@ export const updateMonthWeekIndexes = ({
   previousWeek,
   media,
 }: TUpdateMonthWeekIndexesParams) => {
-  // Helper function to add media index for first full week of month
-  const addMediaIndex = () => {
+  // Helper function to create month index object with all data
+  const setMonthIndexObject = (
+    type: EMonthsWeekIndxsValues | EMonthsEndsIndxsValues,
+    includeMedia: boolean = false,
+  ) => {
     const weekStartDate = format(weekTimePoints[currentWeekIndex].weekStart, 'yyyy-MM-dd');
-    media[weekStartDate] = { isMonthPreview: true };
-    drawWeekIndexes.mediaIndxs[currentWeekIndex + Math.floor(Math.random() * 4)] = weekStartDate;
+    const monthNumber = weekStartDate.split('-')[1]; // Extract month from ISO date
+    const yearNumber = weekStartDate.split('-')[0]; // Extract year from ISO date
+
+    const monthObject: TMonthsIndxsValue = {
+      type,
+      month: monthNumber,
+      year: yearNumber,
+    };
+
+    // Add media if needed
+    if (includeMedia) {
+      media[weekStartDate] = { isMonthPreview: true };
+      monthObject.media = weekStartDate;
+    }
+
+    drawWeekIndexes.monthsIndxs[currentWeekIndex] = monthObject;
   };
 
-  // Helper function to set month index and add media
-  const setMonthIndexWithMedia = (monthIndexValue: EMonthsWeekIndxsValues) => {
-    drawWeekIndexes.monthsIndxs[currentWeekIndex] = monthIndexValue;
-    addMediaIndex();
-  };
-
-  // Special case: first week of life always gets media preview
+  // Special case: first week of life always gets media preview and month label
   if (currentWeekIndex === 0) {
-    addMediaIndex();
+    setMonthIndexObject(EMonthsEndsIndxsValues.HalfBorder, true);
   }
 
   // Check if week spans across two months
@@ -49,7 +67,7 @@ export const updateMonthWeekIndexes = ({
 
   // Check if this is a border week (contains two months)
   if (isWeekInTwoMonths) {
-    drawWeekIndexes.monthsIndxs[currentWeekIndex] = EMonthsWeekIndxsValues.Border;
+    setMonthIndexObject(EMonthsWeekIndxsValues.Border, false);
     return;
   }
 
@@ -61,7 +79,7 @@ export const updateMonthWeekIndexes = ({
 
     // If next day is in different month, current week ends the month
     if (nextDay.getMonth() !== currentWeekEnd.getMonth()) {
-      drawWeekIndexes.monthsIndxs[currentWeekIndex] = EMonthsWeekIndxsValues.BorderEnd;
+      setMonthIndexObject(EMonthsWeekIndxsValues.BorderEnd, false);
       return;
     }
   }
@@ -88,9 +106,9 @@ export const updateMonthWeekIndexes = ({
       // If there are 4 full weeks and some remaining days -> FirstFull5
       // If there are exactly 4 full weeks with no remaining days -> FirstFull4
       if (fullWeeksInMonth === 4 && remainingDays > 0) {
-        setMonthIndexWithMedia(EMonthsWeekIndxsValues.FirstFull5);
+        setMonthIndexObject(EMonthsWeekIndxsValues.FirstFull5, true);
       } else if (fullWeeksInMonth === 4 && remainingDays === 0) {
-        setMonthIndexWithMedia(EMonthsWeekIndxsValues.FirstFull4);
+        setMonthIndexObject(EMonthsWeekIndxsValues.FirstFull4, true);
       }
       return;
     }
@@ -124,11 +142,11 @@ export const updateMonthWeekIndexes = ({
       // If there are exactly 4 full weeks with no remaining days -> First4
       // If there are 3 full weeks and some remaining days -> First4 (remaining days go to border week)
       if (fullWeeksLeft === 4 && remainingDays > 0) {
-        setMonthIndexWithMedia(EMonthsWeekIndxsValues.First5);
+        setMonthIndexObject(EMonthsWeekIndxsValues.First5, true);
       } else if (fullWeeksLeft === 4 && remainingDays === 0) {
-        setMonthIndexWithMedia(EMonthsWeekIndxsValues.First4);
+        setMonthIndexObject(EMonthsWeekIndxsValues.First4, true);
       } else if (fullWeeksLeft === 3 && remainingDays > 0) {
-        setMonthIndexWithMedia(EMonthsWeekIndxsValues.First4);
+        setMonthIndexObject(EMonthsWeekIndxsValues.First4, true);
       }
       return;
     }

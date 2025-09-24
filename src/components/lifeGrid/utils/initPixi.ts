@@ -11,7 +11,7 @@ export const initPixi = async (container: HTMLDivElement): Promise<Application> 
   await app.init({
     width: container.clientWidth,
     height: container.clientHeight,
-    backgroundColor: 0x000000,
+    backgroundAlpha: 0, // Make canvas transparent
     resolution: window.devicePixelRatio || 1,
     autoDensity: true,
     antialias: true,

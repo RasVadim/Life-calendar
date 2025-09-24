@@ -49,7 +49,6 @@ export const generateWeeks = (
     seasonsIndxs: {},
     monthsIndxs: {},
     holidaysIndxs: {},
-    mediaIndxs: {},
     seasonOffset: 0,
     monthOffset: 0,
     yearRows: Math.ceil(lifeSpanYears),
