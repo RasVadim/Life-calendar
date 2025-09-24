@@ -13,6 +13,7 @@ import {
 import { TLifeGridState } from '../types';
 import { calculateMonthWeekXPosition, getMonthDynamicWeekWidth } from './utils';
 import { getCachedColor } from '../utils';
+import { Size, layoutHStack } from '@/shared/layout/HStack';
 
 // Constants for months mode
 const ROW_GAP = 80; // Gap between month rows (reduced from 30)
@@ -128,6 +129,7 @@ const renderRowThreadLine = (
 };
 
 export const renderMonthList = (state: TLifeGridState) => {
+    console.log('renderMonthList1')
   const { app, drawWeekIndexes, theme, isScreenMedium, lifeMode, today, container, media } = state;
 
   if (!app) return;
@@ -325,3 +327,207 @@ export const renderMonthList = (state: TLifeGridState) => {
     }
   }
 };
+
+export const renderMonthList2 = (state: TLifeGridState) => {
+    console.log('renderMonthList2')
+    const { app, drawWeekIndexes, theme, isScreenMedium, lifeMode, today, container, media } = state;
+  
+    if (!app) return;
+  
+    const { lastWeekIndex, monthsIndxs } = drawWeekIndexes;
+  
+    const weekContainer = app.stage.getChildByLabel(CONTAINER_LABELS.weeks) as Container;
+    if (!weekContainer) return;
+  
+    const width = container?.clientWidth || app.renderer.width;
+  
+    // Padding for header and navbar in months mode
+    const paddingTop = isScreenMedium ? PADDING_TOP + ROW_GAP : PADDING_DESKTOP;
+  
+    // Calculate ONE fixed week size based on full 5-week row (with side margins)
+    // This size will be used for ALL normal weeks regardless of row configuration
+    const weekWidth = getMonthDynamicWeekWidth(5, width, WEEK_GAP);
+    const weekHeight = weekWidth; // Square weeks
+    const largeWeekWidth = weekWidth * LARGE_MONTH_WEEK_SIZE_MULTIPLIER;
+    const largeWeekHeight = largeWeekWidth;
+
+    const plainWeekSize: Size = {
+        width: weekWidth,
+        height: weekHeight,
+    }
+
+    const previewWeekSize: Size = {
+        width: largeWeekWidth,
+        height: largeWeekHeight,
+    }
+  
+    // Hide weeks beyond the first 100 by moving them off-screen
+    const hideOffsetY = 10000; // Move off-screen
+  
+    // Hide all existing weeks first
+    for (let i = 0; i < lastWeekIndex; i++) {
+      const weekChild = weekContainer.children[i];
+      if (weekChild) {
+        weekChild.y = hideOffsetY;
+        weekChild.visible = false;
+      }
+    }
+  
+    // Render weeks with months mode styling
+    let currentRow = -1;
+    let currentCol = 0;
+    let weeksPerRow = 5; // Default for First5/FirstFull5
+  
+    const baseProps = {
+      theme,
+    //   cellWidth: weekWidth,
+    //   cellHeight: weekHeight,
+      isScreenMedium,
+      stage: weekContainer,
+      lifeMode,
+      weekType: EWeekType.Future,
+      holiday: null as THolidayName | null,
+      half: false,
+    };
+
+    let weekRow = []
+  
+    // Track current row state
+    let accumulatedOffsetX = 0; // Accumulated offset from large weeks in current row
+  
+    for (let i = 0; i < Math.min(MONTHS_MODE_WEEK_COUNT, lastWeekIndex); i++) {
+      const monthData: TMonthsIndxsValue = monthsIndxs[i];
+      const monthFlag = monthData?.type;
+      const holiday = drawWeekIndexes.holidaysIndxs[i];
+      const weekType =
+        i > today.todayWeekIndex
+          ? EWeekType.Future
+          : i === today.todayWeekIndex
+            ? EWeekType.Present
+            : EWeekType.Past;
+  
+      baseProps.holiday = holiday;
+      baseProps.weekType = weekType;
+  
+      // Check if this week is a month preview week (has media in monthData)
+      const isMonthPreview = monthData?.media && media[monthData.media]?.isMonthPreview === true;
+  
+      // Check if this is a first week (starts new row) or first week of all
+      if (
+        i === 0 ||
+        monthFlag === EMonthsWeekIndxsValues.FirstFull5 ||
+        monthFlag === EMonthsWeekIndxsValues.FirstFull4 ||
+        monthFlag === EMonthsWeekIndxsValues.First5 ||
+        monthFlag === EMonthsWeekIndxsValues.First4
+      ) {
+        if (weekRow.length > 0) {
+
+            const layout = layoutHStack({
+                container: { width: width, height: plainWeekSize.height },
+                children: weekRow.map(week => week.cellSize),
+                spacing: { width: WEEK_GAP, height: 0 }
+            })
+            for(const weekIndex in weekRow) {
+                const week = weekRow[weekIndex]
+                const rect = layout.children[weekIndex]
+                renderWeek({
+                    ...week,
+                    x: rect.origin.x,
+                    y: rect.origin.y + week.baseY,
+                    cellWidth: rect.size.width,
+                    cellHeight: rect.size.height,
+                })
+            }
+
+            weekRow = []
+        }
+        // Start new row
+        currentRow++;
+        currentCol = 0;
+        accumulatedOffsetX = 0;
+  
+        // Determine weeks per row based on flag
+        if (
+          monthFlag === EMonthsWeekIndxsValues.FirstFull4 ||
+          monthFlag === EMonthsWeekIndxsValues.First4
+        ) {
+          weeksPerRow = 4;
+        } else {
+          weeksPerRow = 5;
+        }
+  
+        // Render month/year label for new row
+        if (monthData?.month && monthData?.year) {
+          const rowY = paddingTop + currentRow * (plainWeekSize.height + ROW_GAP);
+  
+          renderMonthLabel(
+            weekContainer,
+            monthData.month,
+            monthData.year,
+            WEEK_GAP, // Left margin for label
+            rowY,
+            theme,
+          );
+        }
+      } else {
+        // Continue current row
+        currentCol++;
+      }
+  
+      // Update accumulated offset for next weeks in the same row
+      if (isMonthPreview) {
+        accumulatedOffsetX += largeWeekWidth - weekWidth;
+      }
+  
+      // Calculate Y position with vertical centering for large weeks
+      const baseY = paddingTop + currentRow * (plainWeekSize.height + ROW_GAP);
+
+      weekRow.push({
+        ...baseProps,
+        baseY: baseY,
+        cellSize: isMonthPreview ? previewWeekSize : plainWeekSize
+      })
+  
+      // Render thread line for the first week of the row
+      if (currentCol === 0) {
+        // Calculate thread line position and colors
+        const threadY = baseY + weekHeight + THREAD_MARGIN_TOP;
+        const monthNumber = parseInt(monthData?.month || '1', 10);
+        const isEvenMonth = monthNumber % 2 === 0;
+        const currentThreadColor = isEvenMonth ? theme.primary2 : theme.primary;
+  
+        // Calculate next month color (opposite of current)
+        const nextThreadColor = isEvenMonth ? theme.primary : theme.primary2;
+  
+        // Calculate total accumulated offset for all weeks in the row
+        // We need to simulate the accumulated offset that will be at the last week
+        let totalAccumulatedOffset = 0;
+        if (isMonthPreview) {
+          totalAccumulatedOffset += largeWeekWidth - weekWidth; // First week offset
+        }
+  
+        // Calculate position of the middle of the last week in the row
+        const lastWeekCol = weeksPerRow - 1;
+        const lastWeekX = calculateMonthWeekXPosition({
+          currentCol: lastWeekCol,
+          weekGap: WEEK_GAP,
+          containerWidth: width,
+          accumulatedOffsetX: totalAccumulatedOffset,
+          weeksPerRow,
+        });
+        const lastWeekCenterX = lastWeekX + weekWidth / 2;
+  
+        // Render thread from left edge to middle of last week
+        renderRowThreadLine(
+          weekContainer,
+          0, // Start from left edge of screen
+          lastWeekCenterX,
+          threadY,
+          currentThreadColor,
+          nextThreadColor,
+          width,
+        );
+      }
+    }
+  };
+  

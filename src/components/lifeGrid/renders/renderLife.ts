@@ -2,7 +2,7 @@ import { Container } from 'pixi.js';
 
 import { ELifeMode } from '@/types';
 
-import { renderMonthList } from './renderMonthLIst';
+import { renderMonthList, renderMonthList2 } from './renderMonthLIst';
 import { renderSeasonList } from './renderSeasosLIst';
 import { renderYearList } from './renderYearList';
 import { CONTAINER_LABELS } from '../constants';
@@ -44,6 +44,6 @@ export const renderLife = (state: TLifeGridState) => {
   }
 
   if (lifeMode === ELifeMode.Months) {
-    renderMonthList(state);
+    renderMonthList2(state);
   }
 };
