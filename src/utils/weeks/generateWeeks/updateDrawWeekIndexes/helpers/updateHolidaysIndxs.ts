@@ -6,6 +6,11 @@ type TUpdateHolidayIndxsParams = {
   holidays?: THolidayName[];
 };
 
+/**
+ * Updates holiday indexes for a specific week
+ * Sets the first holiday from the array as the week's holiday index
+ * @param {TUpdateHolidayIndxsParams} params - The parameters for the update
+ */
 export const updateHolidaysIndxs = ({
   drawWeekIndexes,
   weekIndex,

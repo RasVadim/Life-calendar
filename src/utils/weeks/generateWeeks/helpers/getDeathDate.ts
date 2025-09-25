@@ -16,22 +16,14 @@ export const getDeathDate = ({
   deathDateISO,
   lifeSpanYears,
 }: TGetYearsToGenerateParams): Date => {
-  let parsedDeath: Date | null = null;
-  let deathDate: Date;
-
+  // Try to parse custom death date if provided
   if (deathDateISO) {
-    const d = new Date(deathDateISO);
-    if (!isNaN(d.getTime()) && d > birthDate) {
-      parsedDeath = d;
+    const parsedDeath = new Date(deathDateISO);
+    if (!isNaN(parsedDeath.getTime()) && parsedDeath > birthDate) {
+      return startOfDay(parsedDeath);
     }
   }
 
-  if (parsedDeath) {
-    deathDate = startOfDay(parsedDeath);
-  } else {
-    // If death date is exactly on the birthday, do not add an extra year
-    deathDate = startOfDay(addYears(birthDate, lifeSpanYears));
-  }
-
-  return deathDate;
+  // Fallback to calculated death date based on life span
+  return startOfDay(addYears(birthDate, lifeSpanYears));
 };

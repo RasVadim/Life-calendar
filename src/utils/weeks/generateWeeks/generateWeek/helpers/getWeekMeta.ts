@@ -1,29 +1,30 @@
-import { addDays, isLeapYear } from 'date-fns';
+import { isLeapYear } from 'date-fns';
 
 import { IWeek } from '@/store/clientDB';
-import { EDateSegment, EDayOfWeek, ESeason, TDay } from '@/types';
+import { EDayOfWeek, TMedia, TMediaDatesMap } from '@/types';
 
-import { generateDay } from '../../generateDay';
-import { getDateSegment } from '../../helpers/getDateSegment';
+import { extractDateSegments } from './extractDateSegments';
+import { generateWeekDays } from './generateWeekDays';
+import { setDefaultPreviewFlags } from './setDefaultPreviewFlags';
 import { TWeekMeta } from '../../types';
 
 type TGetWeekMetaParams = {
   weekStart: Date;
   weekEnd: Date;
-  lifeYear: number;
   birthDate: Date;
   weekIndex: number;
   previousWeek: IWeek | null;
+  media: TMediaDatesMap<TMedia>;
 };
 
 /**
- * Returns meta info for the week
- * @param {Date} weekStart
- * @param {Date} weekEnd
- * @param {number} yearOfLife
- * @param {Date} birthDate
- * @param {number} weekIndex - week index in year
- * @returns {object} meta info
+ * Returns meta information for the week including days, date segments, and preview flags
+ * @param weekStart - Start date of the week
+ * @param weekEnd - End date of the week
+ * @param birthDate - User's birth date for generating day info
+ * @param weekIndex - Index of the week in the overall calendar
+ * @param previousWeek - Previous week object for preview calculations
+ * @returns Complete week metadata
  */
 export const getWeekMeta = ({
   weekStart,
@@ -31,40 +32,32 @@ export const getWeekMeta = ({
   weekIndex,
   birthDate,
   previousWeek,
+  media,
 }: TGetWeekMetaParams): TWeekMeta => {
-  const days: TDay[] = [];
-  for (let d = weekStart; d <= weekEnd; d = addDays(d, 1)) {
-    const day = generateDay({ date: d, weekStart, weekIndex, birthDate });
-    days.push(day);
-  }
+  // Generate all days for the week
+  const days = generateWeekDays(weekStart, weekEnd, weekIndex, birthDate);
 
-  const year = getDateSegment(weekStart, EDateSegment.Year)!;
-  const secondYear = getDateSegment(weekEnd, EDateSegment.Year);
-  // Ensure dateMonth is always two digits (e.g. '01', '02', ..., '12')
-  const month = getDateSegment(weekStart, EDateSegment.Month)!;
-  const secondMonth = getDateSegment(weekEnd, EDateSegment.Month);
-  const season = getDateSegment(weekStart, EDateSegment.Season) as ESeason;
-  const secondSeason = getDateSegment(weekEnd, EDateSegment.Season) as ESeason;
+  // Extract date segments for week boundaries
+  const dateSegments = extractDateSegments(weekStart, weekEnd);
+
+  // Calculate additional week properties
   const isLeap = isLeapYear(weekStart);
+  const isWeekStartMonday = days[0].dayOfWeek === EDayOfWeek.Monday;
 
-  // Check if week starts on Monday (day 1) and is the first week of a new season
-  const isWeekStartMonday = days[0].dayOfWeek === EDayOfWeek.Monday; // Monday is day 1
-
-  const isMonthPreview =
-    !!previousWeek?.secondMonth || (previousWeek?.month !== month && isWeekStartMonday);
-  const isSeasonPreview =
-    !!previousWeek?.secondSeason || (previousWeek?.season !== season && isWeekStartMonday);
+  // Calculate preview flags based on previous week
+  const weekMedia = setDefaultPreviewFlags({
+    weekStart,
+    previousWeek,
+    currentMonth: dateSegments.month,
+    currentSeason: dateSegments.season,
+    isWeekStartMonday,
+    media,
+  });
 
   return {
     days,
-    month,
-    secondMonth: month === secondMonth ? null : secondMonth,
-    year,
-    secondYear: year === secondYear ? null : secondYear,
-    season,
-    secondSeason: season === secondSeason ? null : secondSeason,
+    ...dateSegments,
     isLeapYear: isLeap,
-    isMonthPreview,
-    isSeasonPreview,
+    media: weekMedia,
   };
 };

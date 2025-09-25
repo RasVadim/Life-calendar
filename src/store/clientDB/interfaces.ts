@@ -39,8 +39,7 @@ export interface IWeek {
   secondLifeYear: number | null;
   lifeMonth: number;
   isLeapYear: boolean;
-  isSeasonPreview: boolean;
-  isMonthPreview: boolean;
+  media: string | null;
   holidays: THolidayName[] | null;
   yearZodiacLabel: TWeekZodiac | null;
   photoUrl?: string;

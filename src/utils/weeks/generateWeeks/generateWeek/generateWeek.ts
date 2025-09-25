@@ -6,7 +6,13 @@ import { TDrawWeekIndexes, TMedia, TMediaDatesMap } from '@/types';
 
 import { getWeekHolidays, getLifeYear } from '../helpers';
 import { updateDrawWeekIndexes } from '../updateDrawWeekIndexes';
-import { getWeekMeta, getWeekNumber, getWeekType, getZodiac } from './helpers';
+import {
+  getWeekMeta,
+  getWeekNumber,
+  getWeekType,
+  getZodiac,
+  calculateCurrentLifeMonth,
+} from './helpers';
 
 type TGenerateWeekParams = {
   weekTimePoints: { weekStart: Date; weekEnd: Date }[];
@@ -24,21 +30,26 @@ export const generateWeek = ({
   weeks,
   drawWeekIndexes,
   media,
-}: TGenerateWeekParams) => {
+}: TGenerateWeekParams): IWeek => {
   const { weekStart, weekEnd } = weekTimePoints[weekIndex];
   const lifeYear = getLifeYear(birthDate, weekStart);
   const secondLifeYear = getLifeYear(birthDate, weekEnd);
   const previousWeek = weeks[weeks.length - 1] || null;
+
+  // Generate week metadata
   const meta = getWeekMeta({
     weekStart,
     weekEnd,
-    lifeYear,
     weekIndex,
     birthDate,
     previousWeek,
+    media,
   });
+
+  // Calculate week properties
   const type = getWeekType(weekStart, weekEnd);
   const holidays = getWeekHolidays(weekStart, weekEnd, birthDate);
+  const lifeMonth = calculateCurrentLifeMonth(birthDate, weekStart, lifeYear);
 
   // Update draw week indexes
   updateDrawWeekIndexes({
@@ -51,34 +62,23 @@ export const generateWeek = ({
     currentWeekIndex: weeks.length,
     holidays,
     previousWeek,
-    media,
   });
 
-  // Efficient calculation of life month
-  const yearsPassed = lifeYear;
-  const monthOfWeek = weekStart.getMonth(); // 0-11
-  const monthOfBirth = birthDate.getMonth(); // 0-11
-  let monthsFromBirth = yearsPassed * 12 + (monthOfWeek - monthOfBirth);
-  if (monthOfWeek < monthOfBirth) {
-    monthsFromBirth += 12;
-  }
-  const dayOfWeek = weekStart.getDate();
-  const dayOfBirth = birthDate.getDate();
-  if (dayOfWeek < dayOfBirth) {
-    monthsFromBirth -= 1;
-  }
-  const lifeMonth = monthsFromBirth + 1;
-
+  // Pre-format dates to avoid repetition
+  const dateStart = format(weekStart, ISO_DATE_FORMAT);
+  const dateEnd = format(weekEnd, ISO_DATE_FORMAT);
   const weekId = `${format(weekStart, COMPACT_DATE_FORMAT)}_${getWeekNumber(weekIndex)}`;
 
   return {
     id: weekId,
-    dateStart: format(weekStart, ISO_DATE_FORMAT),
-    dateEnd: format(weekEnd, ISO_DATE_FORMAT),
+    dateStart,
+    dateEnd,
     type,
     lifeMonth,
     lifeYear,
     secondLifeYear: secondLifeYear === lifeYear ? null : secondLifeYear,
+
+    // Date segments from meta
     year: meta.year,
     secondYear: meta.secondYear,
     month: meta.month,
@@ -86,11 +86,12 @@ export const generateWeek = ({
     season: meta.season,
     secondSeason: meta.secondSeason,
     isLeapYear: meta.isLeapYear,
-    isSeasonPreview: meta.isSeasonPreview,
-    isMonthPreview: meta.isMonthPreview,
+    days: meta.days,
+    media: meta.media,
+    // Flags and additional data
     holidays,
     yearZodiacLabel: getZodiac(getYear(weekStart)),
-    days: meta.days,
+    // Null fields on generation step
     comments: null,
     description: null,
   };

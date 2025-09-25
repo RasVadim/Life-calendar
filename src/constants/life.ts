@@ -8,3 +8,5 @@ export const HOLIDAY_NAMES = {
   Feb23: '23Feb',
   Mar8: '8Mar',
 } as const;
+
+export const FULL_WEEKS_THRESHOLD = 4;

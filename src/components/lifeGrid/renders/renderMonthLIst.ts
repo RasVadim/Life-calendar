@@ -259,6 +259,8 @@ export const renderMonthList = (state: TLifeGridState) => {
       containerWidth: width,
       accumulatedOffsetX,
       weeksPerRow,
+      fixedWeekWidth: weekWidth,
+      largeWeekWidth,
     });
 
     // Update accumulated offset for next weeks in the same row
@@ -309,6 +311,8 @@ export const renderMonthList = (state: TLifeGridState) => {
         containerWidth: width,
         accumulatedOffsetX: totalAccumulatedOffset,
         weeksPerRow,
+        fixedWeekWidth: weekWidth,
+        largeWeekWidth,
       });
       const lastWeekCenterX = lastWeekX + weekWidth / 2;
 

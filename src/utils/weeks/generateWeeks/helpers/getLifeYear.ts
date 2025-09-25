@@ -14,10 +14,5 @@ export const getLifeYear = (birthDate: Date, date: Date): number => {
     (date.getMonth() === birthDate.getMonth() && date.getDate() < birthDate.getDate());
 
   // If current month is before birth month, or same month but before birth day
-  if (isBeforeBirthday) {
-    return yearsDiff;
-  }
-
-  // Birthday has passed this year
-  return yearsDiff + 1;
+  return isBeforeBirthday ? yearsDiff : yearsDiff + 1;
 };

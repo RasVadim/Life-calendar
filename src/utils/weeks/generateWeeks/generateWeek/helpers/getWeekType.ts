@@ -3,10 +3,11 @@ import { startOfDay } from 'date-fns';
 import { EWeekType } from '@/types/life';
 
 /**
- * Returns week type (Past, Present, Future)
- * @param {Date} weekStart
- * @param {Date} weekEnd
- * @returns {EWeekType}
+ * Determines the type of week relative to today (Past, Present, or Future).
+ *
+ * @param weekStart - Start date of the week
+ * @param weekEnd - End date of the week
+ * @returns Week type based on current date
  */
 export const getWeekType = (weekStart: Date, weekEnd: Date): EWeekType => {
   const today = startOfDay(new Date());

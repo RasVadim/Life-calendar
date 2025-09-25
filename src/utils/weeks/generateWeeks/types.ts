@@ -1,10 +1,23 @@
 import { IWeek } from '@/store/clientDB';
+import { ESide, TDrawWeekIndexes, TMedia, TMediaDatesMap } from '@/types';
+
+export interface IGenerateWeeksResult {
+  weeks: IWeek[];
+  today: {
+    todayWeekId: string;
+    todayWeekIndex: number;
+    todayDayId: string;
+    todayDayIndex: number;
+    todayWeekHalf: ESide | null;
+  };
+  drawWeekIndexes: TDrawWeekIndexes;
+  media: TMediaDatesMap<TMedia>;
+}
 
 export type TWeekMeta = Pick<
   IWeek,
   | 'isLeapYear'
-  | 'isSeasonPreview'
-  | 'isMonthPreview'
+  | 'media'
   | 'days'
   | 'month'
   | 'secondMonth'

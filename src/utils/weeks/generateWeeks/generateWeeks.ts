@@ -1,24 +1,12 @@
-import { addDays, format, startOfDay } from 'date-fns';
+import { startOfDay } from 'date-fns';
 
-import { DEFAULT_LIFE_SPAN_YEARS, ISO_DATE_FORMAT } from '@/constants';
+import { DEFAULT_LIFE_SPAN_YEARS } from '@/constants';
 import { IWeek } from '@/store/clientDB';
 import { ESide, EWeekType, TDrawWeekIndexes, TMedia, TMediaDatesMap } from '@/types';
 
 import { generateWeek } from './generateWeek';
-import { getDeathDate, getIsDateEarly } from './helpers';
-
-export interface IGenerateWeeksResult {
-  weeks: IWeek[];
-  today: {
-    todayWeekId: string;
-    todayWeekIndex: number;
-    todayDayId: string;
-    todayDayIndex: number;
-    todayWeekHalf: ESide | null;
-  };
-  drawWeekIndexes: TDrawWeekIndexes;
-  media: TMediaDatesMap<TMedia>;
-}
+import { getDeathDate, generateWeekTimePoints, updateTodayInfo } from './helpers';
+import { IGenerateWeeksResult } from './types';
 
 /**
  * Generates an array of life weeks for a given birth date and lifespan or death date.
@@ -63,33 +51,8 @@ export const generateWeeks = (
     lifeSpanYears,
   });
 
-  let weekStart = birthDate;
-  const weekTimePoints: { weekStart: Date; weekEnd: Date }[] = [];
-
-  // Generate weeks with proper rules
-  let isFirstWeek = true;
-  while (weekStart < deathDate) {
-    let weekEnd;
-
-    if (isFirstWeek) {
-      isFirstWeek = false;
-      const startDayOfWeek = weekStart.getDay();
-      if (startDayOfWeek !== 1) {
-        const daysToSunday = startDayOfWeek === 0 ? 0 : 7 - startDayOfWeek;
-        weekEnd = addDays(weekStart, daysToSunday);
-        weekTimePoints.push({ weekStart, weekEnd });
-
-        weekStart = addDays(weekEnd, 1);
-        continue;
-      }
-    }
-
-    weekEnd = addDays(weekStart, 6);
-    if (weekEnd > deathDate) weekEnd = deathDate;
-    weekTimePoints.push({ weekStart, weekEnd });
-
-    weekStart = addDays(weekEnd, 1);
-  }
+  // Generate week time points
+  const weekTimePoints = generateWeekTimePoints(birthDate, deathDate);
 
   // Calculate additional fields for each week
   for (let i = 0; i < weekTimePoints.length; i++) {
@@ -103,21 +66,7 @@ export const generateWeeks = (
     });
 
     if (week.type === EWeekType.Present) {
-      today.todayWeekId = week.id;
-      today.todayWeekIndex = weeks.length;
-
-      // Find today's day in one pass
-      const todayDayIndex = week.days.findIndex(
-        (day) => day.date === format(new Date(), ISO_DATE_FORMAT),
-      );
-
-      if (week.secondLifeYear) {
-        const todayDate = new Date(week.days[todayDayIndex].date);
-        today.todayWeekHalf = getIsDateEarly(todayDate, birthDate) ? ESide.Left : ESide.Right;
-      }
-
-      today.todayDayId = todayDayIndex !== -1 ? week.days[todayDayIndex].id : '';
-      today.todayDayIndex = todayDayIndex !== -1 ? todayDayIndex : 0;
+      updateTodayInfo(week, birthDate, today, weeks.length);
     }
 
     weeks.push(week);

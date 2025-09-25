@@ -1,54 +1,41 @@
 import { HOLIDAY_NAMES } from '@/constants';
+import type { THolidayName } from '@/types';
 
 /**
  * Returns holidays for the given week
  * @param {Date} weekStart - Start date of the week
  * @param {Date} weekEnd - End date of the week
  * @param {Date} birthDate - User's birth date
- * @param {number} yearOfLife - Year of life (0-based)
- * @returns {string[]} Array of holiday names
+ * @returns {THolidayName[]} Array of holiday names
  */
 export const getWeekHolidays = (
   weekStart: Date,
   weekEnd: Date,
   birthDate: Date,
-): (typeof HOLIDAY_NAMES)[keyof typeof HOLIDAY_NAMES][] => {
-  const holidays: (typeof HOLIDAY_NAMES)[keyof typeof HOLIDAY_NAMES][] = [];
-  // Birthday
+): THolidayName[] => {
+  const holidays: THolidayName[] = [];
   const birthDay = birthDate.getDate();
-  const birthMonth = birthDate.getMonth() + 1;
+  const birthMonth = birthDate.getMonth();
 
-  for (let d = weekStart; d <= weekEnd; d = new Date(d.getTime() + 86400000)) {
-    if (d.getDate() === birthDay && d.getMonth() + 1 === birthMonth) {
-      holidays.push(HOLIDAY_NAMES.birthday);
-      break;
+  // Check each day of the week for holidays
+  for (let d = new Date(weekStart); d <= weekEnd; d.setDate(d.getDate() + 1)) {
+    const day = d.getDate();
+    const month = d.getMonth();
+
+    // Birthday check (highest priority)
+    if (day === birthDay && month === birthMonth) {
+      holidays.unshift(HOLIDAY_NAMES.birthday); // Add to beginning
     }
-  }
-  // New Year
-  for (let d = weekStart; d <= weekEnd; d = new Date(d.getTime() + 86400000)) {
-    if (d.getDate() === 1 && d.getMonth() + 1 === 1) {
+
+    // Other holidays check (can be on same day as birthday)
+    if (day === 1 && month === 0) {
       holidays.push(HOLIDAY_NAMES.newYear);
-      break;
-    }
-  }
-  // 23 February
-  for (let d = weekStart; d <= weekEnd; d = new Date(d.getTime() + 86400000)) {
-    if (d.getDate() === 23 && d.getMonth() + 1 === 2) {
+    } else if (day === 23 && month === 1) {
       holidays.push(HOLIDAY_NAMES.Feb23);
-      break;
-    }
-  }
-  // 8 March
-  for (let d = weekStart; d <= weekEnd; d = new Date(d.getTime() + 86400000)) {
-    if (d.getDate() === 8 && d.getMonth() + 1 === 3) {
+    } else if (day === 8 && month === 2) {
       holidays.push(HOLIDAY_NAMES.Mar8);
-      break;
     }
   }
-  // Birthday always first if present
-  if (holidays.includes(HOLIDAY_NAMES.birthday)) {
-    const filtered = holidays.filter((h) => h !== HOLIDAY_NAMES.birthday);
-    holidays.splice(0, holidays.length, HOLIDAY_NAMES.birthday, ...filtered);
-  }
+
   return holidays;
 };

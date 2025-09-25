@@ -4,6 +4,9 @@ import { EYearsWeekIndxsValues, TDrawWeekIndexes } from '@/types';
 import { getLifeYear } from '../../helpers';
 import { TWeekMeta } from '../../types';
 
+const FULL_WEEK_DAYS = 7;
+const TUESDAY_DAY_INDEX = 1;
+
 type TUpdateYearWeekIndexesParams = {
   drawWeekIndexes: TDrawWeekIndexes;
   lifeYear: number;
@@ -32,18 +35,16 @@ export const updateYearWeekIndexes = ({
   meta,
 }: TUpdateYearWeekIndexesParams) => {
   // Check if week spans across two years of life
-  const isWeekInTwoLIfeYears = secondLifeYear && lifeYear !== secondLifeYear;
+  const isWeekInTwoLifeYears = secondLifeYear && lifeYear !== secondLifeYear;
 
-  // Check if this is first week of life (less than 7 days)
-  const isHalfFirstWeekOfLife = weekIndex === 0 && weekDuration < 7;
-
-  // Check if this is last week of life (less than 7 days)
-  const isHalfLastWeekOfLife = weekIndex === weekTimePoints.length - 1 && weekDuration < 7;
-
-  const startsFromBirthday = Boolean(meta.days[0].holidays?.includes(HOLIDAY_NAMES.birthday));
-
-  if (isLeapYear && isWeekInTwoLIfeYears) {
-    const tuesdayLifeYear = getLifeYear(weekTimePoints[0].weekStart, new Date(meta.days[1].date));
+  // === HalfLeap ===
+  if (isLeapYear && isWeekInTwoLifeYears) {
+    // Life year of weeks can contain more than 53 full weeks only once every 7 leap years
+    // It happens when last week has only 1 day (Monday) in one year and next day (Tuesday) in next year
+    const tuesdayLifeYear = getLifeYear(
+      weekTimePoints[0].weekStart,
+      new Date(meta.days[TUESDAY_DAY_INDEX].date),
+    );
     const isTuesdayInNextYear = tuesdayLifeYear !== lifeYear;
     if (isTuesdayInNextYear) {
       drawWeekIndexes.yearsIndxs[currentWeekIndex] = EYearsWeekIndxsValues.HalfLeap;
@@ -51,12 +52,22 @@ export const updateYearWeekIndexes = ({
     }
   }
 
-  // Add to yearsIndxs if week meets special conditions
-  if (isWeekInTwoLIfeYears || isHalfFirstWeekOfLife || isHalfLastWeekOfLife) {
+  // Check if this is first week of life (less than 7 days)
+  const isHalfFirstWeekOfLife = weekIndex === 0 && weekDuration < FULL_WEEK_DAYS;
+
+  // Check if this is last week of life (less than 7 days)
+  const isHalfLastWeekOfLife =
+    weekIndex === weekTimePoints.length - 1 && weekDuration < FULL_WEEK_DAYS;
+
+  // === Half ===
+  if (isWeekInTwoLifeYears || isHalfFirstWeekOfLife || isHalfLastWeekOfLife) {
     drawWeekIndexes.yearsIndxs[currentWeekIndex] = EYearsWeekIndxsValues.Half;
     return;
   }
 
+  const startsFromBirthday = Boolean(meta.days[0].holidays?.includes(HOLIDAY_NAMES.birthday));
+
+  // === FullFirst ===
   if (startsFromBirthday) {
     drawWeekIndexes.yearsIndxs[currentWeekIndex] = EYearsWeekIndxsValues.FullFirst;
     return;

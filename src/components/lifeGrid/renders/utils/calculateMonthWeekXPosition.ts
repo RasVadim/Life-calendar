@@ -1,12 +1,11 @@
-import { getMonthDynamicWeekWidth } from './getMonthDynamicWeekWidth';
-import { LARGE_MONTH_WEEK_SIZE_MULTIPLIER } from '../../constants';
-
 type TCalculateWeekXPositionParams = {
   currentCol: number;
   weekGap: number;
   containerWidth: number;
   accumulatedOffsetX: number;
   weeksPerRow: number;
+  fixedWeekWidth: number;
+  largeWeekWidth: number;
 };
 
 /**
@@ -26,12 +25,12 @@ export const calculateMonthWeekXPosition = ({
   containerWidth,
   accumulatedOffsetX,
   weeksPerRow,
+  fixedWeekWidth,
+  largeWeekWidth,
 }: TCalculateWeekXPositionParams): number => {
   // Calculate actual row width with fixed week sizes
   const normalWeeksCount = weeksPerRow - 1;
   const gapsBetweenWeeks = (weeksPerRow - 1) * weekGap;
-  const fixedWeekWidth = getMonthDynamicWeekWidth(5, containerWidth, weekGap); // Fixed size
-  const largeWeekWidth = fixedWeekWidth * LARGE_MONTH_WEEK_SIZE_MULTIPLIER;
 
   const actualRowWidth = normalWeeksCount * fixedWeekWidth + largeWeekWidth + gapsBetweenWeeks;
 
