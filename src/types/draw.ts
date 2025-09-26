@@ -39,6 +39,7 @@ export enum EMonthsEndsIndxsValues {
 export type TMedia = {
   url?: string;
   localPath?: string;
+  isWeekPreview?: boolean;
   isSeasonPreview?: boolean;
   isMonthPreview?: boolean;
   isVideo?: boolean;

@@ -4,8 +4,6 @@ export { getDaysInMonth } from './getDaysInMonth';
 
 export { getMonthInfo } from './getMonthInfo';
 
-export { getMonthStartType } from './getMonthStartType';
-
-export { getPostBorderWeekType } from './getPostBorderWeekType';
+export { getMonthWeekType } from './getMonthWeekType';
 
 export { setMonthIndexObject } from './setMonthIndexObject';

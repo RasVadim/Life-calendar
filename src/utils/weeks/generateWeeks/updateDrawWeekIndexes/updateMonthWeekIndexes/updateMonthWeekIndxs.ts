@@ -1,13 +1,9 @@
 import { IWeek } from '@/store/clientDB';
 import { EMonthsEndsIndxsValues, EMonthsWeekIndxsValues, TDrawWeekIndexes } from '@/types';
 
-import {
-  getMonthStartType,
-  getPostBorderWeekType,
-  setMonthIndexObject,
-  getMonthInfo,
-} from './helpers';
+import { setMonthIndexObject, getMonthInfo, getMonthWeekType } from './helpers';
 import { TWeekMeta } from '../../types';
+import { EMonthWeekTypeCalculation } from './helpers/getMonthWeekType';
 
 type TUpdateMonthWeekIndexesParams = {
   drawWeekIndexes: TDrawWeekIndexes;
@@ -83,7 +79,7 @@ export const updateMonthWeekIndexes = ({
 
       if (isPrevBorderOnWeekHalf) {
         // Month starts on Monday
-        const monthType = getMonthStartType(monthInfo);
+        const monthType = getMonthWeekType(monthInfo, EMonthWeekTypeCalculation.Start);
         if (monthType) {
           setMonthType(monthType, monthInfo);
           return;
@@ -92,7 +88,7 @@ export const updateMonthWeekIndexes = ({
 
       if (isPrevBorderOnWeekEnd) {
         // First full week after border week
-        const monthType = getPostBorderWeekType(monthInfo);
+        const monthType = getMonthWeekType(monthInfo, EMonthWeekTypeCalculation.PostBorder);
         if (monthType) {
           setMonthType(monthType, monthInfo);
         }

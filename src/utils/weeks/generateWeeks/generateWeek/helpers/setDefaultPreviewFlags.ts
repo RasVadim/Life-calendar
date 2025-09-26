@@ -1,7 +1,7 @@
-import { format } from 'date-fns';
-
 import { IWeek } from '@/store/clientDB';
 import { ESeason, TMedia, TMediaDatesMap } from '@/types';
+
+import { setPreviewFlag, setMultiplePreviewFlags } from '../../helpers';
 
 type TSetDefaultPreviewFlagsParams = {
   weekStart: Date;
@@ -10,23 +10,6 @@ type TSetDefaultPreviewFlagsParams = {
   currentSeason: ESeason;
   isWeekStartMonday: boolean;
   media: TMediaDatesMap<TMedia>;
-};
-
-/**
- * Helper function to set preview flag and return media key
- */
-const setPreviewFlag = (
-  weekStart: Date,
-  media: TMediaDatesMap<TMedia>,
-  previewType: 'isMonthPreview' | 'isSeasonPreview',
-): string => {
-  const weekStartDate = format(weekStart, 'yyyyMMdd');
-  // Merge with existing flags instead of overwriting
-  media[weekStartDate] = {
-    ...media[weekStartDate],
-    [previewType]: true,
-  };
-  return weekStartDate;
 };
 
 /**
@@ -51,8 +34,7 @@ export const setDefaultPreviewFlags = ({
 }: TSetDefaultPreviewFlagsParams): string | null => {
   // For the first week of life, set both month and season preview
   if (!previousWeek) {
-    setPreviewFlag(weekStart, media, 'isSeasonPreview');
-    return setPreviewFlag(weekStart, media, 'isMonthPreview');
+    return setMultiplePreviewFlags(weekStart, media, ['isSeasonPreview', 'isMonthPreview']);
   }
 
   if (!!previousWeek?.secondMonth || (previousWeek?.month !== currentMonth && isWeekStartMonday)) {

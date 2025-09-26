@@ -4,14 +4,8 @@ import { ISO_DATE_FORMAT, COMPACT_DATE_FORMAT } from '@/constants';
 import { IWeek } from '@/store/clientDB';
 import { TDrawWeekIndexes, TMedia, TMediaDatesMap } from '@/types';
 
-import { getWeekHolidays, getLifeYear } from '../helpers';
-import {
-  getWeekMeta,
-  getWeekNumber,
-  getWeekType,
-  getZodiac,
-  calculateCurrentLifeMonth,
-} from './helpers';
+import { getWeekHolidays, getLifeYear, formatWeekNumber } from '../helpers';
+import { getWeekMeta, getWeekType, getZodiac, calculateCurrentLifeMonth } from './helpers';
 import { updateDrawWeekIndexes } from '../updateDrawWeekIndexes';
 
 type TGenerateWeekParams = {
@@ -67,7 +61,7 @@ export const generateWeek = ({
   // Pre-format dates to avoid repetition
   const dateStart = format(weekStart, ISO_DATE_FORMAT);
   const dateEnd = format(weekEnd, ISO_DATE_FORMAT);
-  const weekId = `${format(weekStart, COMPACT_DATE_FORMAT)}_${getWeekNumber(weekIndex)}`;
+  const weekId = `${format(weekStart, COMPACT_DATE_FORMAT)}_${formatWeekNumber(weekIndex)}`;
 
   return {
     id: weekId,

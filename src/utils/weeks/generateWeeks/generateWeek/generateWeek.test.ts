@@ -13,6 +13,7 @@ vi.mock('../../helpers', () => ({
     const diffInYears = date.getFullYear() - birthDate.getFullYear();
     return Math.max(1, diffInYears);
   }),
+  formatWeekNumber: vi.fn((weekIndex: number) => String(weekIndex + 1).padStart(4, '0')),
 }));
 
 vi.mock('../../updateDrawWeekIndexes', () => ({
@@ -93,7 +94,7 @@ describe('generateWeek', () => {
     });
 
     expect(result).toMatchObject({
-      id: '20240301_1',
+      id: '20240301_0001',
       dateStart: '2024-03-01',
       dateEnd: '2024-03-08',
       type: 'present',
@@ -201,13 +202,11 @@ describe('generateWeek', () => {
       media: mockMedia,
     });
 
-    expect(result.id).toBe('20240301_1');
+    expect(result.id).toBe('20240301_0001');
   });
 
-  it('should handle different week indices correctly', async () => {
-    const { getWeekNumber } = vi.mocked(await import('./helpers'));
-
-    generateWeek({
+  it('should handle different week indices correctly', () => {
+    const result = generateWeek({
       weekTimePoints: mockWeekTimePoints,
       weekIndex: 1, // Use valid index
       birthDate: mockBirthDate,
@@ -216,7 +215,8 @@ describe('generateWeek', () => {
       media: mockMedia,
     });
 
-    expect(getWeekNumber).toHaveBeenCalledWith(1);
+    // Verify that week ID contains correct week number format
+    expect(result.id).toMatch(/_\d{4}$/); // Should end with 4-digit week number
   });
 
   it('should pass correct parameters to all helper functions', () => {

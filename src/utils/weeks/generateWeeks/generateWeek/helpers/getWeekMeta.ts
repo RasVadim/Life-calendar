@@ -3,9 +3,9 @@ import { isLeapYear } from 'date-fns';
 import { IWeek } from '@/store/clientDB';
 import { EDayOfWeek, TMedia, TMediaDatesMap } from '@/types';
 
-import { extractDateSegments } from './extractDateSegments';
 import { generateWeekDays } from './generateWeekDays';
 import { setDefaultPreviewFlags } from './setDefaultPreviewFlags';
+import { getDateSegments } from '../../helpers';
 import { TWeekMeta } from '../../types';
 
 type TGetWeekMetaParams = {
@@ -38,7 +38,7 @@ export const getWeekMeta = ({
   const days = generateWeekDays(weekStart, weekEnd, weekIndex, birthDate);
 
   // Extract date segments for week boundaries
-  const dateSegments = extractDateSegments(weekStart, weekEnd);
+  const dateSegments = getDateSegments(weekStart, weekEnd);
 
   // Calculate additional week properties
   const isLeap = isLeapYear(weekStart);

@@ -7,6 +7,7 @@ import {
 import { TWeekMeta } from '@/utils/weeks/generateWeeks/types';
 
 import { getMonthInfo, TMonthInfo } from './getMonthInfo';
+import { formatMonthNumber } from '../../../helpers';
 
 type TSetMonthIndexObjectParams = {
   type: EMonthsWeekIndxsValues | EMonthsEndsIndxsValues;
@@ -29,7 +30,7 @@ export const setMonthIndexObject = ({
   monthInfo,
 }: TSetMonthIndexObjectParams) => {
   const { year, month } = monthInfo || getMonthInfo({ weekTimePoints, currentWeekIndex });
-  const monthNumber = String(month + 1).padStart(2, '0');
+  const monthNumber = formatMonthNumber(month);
   const yearNumber = String(year);
 
   const monthObject: TMonthsIndxsValue = {

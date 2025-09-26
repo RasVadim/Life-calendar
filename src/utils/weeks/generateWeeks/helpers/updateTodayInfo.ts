@@ -5,7 +5,7 @@ import { IWeek } from '@/store/clientDB';
 import { ESide } from '@/types';
 
 import { IGenerateWeeksResult } from '../types';
-import { getIsDateEarly } from './getIsDateEarly';
+import { isDateBefore } from './compareDatesWithoutYear';
 
 /**
  * Updates today's information when processing the present week
@@ -41,6 +41,6 @@ export const updateTodayInfo = (
   // Calculate week half for secondLifeYear scenarios
   if (week.secondLifeYear) {
     const todayDate = new Date(todayDateString);
-    today.todayWeekHalf = getIsDateEarly(todayDate, birthDate) ? ESide.Left : ESide.Right;
+    today.todayWeekHalf = isDateBefore(todayDate, birthDate) ? ESide.Left : ESide.Right;
   }
 };

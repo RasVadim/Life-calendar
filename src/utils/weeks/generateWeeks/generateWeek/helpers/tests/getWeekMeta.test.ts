@@ -3,18 +3,18 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { IWeek } from '@/store/clientDB';
 import { EDayOfWeek, ESeason, EWeekType, TDay, TMedia, TMediaDatesMap } from '@/types';
 
-import { extractDateSegments } from '../extractDateSegments';
+import { getDateSegments } from '../../../helpers';
 import { generateWeekDays } from '../generateWeekDays';
 import { getWeekMeta } from '../getWeekMeta';
 import { setDefaultPreviewFlags } from '../setDefaultPreviewFlags';
 
 // Mock helper functions
 vi.mock('../generateWeekDays');
-vi.mock('../extractDateSegments');
+vi.mock('../../../helpers');
 vi.mock('../setDefaultPreviewFlags');
 
 const mockGenerateWeekDays = vi.mocked(generateWeekDays);
-const mockExtractDateSegments = vi.mocked(extractDateSegments);
+const mockGetDateSegments = vi.mocked(getDateSegments);
 const mockSetDefaultPreviewFlags = vi.mocked(setDefaultPreviewFlags);
 
 // Helper function to create mock week
@@ -89,7 +89,7 @@ describe('getWeekMeta', () => {
       };
 
       mockGenerateWeekDays.mockReturnValue(mockDays);
-      mockExtractDateSegments.mockReturnValue(mockDateSegments);
+      mockGetDateSegments.mockReturnValue(mockDateSegments);
       mockSetDefaultPreviewFlags.mockReturnValue('20240304');
 
       getWeekMeta({
@@ -110,7 +110,7 @@ describe('getWeekMeta', () => {
       );
 
       // Verify extractDateSegments call
-      expect(mockExtractDateSegments).toHaveBeenCalledWith(weekStart, weekEnd);
+      expect(mockGetDateSegments).toHaveBeenCalledWith(weekStart, weekEnd);
 
       // Verify setDefaultPreviewFlags call
       expect(mockSetDefaultPreviewFlags).toHaveBeenCalledWith({
@@ -140,7 +140,7 @@ describe('getWeekMeta', () => {
       const mockMediaKey = '20240304';
 
       mockGenerateWeekDays.mockReturnValue(mockDays);
-      mockExtractDateSegments.mockReturnValue(mockDateSegments);
+      mockGetDateSegments.mockReturnValue(mockDateSegments);
       mockSetDefaultPreviewFlags.mockReturnValue(mockMediaKey);
 
       const result = getWeekMeta({
@@ -167,7 +167,7 @@ describe('getWeekMeta', () => {
       const weekEnd = new Date(2024, 2, 3); // March 3, 2024
 
       mockGenerateWeekDays.mockReturnValue([createMockDay(weekStart, EDayOfWeek.Monday)]);
-      mockExtractDateSegments.mockReturnValue({
+      mockGetDateSegments.mockReturnValue({
         year: '2024',
         secondYear: null,
         month: '02',
@@ -194,7 +194,7 @@ describe('getWeekMeta', () => {
       const weekEnd = new Date(2023, 2, 4); // March 4, 2023
 
       mockGenerateWeekDays.mockReturnValue([createMockDay(weekStart, EDayOfWeek.Sunday)]);
-      mockExtractDateSegments.mockReturnValue({
+      mockGetDateSegments.mockReturnValue({
         year: '2023',
         secondYear: null,
         month: '02',
@@ -224,7 +224,7 @@ describe('getWeekMeta', () => {
 
       const mondayDay = createMockDay(weekStart, EDayOfWeek.Monday);
       mockGenerateWeekDays.mockReturnValue([mondayDay]);
-      mockExtractDateSegments.mockReturnValue({
+      mockGetDateSegments.mockReturnValue({
         year: '2024',
         secondYear: null,
         month: '03',
@@ -259,7 +259,7 @@ describe('getWeekMeta', () => {
 
       const tuesdayDay = createMockDay(weekStart, EDayOfWeek.Tuesday);
       mockGenerateWeekDays.mockReturnValue([tuesdayDay]);
-      mockExtractDateSegments.mockReturnValue({
+      mockGetDateSegments.mockReturnValue({
         year: '2024',
         secondYear: null,
         month: '03',
@@ -295,7 +295,7 @@ describe('getWeekMeta', () => {
       const weekEnd = new Date(2024, 2, 10);
 
       mockGenerateWeekDays.mockReturnValue([createMockDay(weekStart, EDayOfWeek.Monday)]);
-      mockExtractDateSegments.mockReturnValue({
+      mockGetDateSegments.mockReturnValue({
         year: '2024',
         secondYear: null,
         month: '03',
@@ -332,7 +332,7 @@ describe('getWeekMeta', () => {
       const previousWeek = createMockWeek('02', ESeason.Winter);
 
       mockGenerateWeekDays.mockReturnValue([createMockDay(weekStart, EDayOfWeek.Monday)]);
-      mockExtractDateSegments.mockReturnValue({
+      mockGetDateSegments.mockReturnValue({
         year: '2024',
         secondYear: null,
         month: '02',
@@ -370,7 +370,7 @@ describe('getWeekMeta', () => {
 
       const singleDay = createMockDay(weekStart, EDayOfWeek.Monday);
       mockGenerateWeekDays.mockReturnValue([singleDay]);
-      mockExtractDateSegments.mockReturnValue({
+      mockGetDateSegments.mockReturnValue({
         year: '2024',
         secondYear: null,
         month: '03',
@@ -401,7 +401,7 @@ describe('getWeekMeta', () => {
       const initialMedia = { '20240301': { isMonthPreview: true } };
 
       mockGenerateWeekDays.mockReturnValue([createMockDay(weekStart, EDayOfWeek.Monday)]);
-      mockExtractDateSegments.mockReturnValue({
+      mockGetDateSegments.mockReturnValue({
         year: '2024',
         secondYear: null,
         month: '03',
