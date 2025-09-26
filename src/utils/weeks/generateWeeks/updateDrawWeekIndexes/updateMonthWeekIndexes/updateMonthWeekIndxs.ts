@@ -7,7 +7,7 @@ import {
   setMonthIndexObject,
   getMonthInfo,
 } from './helpers';
-import { TWeekMeta } from '../../../types';
+import { TWeekMeta } from '../../types';
 
 type TUpdateMonthWeekIndexesParams = {
   drawWeekIndexes: TDrawWeekIndexes;

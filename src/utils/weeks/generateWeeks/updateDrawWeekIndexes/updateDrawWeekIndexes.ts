@@ -1,8 +1,8 @@
 import { IWeek } from '@/store/clientDB';
 import { TDrawWeekIndexes, THolidayName } from '@/types';
 
+import { updateHolidaysIndxs, updateMonthWeekIndexes, updateYearWeekIndexes } from './';
 import { TWeekMeta } from '../types';
-import { updateHolidaysIndxs, updateMonthWeekIndexes, updateYearWeekIndexes } from './helpers';
 
 type TUpdateDrawWeekIndexesParams = {
   drawWeekIndexes: TDrawWeekIndexes;

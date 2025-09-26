@@ -5,7 +5,6 @@ import { IWeek } from '@/store/clientDB';
 import { TDrawWeekIndexes, TMedia, TMediaDatesMap } from '@/types';
 
 import { getWeekHolidays, getLifeYear } from '../helpers';
-import { updateDrawWeekIndexes } from '../updateDrawWeekIndexes';
 import {
   getWeekMeta,
   getWeekNumber,
@@ -13,6 +12,7 @@ import {
   getZodiac,
   calculateCurrentLifeMonth,
 } from './helpers';
+import { updateDrawWeekIndexes } from '../updateDrawWeekIndexes';
 
 type TGenerateWeekParams = {
   weekTimePoints: { weekStart: Date; weekEnd: Date }[];

@@ -11,7 +11,7 @@ import {
 } from '@/types';
 
 import { updateMonthWeekIndexes } from './updateMonthWeekIndxs';
-import { TWeekMeta } from '../../../types';
+import { TWeekMeta } from '../../types';
 
 describe('updateMonthWeekIndexes', () => {
   let mockDrawWeekIndexes: TDrawWeekIndexes;

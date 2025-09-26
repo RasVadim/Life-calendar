@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeAll } from 'vitest';
+import { describe, it, expect, beforeAll, vi } from 'vitest';
 
 import { generateWeeks } from './generateWeeks';
 import { realGenerateWeeksFirst10Fixture } from '../../../../fixtures/generateWeeks-first10-fixture';
@@ -10,6 +10,10 @@ describe('generateWeeks - Real Fixture Validation Tests', () => {
   let shortResult: ReturnType<typeof generateWeeks>;
 
   beforeAll(() => {
+    // Mock Date to return fixed date from fixture
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2025-09-25')); // Thursday from fixture
+
     // Generate main result once for all tests
     mainResult = generateWeeks(
       realGenerateWeeksMainFixture.birthDate,
@@ -101,5 +105,10 @@ describe('generateWeeks - Real Fixture Validation Tests', () => {
       const deathYear = parseInt(mainResult.weeks[mainResult.weeks.length - 1].year);
       expect(deathYear - birthYear).toBeLessThanOrEqual(2); // Should be around 2 years
     });
+  });
+
+  afterAll(() => {
+    // Restore real timers
+    vi.useRealTimers();
   });
 });

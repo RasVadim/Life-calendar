@@ -1,8 +1,8 @@
 import { HOLIDAY_NAMES } from '@/constants';
 import { EYearsWeekIndxsValues, TDrawWeekIndexes } from '@/types';
 
-import { getLifeYear } from '../../helpers';
-import { TWeekMeta } from '../../types';
+import { getLifeYear } from '../helpers';
+import { TWeekMeta } from '../types';
 
 const FULL_WEEK_DAYS = 7;
 const TUESDAY_DAY_INDEX = 1;

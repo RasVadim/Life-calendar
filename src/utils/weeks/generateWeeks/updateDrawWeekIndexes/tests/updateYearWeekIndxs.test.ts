@@ -3,7 +3,7 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import { HOLIDAY_NAMES } from '@/constants';
 import { EYearsWeekIndxsValues, TDrawWeekIndexes, EDayOfWeek } from '@/types';
 
-import { TWeekMeta } from '../../../types';
+import { TWeekMeta } from '../../types';
 import { updateYearWeekIndexes } from '../updateYearWeekIndxs';
 
 describe('updateYearWeekIndexes', () => {
