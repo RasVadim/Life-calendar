@@ -9,3 +9,7 @@ export { renderMonthList } from './renderMonthLIst';
 export { renderWeek } from './renderWeek';
 
 export { renderIcon } from './renderIcon';
+
+export { renderLabel } from './renderLabel';
+
+export { renderRowThreadLine } from './renderRowThreadLine';
