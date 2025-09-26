@@ -7,7 +7,7 @@ const DEFAULT_TODAY_DATA = {
   todayWeekIndex: 0,
   todayDayId: '',
   todayDayIndex: 0,
-  todayWeekHalf: null,
+  todayWeekYearHalf: null,
 };
 
 /**
@@ -19,7 +19,7 @@ export const updateDBTodayWeek = async (newData: {
   todayWeekIndex?: number;
   todayDayId?: string;
   todayDayIndex?: number;
-  todayWeekHalf?: ESide | null;
+  todayWeekYearHalf?: ESide | null;
 }) => {
   let prev = await lifeCalendarDB.meta.get('main');
 

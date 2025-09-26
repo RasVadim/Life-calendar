@@ -44,9 +44,12 @@ vi.mock('./helpers', () => ({
     media: [],
   })),
   getWeekNumber: vi.fn((index: number) => index + 1),
-  getWeekType: vi.fn(() => 'present'),
   getZodiac: vi.fn(() => 'dragon'),
   calculateCurrentLifeMonth: vi.fn(() => '3'),
+}));
+
+vi.mock('@/utils', () => ({
+  getWeekType: vi.fn(() => 'present'),
 }));
 
 describe('generateWeek', () => {

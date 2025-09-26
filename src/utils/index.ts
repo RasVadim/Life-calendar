@@ -25,5 +25,8 @@ export { getHoursWord } from './getRightWordEnd/getHoursWord';
 export { getRestDaysSentence } from './getRightWordEnd/getRestDaysSentence';
 
 // weeks
-export { generateWeeks, type IGenerateWeeksResult } from './weeks/generateWeeks/generateWeeks';
-export { actualizeWeeks } from './weeks/actualizeWeeks';
+export { generateWeeks } from './weeks/generateWeeks/generateWeeks';
+export { actualizeWeeks } from './weeks/actualizeWeeks/actualizeWeeks';
+export { getWeekType } from './weeks/getWeekType';
+export { compareDatesWithoutYear } from './weeks/compareDatesWithoutYear';
+export { calculateTodayDayInfo } from './weeks/calculateTodayDayInfo';

@@ -3,9 +3,10 @@ import { getYear, format } from 'date-fns';
 import { ISO_DATE_FORMAT, COMPACT_DATE_FORMAT } from '@/constants';
 import { IWeek } from '@/store/clientDB';
 import { TDrawWeekIndexes, TMedia, TMediaDatesMap } from '@/types';
+import { getWeekType } from '@/utils';
 
 import { getWeekHolidays, getLifeYear, formatWeekNumber } from '../helpers';
-import { getWeekMeta, getWeekType, getZodiac, calculateCurrentLifeMonth } from './helpers';
+import { getWeekMeta, getZodiac, calculateCurrentLifeMonth } from './helpers';
 import { updateDrawWeekIndexes } from '../updateDrawWeekIndexes';
 
 type TGenerateWeekParams = {

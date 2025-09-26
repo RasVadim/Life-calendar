@@ -14,6 +14,6 @@ export const useDBTodayWeek = (): TTodayData => {
     todayWeekIndex: meta?.todayWeekIndex || 0,
     todayDayId: meta?.todayDayId || '',
     todayDayIndex: meta?.todayDayIndex || 0,
-    todayWeekHalf: meta?.todayWeekHalf || null,
+    todayWeekYearHalf: meta?.todayWeekYearHalf || null,
   };
 };

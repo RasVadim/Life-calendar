@@ -27,7 +27,7 @@ export const generateWeeks = (
   const today = {
     todayWeekId: '',
     todayWeekIndex: 0,
-    todayWeekHalf: null as ESide | null,
+    todayWeekYearHalf: null as ESide | null,
     todayDayId: '',
     todayDayIndex: 0,
   };

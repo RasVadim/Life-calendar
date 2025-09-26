@@ -81,5 +81,5 @@ export enum ELifeMode {
 
 export type TTodayData = Pick<
   IMeta,
-  'todayWeekId' | 'todayWeekIndex' | 'todayDayId' | 'todayDayIndex' | 'todayWeekHalf'
+  'todayWeekId' | 'todayWeekIndex' | 'todayDayId' | 'todayDayIndex' | 'todayWeekYearHalf'
 >;

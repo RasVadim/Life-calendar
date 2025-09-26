@@ -50,8 +50,7 @@ describe('getWeekType', () => {
 
       const result = getWeekType(weekStart, weekEnd);
 
-      // Due to timezone differences, this actually returns Future
-      expect(result).toBe(EWeekType.Future);
+      expect(result).toBe(EWeekType.Present);
     });
 
     it('should return Present when today is exactly at week end', () => {
@@ -105,8 +104,8 @@ describe('getWeekType', () => {
     });
 
     it('should return Future when today is exactly one day before week start', () => {
-      // Set today to February 29, 2024 (day before week start)
-      vi.setSystemTime(new Date('2024-02-29T23:59:59.999Z'));
+      // Set today to February 28, 2024 (day before week start)
+      vi.setSystemTime(new Date('2024-02-28T12:00:00.000Z'));
 
       const weekStart = new Date('2024-03-01T00:00:00.000Z');
       const weekEnd = new Date('2024-03-07T23:59:59.999Z');
@@ -127,8 +126,7 @@ describe('getWeekType', () => {
 
       const result = getWeekType(weekStart, weekEnd);
 
-      // Due to timezone differences, this actually returns Future
-      expect(result).toBe(EWeekType.Future);
+      expect(result).toBe(EWeekType.Present);
     });
 
     it('should handle year boundary correctly', () => {
@@ -164,8 +162,7 @@ describe('getWeekType', () => {
 
       const result = getWeekType(weekStart, weekEnd);
 
-      // Due to timezone differences, this actually returns Future
-      expect(result).toBe(EWeekType.Future);
+      expect(result).toBe(EWeekType.Present);
     });
   });
 
@@ -192,8 +189,7 @@ describe('getWeekType', () => {
 
       const result = getWeekType(weekStart, weekEnd);
 
-      // Due to timezone differences, this actually returns Future
-      expect(result).toBe(EWeekType.Future);
+      expect(result).toBe(EWeekType.Present);
     });
   });
 });

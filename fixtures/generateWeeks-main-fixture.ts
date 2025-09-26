@@ -9,7 +9,7 @@ export const realGenerateWeeksMainFixture = {
   today: {
     todayWeekId: '20250922_0012',
     todayWeekIndex: 11,
-    todayWeekHalf: null,
+    todayWeekYearHalf: null,
     todayDayId: 'w12_d4',
     todayDayIndex: 3,
   },

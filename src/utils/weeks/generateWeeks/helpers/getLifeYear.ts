@@ -1,4 +1,4 @@
-import { isDateBefore } from './compareDatesWithoutYear';
+import { isDateBefore } from '../../compareDatesWithoutYear';
 
 /**
  * Calculates the life year based on the birth date and the date

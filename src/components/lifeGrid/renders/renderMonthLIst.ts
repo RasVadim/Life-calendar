@@ -15,8 +15,8 @@ import { renderRowThreadLine } from './renderRowThreadLine';
 import { calculateMonthWeekXPosition, getMonthDynamicWeekWidth } from './utils';
 
 // Constants for months mode
-const ROW_GAP = 72; // Gap between month rows (reduced from 30)
-const WEEK_GAP = 6; // Gap between weeks in the same row (increased from 12)
+const ROW_GAP = 72; // Gap between month rows
+const WEEK_GAP = 6; // Gap between weeks in the same row
 const MONTHS_MODE_WEEK_COUNT = 50; // Number of weeks to show in months mode
 
 const THREAD_MARGIN_TOP = 22; // Increased margin to position threads lower

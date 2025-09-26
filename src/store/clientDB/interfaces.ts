@@ -75,7 +75,7 @@ export interface IMeta {
   id: string;
   todayWeekId: string;
   todayWeekIndex: number;
-  todayWeekHalf: ESide | null;
+  todayWeekYearHalf: ESide | null;
   todayDayId: string;
   todayDayIndex: number;
 }

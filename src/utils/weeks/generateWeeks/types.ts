@@ -8,7 +8,7 @@ export interface IGenerateWeeksResult {
     todayWeekIndex: number;
     todayDayId: string;
     todayDayIndex: number;
-    todayWeekHalf: ESide | null;
+    todayWeekYearHalf: ESide | null;
   };
   drawWeekIndexes: TDrawWeekIndexes;
   media: TMediaDatesMap<TMedia>;

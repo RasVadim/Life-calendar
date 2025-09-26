@@ -100,9 +100,10 @@ export const renderYearList = (state: TLifeGridState) => {
           let rightWeekType: EWeekType | null = null;
 
           if (i === today.todayWeekIndex) {
-            leftWeekType = today.todayWeekHalf === ESide.Left ? EWeekType.Present : EWeekType.Past;
+            leftWeekType =
+              today.todayWeekYearHalf === ESide.Left ? EWeekType.Present : EWeekType.Past;
             rightWeekType =
-              today.todayWeekHalf === ESide.Right ? EWeekType.Present : EWeekType.Future;
+              today.todayWeekYearHalf === ESide.Right ? EWeekType.Present : EWeekType.Future;
           }
 
           // Create container for two weeks that will be positioned separately

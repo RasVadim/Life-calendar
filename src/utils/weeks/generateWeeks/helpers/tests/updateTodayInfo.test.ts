@@ -63,7 +63,7 @@ describe('updateTodayInfo', () => {
       const todayInfo = {
         todayWeekId: '',
         todayWeekIndex: 0,
-        todayWeekHalf: null,
+        todayWeekYearHalf: null,
         todayDayId: '',
         todayDayIndex: 0,
       };
@@ -90,7 +90,7 @@ describe('updateTodayInfo', () => {
       const todayInfo = {
         todayWeekId: '',
         todayWeekIndex: 0,
-        todayWeekHalf: null,
+        todayWeekYearHalf: null,
         todayDayId: '',
         todayDayIndex: 0,
       };
@@ -119,7 +119,7 @@ describe('updateTodayInfo', () => {
       const todayInfo = {
         todayWeekId: '',
         todayWeekIndex: 0,
-        todayWeekHalf: null,
+        todayWeekYearHalf: null,
         todayDayId: '',
         todayDayIndex: 0,
       };

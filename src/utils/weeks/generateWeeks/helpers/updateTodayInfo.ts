@@ -1,11 +1,7 @@
-import { format } from 'date-fns';
-
-import { ISO_DATE_FORMAT } from '@/constants';
 import { IWeek } from '@/store/clientDB';
-import { ESide } from '@/types';
+import { calculateTodayDayInfo } from '@/utils';
 
 import { IGenerateWeeksResult } from '../types';
-import { isDateBefore } from './compareDatesWithoutYear';
 
 /**
  * Updates today's information when processing the present week
@@ -23,24 +19,10 @@ export const updateTodayInfo = (
   today.todayWeekId = week.id;
   today.todayWeekIndex = weekIndex;
 
-  // Find today's day
-  const todayDateString = format(new Date(), ISO_DATE_FORMAT);
-  const todayDayIndex = week.days.findIndex((day) => day.date === todayDateString);
+  // Calculate today's day information using shared logic
+  const todayDayInfo = calculateTodayDayInfo(week, new Date(), birthDate);
 
-  if (todayDayIndex === -1) {
-    // Today is not in this week
-    today.todayDayId = '';
-    today.todayDayIndex = 0;
-    return;
-  }
-
-  // Today is in this week
-  today.todayDayId = week.days[todayDayIndex].id;
-  today.todayDayIndex = todayDayIndex;
-
-  // Calculate week half for secondLifeYear scenarios
-  if (week.secondLifeYear) {
-    const todayDate = new Date(todayDateString);
-    today.todayWeekHalf = isDateBefore(todayDate, birthDate) ? ESide.Left : ESide.Right;
-  }
+  today.todayDayId = todayDayInfo.todayDayId;
+  today.todayDayIndex = todayDayInfo.todayDayIndex;
+  today.todayWeekYearHalf = todayDayInfo.todayWeekYearHalf;
 };
