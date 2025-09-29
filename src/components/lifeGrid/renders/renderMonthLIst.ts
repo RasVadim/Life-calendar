@@ -155,6 +155,8 @@ export const renderMonthList = (state: TLifeGridState) => {
       weeksPerRow,
       fixedWeekWidth: weekWidth,
       largeWeekWidth,
+      monthOffset: drawWeekIndexes.monthOffset,
+      isFirstRow: currentRow === 1,
     });
 
     // Update accumulated offset for next weeks in the same row
@@ -179,8 +181,13 @@ export const renderMonthList = (state: TLifeGridState) => {
       cellHeight,
     });
 
-    // Render thread line for the first week of the row
-    if (currentCol === 0) {
+    // Render thread line for the last week of the row
+    if (
+      currentCol === weeksPerRow - 1 ||
+      (currentRow === 1 &&
+        drawWeekIndexes.monthOffset > 0 &&
+        currentCol === weeksPerRow - drawWeekIndexes.monthOffset - 1)
+    ) {
       // Calculate thread line position and colors
       const threadY = baseY + weekHeight + THREAD_MARGIN_TOP;
       const monthNumber = parseInt(monthData?.month || '1', 10);
@@ -190,25 +197,13 @@ export const renderMonthList = (state: TLifeGridState) => {
       // Calculate next month color (opposite of current)
       const nextThreadColor = isEvenMonth ? theme.primary : theme.primary2;
 
-      // Calculate total accumulated offset for all weeks in the row
-      // We need to simulate the accumulated offset that will be at the last week
-      let totalAccumulatedOffset = 0;
+      // Calculate position of the center of this week (which is the last week in the row)
+      // If it's a preview week, add a small offset to reduce the left shift
+      let lastWeekCenterX = x + weekWidth / 2;
       if (isMonthPreview) {
-        totalAccumulatedOffset += largeWeekWidth - weekWidth; // First week offset
+        // Add half of the extra width to reduce the left shift
+        lastWeekCenterX += (largeWeekWidth - weekWidth) / 2;
       }
-
-      // Calculate position of the middle of the last week in the row
-      const lastWeekCol = weeksPerRow - 1;
-      const lastWeekX = calculateMonthWeekXPosition({
-        currentCol: lastWeekCol,
-        weekGap: WEEK_GAP,
-        containerWidth: width,
-        accumulatedOffsetX: totalAccumulatedOffset,
-        weeksPerRow,
-        fixedWeekWidth: weekWidth,
-        largeWeekWidth,
-      });
-      const lastWeekCenterX = lastWeekX + weekWidth / 2;
 
       // Render thread from left edge to middle of last week
       renderRowThreadLine(

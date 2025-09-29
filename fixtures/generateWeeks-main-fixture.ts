@@ -22,7 +22,7 @@ export const realGenerateWeeksMainFixture = {
     seasonsIndxs: {},
     monthsIndxs: {
       '0': {
-        type: 'halfBorder',
+        type: 'full',
         month: '07',
         year: '2025',
         media: '20250707',
@@ -297,7 +297,7 @@ export const realGenerateWeeksMainFixture = {
         year: '2027',
       },
       '108': {
-        type: 'first5',
+        type: 'full',
         month: '08',
         year: '2027',
         media: '20270802',

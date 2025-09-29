@@ -126,7 +126,7 @@ describe('updateMonthWeekIndexes', () => {
   });
 
   describe('First week of life', () => {
-    it('should set HalfBorder for first week of life (currentWeekIndex === 0)', () => {
+    it('should set Full for first week of life (currentWeekIndex === 0)', () => {
       updateMonthWeekIndexes({
         drawWeekIndexes: mockDrawWeekIndexes,
         currentWeekIndex: 0,
@@ -136,7 +136,7 @@ describe('updateMonthWeekIndexes', () => {
       });
 
       expect(mockDrawWeekIndexes.monthsIndxs![0]).toEqual({
-        type: EMonthsEndsIndxsValues.HalfBorder,
+        type: EMonthsEndsIndxsValues.Full,
         month: '01',
         year: '2024',
       });
@@ -167,11 +167,11 @@ describe('updateMonthWeekIndexes', () => {
   });
 
   describe('Border end week (month ends on Sunday)', () => {
-    it('should set BorderEnd when month ends on Sunday', () => {
-      // Week ending on January 31st (Sunday) - NOT first week
+    it('should set Half when month does not end on Sunday', () => {
+      // Week ending on January 31st (Wednesday) - NOT first week
       const weekTimePoints = [
         { weekStart: new Date('2024-01-22'), weekEnd: new Date('2024-01-28') }, // Previous week
-        { weekStart: new Date('2024-01-29'), weekEnd: new Date('2024-01-31') }, // Current week ending on Sunday
+        { weekStart: new Date('2024-01-29'), weekEnd: new Date('2024-01-31') }, // Current week ending on Wednesday
       ];
 
       updateMonthWeekIndexes({
@@ -183,13 +183,13 @@ describe('updateMonthWeekIndexes', () => {
       });
 
       expect(mockDrawWeekIndexes.monthsIndxs![1]).toEqual({
-        type: EMonthsWeekIndxsValues.BorderEnd,
+        type: EMonthsEndsIndxsValues.Half,
         month: '01',
         year: '2024',
       });
     });
 
-    it('should not set BorderEnd when month does not end on Sunday', () => {
+    it('should set Half when month does not end on Sunday', () => {
       // Week ending on January 30th (Saturday) - NOT first week
       const weekTimePoints = [
         { weekStart: new Date('2024-01-22'), weekEnd: new Date('2024-01-28') }, // Previous week
@@ -204,7 +204,11 @@ describe('updateMonthWeekIndexes', () => {
         previousWeek: null,
       });
 
-      expect(mockDrawWeekIndexes.monthsIndxs![1]).toBeUndefined();
+      expect(mockDrawWeekIndexes.monthsIndxs![1]).toEqual({
+        type: EMonthsEndsIndxsValues.Half,
+        month: '01',
+        year: '2024',
+      });
     });
   });
 
@@ -247,9 +251,9 @@ describe('updateMonthWeekIndexes', () => {
         previousWeek,
       });
 
-      // Should set FirstFull5 for February (29 days in leap year)
+      // Should set HalfBorderEnd for February (29 days in leap year)
       expect(mockDrawWeekIndexes.monthsIndxs![1]).toEqual({
-        type: EMonthsWeekIndxsValues.FirstFull5,
+        type: EMonthsEndsIndxsValues.HalfBorderEnd,
         month: '02',
         year: '2024',
       });
@@ -293,9 +297,9 @@ describe('updateMonthWeekIndexes', () => {
         previousWeek,
       });
 
-      // Should set FirstFull5 for February (29 days in leap year) - border on week half takes priority
+      // Should set HalfBorderEnd for February (29 days in leap year) - border on week half takes priority
       expect(mockDrawWeekIndexes.monthsIndxs![1]).toEqual({
-        type: EMonthsWeekIndxsValues.FirstFull5,
+        type: EMonthsEndsIndxsValues.HalfBorderEnd,
         month: '02',
         year: '2024',
       });
@@ -339,9 +343,9 @@ describe('updateMonthWeekIndexes', () => {
         previousWeek,
       });
 
-      // Should prioritize border on week half (FirstFull5)
+      // Should prioritize border on week half (HalfBorderEnd)
       expect(mockDrawWeekIndexes.monthsIndxs![1]).toEqual({
-        type: EMonthsWeekIndxsValues.FirstFull5,
+        type: EMonthsEndsIndxsValues.HalfBorderEnd,
         month: '02',
         year: '2024',
       });
@@ -388,7 +392,7 @@ describe('updateMonthWeekIndexes', () => {
       });
 
       expect(mockDrawWeekIndexes.monthsIndxs![1]).toEqual({
-        type: EMonthsWeekIndxsValues.FirstFull4,
+        type: EMonthsEndsIndxsValues.HalfBorderEnd,
         month: '02',
         year: '2023',
       });
@@ -433,7 +437,7 @@ describe('updateMonthWeekIndexes', () => {
       });
 
       expect(mockDrawWeekIndexes.monthsIndxs![1]).toEqual({
-        type: EMonthsWeekIndxsValues.FirstFull5,
+        type: EMonthsEndsIndxsValues.FullBorderEnd,
         month: '04',
         year: '2024',
       });
@@ -478,7 +482,7 @@ describe('updateMonthWeekIndexes', () => {
       });
 
       expect(mockDrawWeekIndexes.monthsIndxs![1]).toEqual({
-        type: EMonthsWeekIndxsValues.FirstFull5,
+        type: EMonthsEndsIndxsValues.HalfBorderEnd,
         month: '02',
         year: '2024',
       });
@@ -552,7 +556,7 @@ describe('updateMonthWeekIndexes', () => {
       });
 
       expect(mockDrawWeekIndexes.monthsIndxs![0]).toEqual({
-        type: EMonthsEndsIndxsValues.HalfBorder,
+        type: EMonthsEndsIndxsValues.Full,
         month: '01',
         year: '2024',
         media: 'test-media-url',
@@ -569,7 +573,7 @@ describe('updateMonthWeekIndexes', () => {
       });
 
       expect(mockDrawWeekIndexes.monthsIndxs![0]).toEqual({
-        type: EMonthsEndsIndxsValues.HalfBorder,
+        type: EMonthsEndsIndxsValues.Full,
         month: '01',
         year: '2024',
       });
@@ -592,9 +596,9 @@ describe('updateMonthWeekIndexes', () => {
         previousWeek: null,
       });
 
-      // Should be HalfBorder, not Border
+      // Should be Full, not Border
       expect(mockDrawWeekIndexes.monthsIndxs![0]).toEqual({
-        type: EMonthsEndsIndxsValues.HalfBorder,
+        type: EMonthsEndsIndxsValues.Full,
         month: '01',
         year: '2024',
       });

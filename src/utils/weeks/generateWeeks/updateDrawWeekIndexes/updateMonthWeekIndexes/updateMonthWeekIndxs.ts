@@ -1,7 +1,14 @@
 import { IWeek } from '@/store/clientDB';
 import { EMonthsEndsIndxsValues, EMonthsWeekIndxsValues, TDrawWeekIndexes } from '@/types';
 
-import { setMonthIndexObject, getMonthInfo, getMonthWeekType } from './helpers';
+import {
+  setMonthIndexObject,
+  getMonthInfo,
+  getMonthWeekType,
+  calculateMonthExtremeWeekType,
+  calculateMonthOffset,
+  EWeekPosition,
+} from './helpers';
 import { TWeekMeta } from '../../types';
 import { EMonthWeekTypeCalculation } from './helpers/getMonthWeekType';
 
@@ -44,7 +51,22 @@ export const updateMonthWeekIndexes = ({
 
   // Special case: first week of life
   if (currentWeekIndex === 0) {
-    setMonthType(EMonthsEndsIndxsValues.HalfBorder);
+    const firstWeekType = calculateMonthExtremeWeekType(weekTimePoints, EWeekPosition.First);
+    setMonthType(firstWeekType);
+
+    // Calculate and set month offset for proper positioning in month row
+    const monthOffset = calculateMonthOffset({
+      firstDayDate: meta.days[0].date,
+    });
+    drawWeekIndexes.monthOffset = monthOffset;
+
+    return;
+  }
+
+  // Special case: last week of life
+  if (currentWeekIndex === weekTimePoints.length - 1) {
+    const lastWeekType = calculateMonthExtremeWeekType(weekTimePoints, EWeekPosition.Last);
+    setMonthType(lastWeekType);
     return;
   }
 

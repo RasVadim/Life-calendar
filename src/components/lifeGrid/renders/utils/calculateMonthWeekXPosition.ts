@@ -6,6 +6,8 @@ type TCalculateWeekXPositionParams = {
   weeksPerRow: number;
   fixedWeekWidth: number;
   largeWeekWidth: number;
+  monthOffset?: number; // Offset for first month (0-4)
+  isFirstRow?: boolean; // Whether this is the first row
 };
 
 /**
@@ -27,6 +29,8 @@ export const calculateMonthWeekXPosition = ({
   weeksPerRow,
   fixedWeekWidth,
   largeWeekWidth,
+  monthOffset = 0,
+  isFirstRow = false,
 }: TCalculateWeekXPositionParams): number => {
   // Calculate actual row width with fixed week sizes
   const normalWeeksCount = weeksPerRow - 1;
@@ -46,7 +50,12 @@ export const calculateMonthWeekXPosition = ({
   }
 
   // Calculate base position for current column using fixed width
-  const baseX = rowStartX + currentCol * (fixedWeekWidth + weekGap);
+  let baseX = rowStartX + currentCol * (fixedWeekWidth + weekGap);
+
+  // Add month offset for first row only
+  if (isFirstRow && monthOffset > 0) {
+    baseX += monthOffset * (fixedWeekWidth + weekGap);
+  }
 
   // Add accumulated offset from large weeks that came before this position
   return baseX + accumulatedOffsetX;
