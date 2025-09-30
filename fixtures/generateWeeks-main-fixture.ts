@@ -315,7 +315,7 @@ export const realGenerateWeeksMainFixture = {
       '104': 'birthday',
     },
     seasonOffset: 0,
-    monthOffset: 0,
+    monthOffset: 1,
     yearRows: 2,
     lastWeekIndex: 108,
   },

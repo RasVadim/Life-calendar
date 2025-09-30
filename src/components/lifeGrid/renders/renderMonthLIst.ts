@@ -1,6 +1,12 @@
 import { Container } from 'pixi.js';
 
-import { EMonthsWeekIndxsValues, EWeekType, THolidayName, TMonthsIndxsValue } from '@/types';
+import {
+  EMonthsWeekIndxsValues,
+  EMonthsEndsIndxsValues,
+  EWeekType,
+  THolidayName,
+  TMonthsIndxsValue,
+} from '@/types';
 
 import { renderWeek } from './renderWeek';
 import {
@@ -12,11 +18,12 @@ import {
 import { TLifeGridState } from '../types';
 import { renderLabel } from './renderLabel';
 import { renderRowThreadLine } from './renderRowThreadLine';
+import { renderThreadLineStart } from './renderThreadLineStart';
 import { calculateMonthWeekXPosition, getMonthDynamicWeekWidth } from './utils';
 
 // Constants for months mode
 const ROW_GAP = 72; // Gap between month rows
-const WEEK_GAP = 6; // Gap between weeks in the same row
+export const WEEK_GAP = 6; // Gap between weeks in the same row
 const MONTHS_MODE_WEEK_COUNT = 50; // Number of weeks to show in months mode
 
 const THREAD_MARGIN_TOP = 22; // Increased margin to position threads lower
@@ -181,13 +188,22 @@ export const renderMonthList = (state: TLifeGridState) => {
       cellHeight,
     });
 
-    // Render thread line for the last week of the row
-    if (
+    // Check if this is the first week of life with EMonthsEndsIndxsValues type
+    const isFirstWeekOfLife = i === 0;
+    const isFirstWeekEndsType =
+      isFirstWeekOfLife &&
+      monthData &&
+      Object.values(EMonthsEndsIndxsValues).includes(monthData.type as EMonthsEndsIndxsValues);
+
+    // Render thread line for the last week of the row OR first week with special type
+    const shouldRenderThreadLine =
+      isFirstWeekEndsType ||
       currentCol === weeksPerRow - 1 ||
       (currentRow === 1 &&
         drawWeekIndexes.monthOffset > 0 &&
-        currentCol === weeksPerRow - drawWeekIndexes.monthOffset - 1)
-    ) {
+        currentCol === weeksPerRow - drawWeekIndexes.monthOffset - 1);
+
+    if (shouldRenderThreadLine) {
       // Calculate thread line position and colors
       const threadY = baseY + weekHeight + THREAD_MARGIN_TOP;
       const monthNumber = parseInt(monthData?.month || '1', 10);
@@ -205,16 +221,51 @@ export const renderMonthList = (state: TLifeGridState) => {
         lastWeekCenterX += (largeWeekWidth - weekWidth) / 2;
       }
 
-      // Render thread from left edge to middle of last week
-      renderRowThreadLine(
-        weekContainer,
-        0, // Start from left edge of screen
-        lastWeekCenterX,
-        threadY,
-        currentThreadColor,
-        nextThreadColor,
-        width,
-      );
+      if (isFirstWeekEndsType) {
+        renderThreadLineStart({
+          container: weekContainer,
+          weekX: x,
+          threadY,
+          currentColor: currentThreadColor,
+          nextColor: nextThreadColor,
+          containerWidth: width,
+          weekType: monthData.type as EMonthsEndsIndxsValues,
+          weekWidth,
+          largeWeekWidth,
+          isPreview: !!isMonthPreview,
+        });
+      } else {
+        // Render thread from left edge to middle of last week
+
+        const getStartX = () => {
+          if (currentRow !== 1) return 0;
+
+          if (isMonthPreview) {
+            return (
+              (drawWeekIndexes.monthOffset + 1) * weekWidth +
+              (drawWeekIndexes.monthOffset + 1) * WEEK_GAP
+            );
+          } else {
+            return (
+              drawWeekIndexes.monthOffset * weekWidth +
+              largeWeekWidth +
+              (drawWeekIndexes.monthOffset + 1) * WEEK_GAP
+            );
+          }
+        };
+
+        const startX = getStartX();
+
+        renderRowThreadLine({
+          container: weekContainer,
+          startX,
+          endX: lastWeekCenterX,
+          y: threadY,
+          currentColor: currentThreadColor,
+          nextColor: nextThreadColor,
+          containerWidth: width,
+        });
+      }
     }
   }
 };

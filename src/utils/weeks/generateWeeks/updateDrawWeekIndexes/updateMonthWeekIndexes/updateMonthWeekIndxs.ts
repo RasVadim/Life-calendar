@@ -56,7 +56,9 @@ export const updateMonthWeekIndexes = ({
 
     // Calculate and set month offset for proper positioning in month row
     const monthOffset = calculateMonthOffset({
-      firstDayDate: meta.days[0].date,
+      weekTimePoints,
+      currentWeekIndex,
+      meta,
     });
     drawWeekIndexes.monthOffset = monthOffset;
 
