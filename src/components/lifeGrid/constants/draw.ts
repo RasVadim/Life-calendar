@@ -31,3 +31,7 @@ export const BORDER_WIDTH_MAP = {
 };
 
 export const LARGE_MONTH_WEEK_SIZE_MULTIPLIER = 1.3; // Size multiplier for large weeks
+
+export const THREAD_CIRCLE_GAP = 4; // Gap between two circles
+
+export const WEEK_IN_MONTH_GAP = 6; // Gap between weeks in the same month row

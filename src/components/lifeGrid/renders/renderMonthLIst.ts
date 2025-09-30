@@ -14,7 +14,8 @@ import {
   LARGE_MONTH_WEEK_SIZE_MULTIPLIER,
   PADDING_DESKTOP,
   PADDING_TOP,
-} from '../constants/draw';
+  WEEK_IN_MONTH_GAP,
+} from '../constants';
 import { TLifeGridState } from '../types';
 import { renderLabel } from './renderLabel';
 import { renderRowThreadLine } from './renderRowThreadLine';
@@ -23,7 +24,6 @@ import { calculateMonthWeekXPosition, getMonthDynamicWeekWidth } from './utils';
 
 // Constants for months mode
 const ROW_GAP = 72; // Gap between month rows
-export const WEEK_GAP = 6; // Gap between weeks in the same row
 const MONTHS_MODE_WEEK_COUNT = 50; // Number of weeks to show in months mode
 
 const THREAD_MARGIN_TOP = 22; // Increased margin to position threads lower
@@ -45,7 +45,7 @@ export const renderMonthList = (state: TLifeGridState) => {
 
   // Calculate ONE fixed week size based on full 5-week row (with side margins)
   // This size will be used for ALL normal weeks regardless of row configuration
-  const weekWidth = getMonthDynamicWeekWidth(5, width, WEEK_GAP);
+  const weekWidth = getMonthDynamicWeekWidth(5, width, WEEK_IN_MONTH_GAP);
   const weekHeight = weekWidth; // Square weeks
   const largeWeekWidth = weekWidth * LARGE_MONTH_WEEK_SIZE_MULTIPLIER;
   const largeWeekHeight = largeWeekWidth;
@@ -134,7 +134,7 @@ export const renderMonthList = (state: TLifeGridState) => {
           container: weekContainer,
           month: monthData.month,
           year: monthData.year,
-          x: WEEK_GAP,
+          x: WEEK_IN_MONTH_GAP,
           y: rowY,
           theme,
         });
@@ -156,7 +156,7 @@ export const renderMonthList = (state: TLifeGridState) => {
     // Calculate position using flex-like behavior
     const x = calculateMonthWeekXPosition({
       currentCol,
-      weekGap: WEEK_GAP,
+      weekGap: WEEK_IN_MONTH_GAP,
       containerWidth: width,
       accumulatedOffsetX,
       weeksPerRow,
@@ -243,13 +243,13 @@ export const renderMonthList = (state: TLifeGridState) => {
           if (isMonthPreview) {
             return (
               (drawWeekIndexes.monthOffset + 1) * weekWidth +
-              (drawWeekIndexes.monthOffset + 1) * WEEK_GAP
+              (drawWeekIndexes.monthOffset + 1) * WEEK_IN_MONTH_GAP
             );
           } else {
             return (
               drawWeekIndexes.monthOffset * weekWidth +
               largeWeekWidth +
-              (drawWeekIndexes.monthOffset + 1) * WEEK_GAP
+              (drawWeekIndexes.monthOffset + 1) * WEEK_IN_MONTH_GAP
             );
           }
         };

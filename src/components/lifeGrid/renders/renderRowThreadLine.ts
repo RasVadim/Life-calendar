@@ -1,11 +1,11 @@
 import { Container, Graphics } from 'pixi.js';
 
+import { THREAD_CIRCLE_GAP } from '../constants';
 import { getCachedColor } from '../utils';
 
 // Constants for thread lines
 const THREAD_HEIGHT = 1;
 const THREAD_CIRCLE_RADIUS = 2;
-export const THREAD_CIRCLE_GAP = 4; // Gap between two circles
 
 type TRenderRowThreadLineParams = {
   container: Container;

@@ -2,9 +2,8 @@ import { Container, Graphics } from 'pixi.js';
 
 import { EMonthsEndsIndxsValues } from '@/types';
 
+import { THREAD_CIRCLE_GAP, WEEK_IN_MONTH_GAP } from '../constants';
 import { getCachedColor } from '../utils';
-import { WEEK_GAP } from './renderMonthLIst';
-import { THREAD_CIRCLE_GAP } from './renderRowThreadLine';
 
 // Constants for thread lines
 const THREAD_HEIGHT = 1;
@@ -63,7 +62,7 @@ export const renderThreadLineStart = ({
     }
     case EMonthsEndsIndxsValues.Full: {
       // Half: circle in center + line to right edge of current week
-      const centerX = weekX + WEEK_GAP;
+      const centerX = weekX + WEEK_IN_MONTH_GAP;
 
       // Draw circle in center
       const circle = new Graphics();
@@ -85,7 +84,7 @@ export const renderThreadLineStart = ({
 
     case EMonthsEndsIndxsValues.FullBorder: {
       // Half: circle in center + line to right edge of current week
-      const centerX = weekX + WEEK_GAP;
+      const centerX = weekX + WEEK_IN_MONTH_GAP;
 
       // Draw circle in center
       const circle1 = new Graphics();
@@ -143,7 +142,7 @@ export const renderThreadLineStart = ({
 
     case EMonthsEndsIndxsValues.HalfBorder: {
       // Half: circle in center + line to right edge of current week
-      const centerX = weekX + actualWeekWidth / 4 + WEEK_GAP;
+      const centerX = weekX + actualWeekWidth / 4 + WEEK_IN_MONTH_GAP;
 
       // Draw circle in center
       const circle1 = new Graphics();
@@ -154,7 +153,7 @@ export const renderThreadLineStart = ({
 
       // Draw line from circle to right edge of current week
       const lineStartX = centerX + THREAD_CIRCLE_RADIUS;
-      const lineEndX = weekX + actualWeekWidth / 2 + WEEK_GAP;
+      const lineEndX = weekX + actualWeekWidth / 2 + WEEK_IN_MONTH_GAP;
       const thread = new Graphics();
       thread
         .rect(lineStartX, threadY, lineEndX - lineStartX - THREAD_CIRCLE_GAP, THREAD_HEIGHT)
@@ -201,7 +200,7 @@ export const renderThreadLineStart = ({
 
     case EMonthsEndsIndxsValues.FullBorderEnd: {
       // Half: circle in center + line to right edge of current week
-      const centerX = weekX + WEEK_GAP;
+      const centerX = weekX + WEEK_IN_MONTH_GAP;
 
       // Draw circle in center
       const circle1 = new Graphics();
@@ -215,14 +214,14 @@ export const renderThreadLineStart = ({
       const lineEndX = weekX + actualWeekWidth;
       const thread = new Graphics();
       thread
-        .rect(lineStartX, threadY, lineEndX - lineStartX - WEEK_GAP, THREAD_HEIGHT)
+        .rect(lineStartX, threadY, lineEndX - lineStartX - WEEK_IN_MONTH_GAP, THREAD_HEIGHT)
         .fill(currentColorNumber);
       container.addChild(thread);
 
       const circle2 = new Graphics();
       circle2
         .circle(
-          centerX + THREAD_CIRCLE_RADIUS * 2 + lineEndX - lineStartX - WEEK_GAP,
+          centerX + THREAD_CIRCLE_RADIUS * 2 + lineEndX - lineStartX - WEEK_IN_MONTH_GAP,
           threadY + THREAD_HEIGHT / 2,
           THREAD_CIRCLE_RADIUS,
         )
@@ -248,14 +247,14 @@ export const renderThreadLineStart = ({
       const lineEndX = weekX + actualWeekWidth;
       const thread = new Graphics();
       thread
-        .rect(lineStartX, threadY, lineEndX - lineStartX - WEEK_GAP, THREAD_HEIGHT)
+        .rect(lineStartX, threadY, lineEndX - lineStartX - WEEK_IN_MONTH_GAP, THREAD_HEIGHT)
         .fill(currentColorNumber);
       container.addChild(thread);
 
       const circle2 = new Graphics();
       circle2
         .circle(
-          centerX + THREAD_CIRCLE_RADIUS * 2 + lineEndX - lineStartX - WEEK_GAP,
+          centerX + THREAD_CIRCLE_RADIUS * 2 + lineEndX - lineStartX - WEEK_IN_MONTH_GAP,
           threadY + THREAD_HEIGHT / 2,
           THREAD_CIRCLE_RADIUS,
         )
