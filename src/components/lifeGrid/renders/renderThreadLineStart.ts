@@ -9,6 +9,76 @@ import { getCachedColor } from '../utils';
 const THREAD_HEIGHT = 1;
 const THREAD_CIRCLE_RADIUS = 2;
 
+// Derived constants for optimization
+const CIRCLE_OFFSET = THREAD_CIRCLE_RADIUS;
+const DOUBLE_CIRCLE_GAP = THREAD_CIRCLE_GAP * 2;
+
+/**
+ * Creates a circle Graphics object
+ */
+const createCircle = (x: number, y: number, color: number): Graphics => {
+  const circle = new Graphics();
+  circle
+    .circle(x, y + THREAD_HEIGHT / 2, THREAD_CIRCLE_RADIUS)
+    .stroke({ color, width: THREAD_HEIGHT });
+  return circle;
+};
+
+/**
+ * Creates a line Graphics object
+ */
+const createLine = (x: number, y: number, width: number, color: number): Graphics => {
+  const line = new Graphics();
+  line.rect(x, y, width, THREAD_HEIGHT).fill(color);
+  return line;
+};
+
+/**
+ * Calculates positions for Half week type
+ */
+const calculateHalfPositions = (weekX: number, actualWeekWidth: number) => {
+  const centerX = weekX + actualWeekWidth / 2;
+  const lineStartX = centerX + CIRCLE_OFFSET;
+  const lineEndX = weekX + actualWeekWidth;
+  return { centerX, lineStartX, lineEndX };
+};
+
+/**
+ * Calculates positions for Full week type
+ */
+const calculateFullPositions = (weekX: number, actualWeekWidth: number) => {
+  const centerX = weekX + WEEK_IN_MONTH_GAP;
+  const lineStartX = centerX + CIRCLE_OFFSET;
+  const lineEndX = weekX + actualWeekWidth;
+  return { centerX, lineStartX, lineEndX };
+};
+
+/**
+ * Calculates positions for Border week types (FullBorder, HalfBorder)
+ */
+const calculateBorderPositions = (
+  centerX: number,
+  lineStartX: number,
+  lineEndX: number,
+  containerWidth: number,
+) => {
+  const lineWidth = lineEndX - lineStartX;
+  const circle2X = centerX + lineWidth;
+  const circle3X = centerX + lineWidth + DOUBLE_CIRCLE_GAP;
+  const lineStartX2 = circle3X + CIRCLE_OFFSET;
+  const lineEndX2 = containerWidth;
+  return { circle2X, circle3X, lineStartX2, lineEndX2 };
+};
+
+/**
+ * Calculates positions for End week types (FullBorderEnd, HalfBorderEnd)
+ */
+const calculateEndPositions = (centerX: number, lineStartX: number, lineEndX: number) => {
+  const lineWidth = lineEndX - lineStartX;
+  const circle2X = centerX + lineWidth;
+  return { circle2X };
+};
+
 type TRenderThreadLineStartParams = {
   container: Container;
   weekX: number;
@@ -20,6 +90,9 @@ type TRenderThreadLineStartParams = {
   weekWidth: number;
   largeWeekWidth: number;
   isPreview: boolean;
+  // Pre-calculated color numbers for optimization
+  currentColorNumber?: number;
+  nextColorNumber?: number;
 };
 
 export const renderThreadLineStart = ({
@@ -33,232 +106,190 @@ export const renderThreadLineStart = ({
   weekWidth,
   largeWeekWidth,
   isPreview,
+  currentColorNumber,
+  nextColorNumber,
 }: TRenderThreadLineStartParams) => {
   const actualWeekWidth = isPreview ? largeWeekWidth : weekWidth;
-  const currentColorNumber = getCachedColor(currentColor).toNumber();
-  const nextColorNumber = getCachedColor(nextColor).toNumber();
+
+  // Use pre-calculated color numbers if provided, otherwise calculate them
+  const currentColorNum = currentColorNumber ?? getCachedColor(currentColor).toNumber();
+  const nextColorNum = nextColorNumber ?? getCachedColor(nextColor).toNumber();
 
   switch (weekType) {
     case EMonthsEndsIndxsValues.Half: {
       // Half: circle in center + line to right edge of current week
-      const centerX = weekX + actualWeekWidth / 2;
+      const { centerX, lineStartX, lineEndX } = calculateHalfPositions(weekX, actualWeekWidth);
 
       // Draw circle in center
-      const circle = new Graphics();
-      circle
-        .circle(centerX, threadY + THREAD_HEIGHT / 2, THREAD_CIRCLE_RADIUS)
-        .stroke({ color: currentColorNumber, width: THREAD_HEIGHT });
+      const circle = createCircle(centerX, threadY, currentColorNum);
       container.addChild(circle);
 
       // Draw line from circle to right edge of current week
-      const lineStartX = centerX + THREAD_CIRCLE_RADIUS;
-      const lineEndX = weekX + actualWeekWidth;
-      const thread = new Graphics();
-      thread
-        .rect(lineStartX, threadY, lineEndX - lineStartX, THREAD_HEIGHT)
-        .fill(currentColorNumber);
+      const thread = createLine(lineStartX, threadY, lineEndX - lineStartX, currentColorNum);
       container.addChild(thread);
       break;
     }
     case EMonthsEndsIndxsValues.Full: {
-      // Half: circle in center + line to right edge of current week
-      const centerX = weekX + WEEK_IN_MONTH_GAP;
+      // Full: circle in center + line to right edge of current week
+      const { centerX, lineStartX, lineEndX } = calculateFullPositions(weekX, actualWeekWidth);
 
       // Draw circle in center
-      const circle = new Graphics();
-      circle
-        .circle(centerX, threadY + THREAD_HEIGHT / 2, THREAD_CIRCLE_RADIUS)
-        .stroke({ color: currentColorNumber, width: THREAD_HEIGHT });
+      const circle = createCircle(centerX, threadY, currentColorNum);
       container.addChild(circle);
 
       // Draw line from circle to right edge of current week
-      const lineStartX = centerX + THREAD_CIRCLE_RADIUS;
-      const lineEndX = weekX + actualWeekWidth;
-      const thread = new Graphics();
-      thread
-        .rect(lineStartX, threadY, lineEndX - lineStartX, THREAD_HEIGHT)
-        .fill(currentColorNumber);
+      const thread = createLine(lineStartX, threadY, lineEndX - lineStartX, currentColorNum);
       container.addChild(thread);
       break;
     }
 
     case EMonthsEndsIndxsValues.FullBorder: {
-      // Half: circle in center + line to right edge of current week
+      // FullBorder: multiple circles and lines for border week
       const centerX = weekX + WEEK_IN_MONTH_GAP;
+      const lineStartX = centerX + CIRCLE_OFFSET;
+      const lineEndX = weekX + actualWeekWidth / 2;
 
-      // Draw circle in center
-      const circle1 = new Graphics();
-      circle1
-        .circle(centerX, threadY + THREAD_HEIGHT / 2, THREAD_CIRCLE_RADIUS)
-        .stroke({ color: currentColorNumber, width: THREAD_HEIGHT });
+      // Calculate border positions
+      const { circle2X, circle3X, lineStartX2, lineEndX2 } = calculateBorderPositions(
+        centerX,
+        lineStartX,
+        lineEndX,
+        containerWidth,
+      );
+
+      // Draw first circle
+      const circle1 = createCircle(centerX, threadY, currentColorNum);
       container.addChild(circle1);
 
-      // Draw line from circle to right edge of current week
-      const lineStartX = centerX + THREAD_CIRCLE_RADIUS;
-      const lineEndX = weekX + actualWeekWidth / 2;
-      const thread = new Graphics();
-      thread
-        .rect(lineStartX, threadY, lineEndX - lineStartX - THREAD_CIRCLE_GAP, THREAD_HEIGHT)
-        .fill(currentColorNumber);
+      // Draw first line
+      const thread = createLine(
+        lineStartX,
+        threadY,
+        lineEndX - lineStartX - THREAD_CIRCLE_GAP,
+        currentColorNum,
+      );
       container.addChild(thread);
 
-      const circle2 = new Graphics();
-      circle2
-        .circle(
-          centerX + THREAD_CIRCLE_RADIUS * 2 + lineEndX - lineStartX - THREAD_CIRCLE_GAP,
-          threadY + THREAD_HEIGHT / 2,
-          THREAD_CIRCLE_RADIUS,
-        )
-        .stroke({ color: currentColorNumber, width: THREAD_HEIGHT });
+      // Draw second circle
+      const circle2 = createCircle(circle2X, threadY, currentColorNum);
       container.addChild(circle2);
 
-      const circle3 = new Graphics();
-      circle3
-        .circle(
-          centerX + THREAD_CIRCLE_RADIUS * 2 + lineEndX - lineStartX + THREAD_CIRCLE_GAP,
-          threadY + THREAD_HEIGHT / 2,
-          THREAD_CIRCLE_RADIUS,
-        )
-        .stroke({ color: nextColorNumber, width: THREAD_HEIGHT });
+      // Draw third circle
+      const circle3 = createCircle(circle3X, threadY, nextColorNum);
       container.addChild(circle3);
 
-      // Draw line from circle to right edge of current week
-      const lineStartX2 =
-        centerX +
-        THREAD_CIRCLE_RADIUS * 2 +
-        lineEndX -
-        lineStartX +
-        THREAD_CIRCLE_GAP +
-        THREAD_CIRCLE_RADIUS;
-      const lineEndX2 = containerWidth;
-      const thread2 = new Graphics();
-      thread
-        .rect(lineStartX2, threadY, lineEndX2 - lineStartX2 - THREAD_CIRCLE_GAP, THREAD_HEIGHT)
-        .fill(nextColorNumber);
+      // Draw second line
+      const thread2 = createLine(
+        lineStartX2,
+        threadY,
+        lineEndX2 - lineStartX2 - THREAD_CIRCLE_GAP,
+        nextColorNum,
+      );
       container.addChild(thread2);
 
       break;
     }
 
     case EMonthsEndsIndxsValues.HalfBorder: {
-      // Half: circle in center + line to right edge of current week
+      // HalfBorder: multiple circles and lines for half border week
       const centerX = weekX + actualWeekWidth / 4 + WEEK_IN_MONTH_GAP;
+      const lineStartX = centerX + CIRCLE_OFFSET;
+      const lineEndX = weekX + actualWeekWidth / 2 + WEEK_IN_MONTH_GAP;
 
-      // Draw circle in center
-      const circle1 = new Graphics();
-      circle1
-        .circle(centerX, threadY + THREAD_HEIGHT / 2, THREAD_CIRCLE_RADIUS)
-        .stroke({ color: currentColorNumber, width: THREAD_HEIGHT });
+      // Calculate border positions
+      const { circle2X, circle3X, lineStartX2, lineEndX2 } = calculateBorderPositions(
+        centerX,
+        lineStartX,
+        lineEndX,
+        containerWidth,
+      );
+
+      // Draw first circle
+      const circle1 = createCircle(centerX, threadY, currentColorNum);
       container.addChild(circle1);
 
-      // Draw line from circle to right edge of current week
-      const lineStartX = centerX + THREAD_CIRCLE_RADIUS;
-      const lineEndX = weekX + actualWeekWidth / 2 + WEEK_IN_MONTH_GAP;
-      const thread = new Graphics();
-      thread
-        .rect(lineStartX, threadY, lineEndX - lineStartX - THREAD_CIRCLE_GAP, THREAD_HEIGHT)
-        .fill(currentColorNumber);
+      // Draw first line
+      const thread = createLine(
+        lineStartX,
+        threadY,
+        lineEndX - lineStartX - THREAD_CIRCLE_GAP,
+        currentColorNum,
+      );
       container.addChild(thread);
 
-      const circle2 = new Graphics();
-      circle2
-        .circle(
-          centerX + THREAD_CIRCLE_RADIUS * 2 + lineEndX - lineStartX - THREAD_CIRCLE_GAP,
-          threadY + THREAD_HEIGHT / 2,
-          THREAD_CIRCLE_RADIUS,
-        )
-        .stroke({ color: currentColorNumber, width: THREAD_HEIGHT });
+      // Draw second circle
+      const circle2 = createCircle(circle2X, threadY, currentColorNum);
       container.addChild(circle2);
 
-      const circle3 = new Graphics();
-      circle3
-        .circle(
-          centerX + THREAD_CIRCLE_RADIUS * 2 + lineEndX - lineStartX + THREAD_CIRCLE_GAP,
-          threadY + THREAD_HEIGHT / 2,
-          THREAD_CIRCLE_RADIUS,
-        )
-        .stroke({ color: nextColorNumber, width: THREAD_HEIGHT });
+      // Draw third circle
+      const circle3 = createCircle(circle3X, threadY, nextColorNum);
       container.addChild(circle3);
 
-      // Draw line from circle to right edge of current week
-      const lineStartX2 =
-        centerX +
-        THREAD_CIRCLE_RADIUS * 2 +
-        lineEndX -
-        lineStartX +
-        THREAD_CIRCLE_GAP +
-        THREAD_CIRCLE_RADIUS;
-      const lineEndX2 = containerWidth;
-      const thread2 = new Graphics();
-      thread
-        .rect(lineStartX2, threadY, lineEndX2 - lineStartX2 - THREAD_CIRCLE_GAP, THREAD_HEIGHT)
-        .fill(nextColorNumber);
+      // Draw second line
+      const thread2 = createLine(
+        lineStartX2,
+        threadY,
+        lineEndX2 - lineStartX2 - THREAD_CIRCLE_GAP,
+        nextColorNum,
+      );
       container.addChild(thread2);
 
       break;
     }
 
     case EMonthsEndsIndxsValues.FullBorderEnd: {
-      // Half: circle in center + line to right edge of current week
+      // FullBorderEnd: two circles and line for border end week
       const centerX = weekX + WEEK_IN_MONTH_GAP;
+      const lineStartX = centerX + CIRCLE_OFFSET;
+      const lineEndX = weekX + actualWeekWidth;
 
-      // Draw circle in center
-      const circle1 = new Graphics();
-      circle1
-        .circle(centerX, threadY + THREAD_HEIGHT / 2, THREAD_CIRCLE_RADIUS)
-        .stroke({ color: currentColorNumber, width: THREAD_HEIGHT });
+      // Calculate end positions
+      const { circle2X } = calculateEndPositions(centerX, lineStartX, lineEndX);
+
+      // Draw first circle
+      const circle1 = createCircle(centerX, threadY, currentColorNum);
       container.addChild(circle1);
 
-      // Draw line from circle to right edge of current week
-      const lineStartX = centerX + THREAD_CIRCLE_RADIUS;
-      const lineEndX = weekX + actualWeekWidth;
-      const thread = new Graphics();
-      thread
-        .rect(lineStartX, threadY, lineEndX - lineStartX - WEEK_IN_MONTH_GAP, THREAD_HEIGHT)
-        .fill(currentColorNumber);
+      // Draw line
+      const thread = createLine(
+        lineStartX,
+        threadY,
+        lineEndX - lineStartX - WEEK_IN_MONTH_GAP,
+        currentColorNum,
+      );
       container.addChild(thread);
 
-      const circle2 = new Graphics();
-      circle2
-        .circle(
-          centerX + THREAD_CIRCLE_RADIUS * 2 + lineEndX - lineStartX - WEEK_IN_MONTH_GAP,
-          threadY + THREAD_HEIGHT / 2,
-          THREAD_CIRCLE_RADIUS,
-        )
-        .stroke({ color: currentColorNumber, width: THREAD_HEIGHT });
+      // Draw second circle
+      const circle2 = createCircle(circle2X, threadY, currentColorNum);
       container.addChild(circle2);
 
       break;
     }
 
     case EMonthsEndsIndxsValues.HalfBorderEnd: {
-      // Half: circle in center + line to right edge of current week
+      // HalfBorderEnd: two circles and line for half border end week
       const centerX = weekX + actualWeekWidth / 2;
+      const lineStartX = centerX + CIRCLE_OFFSET;
+      const lineEndX = weekX + actualWeekWidth;
 
-      // Draw circle in center
-      const circle1 = new Graphics();
-      circle1
-        .circle(centerX, threadY + THREAD_HEIGHT / 2, THREAD_CIRCLE_RADIUS)
-        .stroke({ color: currentColorNumber, width: THREAD_HEIGHT });
+      // Calculate end positions
+      const { circle2X } = calculateEndPositions(centerX, lineStartX, lineEndX);
+
+      // Draw first circle
+      const circle1 = createCircle(centerX, threadY, currentColorNum);
       container.addChild(circle1);
 
-      // Draw line from circle to right edge of current week
-      const lineStartX = centerX + THREAD_CIRCLE_RADIUS;
-      const lineEndX = weekX + actualWeekWidth;
-      const thread = new Graphics();
-      thread
-        .rect(lineStartX, threadY, lineEndX - lineStartX - WEEK_IN_MONTH_GAP, THREAD_HEIGHT)
-        .fill(currentColorNumber);
+      // Draw line
+      const thread = createLine(
+        lineStartX,
+        threadY,
+        lineEndX - lineStartX - WEEK_IN_MONTH_GAP,
+        currentColorNum,
+      );
       container.addChild(thread);
 
-      const circle2 = new Graphics();
-      circle2
-        .circle(
-          centerX + THREAD_CIRCLE_RADIUS * 2 + lineEndX - lineStartX - WEEK_IN_MONTH_GAP,
-          threadY + THREAD_HEIGHT / 2,
-          THREAD_CIRCLE_RADIUS,
-        )
-        .stroke({ color: currentColorNumber, width: THREAD_HEIGHT });
+      // Draw second circle
+      const circle2 = createCircle(circle2X, threadY, currentColorNum);
       container.addChild(circle2);
 
       break;

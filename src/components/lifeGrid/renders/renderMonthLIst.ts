@@ -21,6 +21,7 @@ import { renderLabel } from './renderLabel';
 import { renderRowThreadLine } from './renderRowThreadLine';
 import { renderThreadLineStart } from './renderThreadLineStart';
 import { calculateMonthWeekXPosition, getMonthDynamicWeekWidth } from './utils';
+import { getCachedColor } from '../utils';
 
 // Constants for months mode
 const ROW_GAP = 72; // Gap between month rows
@@ -30,9 +31,9 @@ const THREAD_MARGIN_TOP = 22; // Increased margin to position threads lower
 
 export const renderMonthList = (state: TLifeGridState) => {
   const { app, drawWeekIndexes, theme, isScreenMedium, lifeMode, today, container, media } = state;
-
   if (!app) return;
 
+  const renderer = app.renderer;
   const { lastWeekIndex, monthsIndxs } = drawWeekIndexes;
 
   const weekContainer = app.stage.getChildByLabel(CONTAINER_LABELS.weeks) as Container;
@@ -222,6 +223,9 @@ export const renderMonthList = (state: TLifeGridState) => {
       }
 
       if (isFirstWeekEndsType) {
+        // Pre-calculate color numbers for optimization
+        const currentColorNumber = getCachedColor(currentThreadColor).toNumber();
+        const nextColorNumber = getCachedColor(nextThreadColor).toNumber();
         renderThreadLineStart({
           container: weekContainer,
           weekX: x,
@@ -233,6 +237,8 @@ export const renderMonthList = (state: TLifeGridState) => {
           weekWidth,
           largeWeekWidth,
           isPreview: !!isMonthPreview,
+          currentColorNumber,
+          nextColorNumber,
         });
       } else {
         // Render thread from left edge to middle of last week
@@ -264,6 +270,7 @@ export const renderMonthList = (state: TLifeGridState) => {
           currentColor: currentThreadColor,
           nextColor: nextThreadColor,
           containerWidth: width,
+          renderer,
         });
       }
     }
