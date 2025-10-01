@@ -4,9 +4,13 @@
 .mediaItem
   width 100%
   min-height 270px
-  border-radius var(--border-radius-large)
+  border-radius var(--border-radius-large) var(--border-radius-large) 0 0
   overflow hidden
-  background linear-gradient(135deg, rgba(122, 122, 122, 0.07), rgba(0, 0, 0, 0))
+  background var(--shading-color)
+  transition background 0.2s ease
+
+  &:hover
+    background transparent
 
   @media (min-width $mobile-width)
     min-height 380px
@@ -24,12 +28,67 @@
 .placeholder
   width 100%
   height 100%
-  background linear-gradient(135deg, rgba(122, 122, 122, 0.07), rgba(0, 0, 0, 0))
+  display flex
+  align-items center
+  justify-content center
+  position relative
+  flex-direction column
+  margin-top 5px
+
+  &:hover
+    cursor default
+
+  .placeholderIcon
+    font-size 42px
+    line-height 50px
+    font-weight 100
+    color var(--text-color)
+    transition font-size 0.2s ease
+    opacity 0.8
+
+  &:hover
+    .placeholderIcon
+      font-size 50px
+      cursor default
+      opacity 1
+
+.smallMediaItem .placeholder
+  .placeholderIcon
+    font-size 18px
+    font-weight 100
+    line-height 24px
+    opacity 0.8
+
+  &:hover
+    .placeholderIcon
+      font-size 24px
+      cursor default
+      opacity 1
+
+.dayLabel
+  font-size 10px
+  font-weight 100
+  color var(--disabled-color)
+  line-height 1
+  opacity 0.7
+  transition font-size 0.2s ease
+
+  &:hover
+    cursor default
+    opacity 1
 
 // Small size media item
 .smallMediaItem
   width 100%
-  aspect-ratio 1
-  border-radius var(--border-radius-medium)
+  min-height 60px
   overflow hidden
-  background linear-gradient(135deg, rgba(122, 122, 122, 0.07), rgba(0, 0, 0, 0))
+  border-radius 0
+
+  &.first
+    border-bottom-left-radius var(--border-radius)
+
+  &.last
+    border-bottom-right-radius var(--border-radius)
+
+  @media (min-width $mobile-width)
+    min-height 80px

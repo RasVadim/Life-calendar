@@ -6,6 +6,7 @@ export { blendColors } from './common/blendColors';
 export { formatDateToUI } from './common/formatDateToUI';
 export { findWithIndex } from './common/findWithIndex';
 export { getUserTimezone, getUserTimezoneOffset } from './common/getUserTimezone';
+export { checkEvenMonth } from './common/checkEvenMonth';
 
 // mobile
 export { changeByDrawerStatusBarColor } from './mobile/changeByDrawerStatusBarColor';

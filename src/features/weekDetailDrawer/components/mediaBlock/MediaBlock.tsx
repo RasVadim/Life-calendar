@@ -15,22 +15,29 @@ type TProps = {
 export const MediaBlock: FC<TProps> = ({ week, mediaData }) => {
   const { days = [], media } = week || {};
 
-  console.log('days', days);
-
   const smallMediaItems = days
     .filter(({ isWeekPreview }) => !isWeekPreview)
-    .map(({ media: mediaIndex }) => (mediaIndex ? mediaData?.[mediaIndex] : {}));
+    .map(({ media: mediaIndex, dayOfWeek }) => ({
+      dayOfWeek,
+      ...(mediaIndex ? mediaData?.[mediaIndex] : {}),
+    }));
 
-  console.log('smallMediaItems', smallMediaItems);
+  const restDay = days.find(({ isWeekPreview }) => isWeekPreview);
 
   return (
     <div className={s.mediaContainer}>
-      <MediaItem media={mediaData?.[media || '']} />
+      <MediaItem item={{ dayOfWeek: restDay?.dayOfWeek, ...mediaData?.[media || ''] }} />
 
       {smallMediaItems.length > 0 && (
         <div className={s.smallMediaContainer}>
-          {smallMediaItems.slice(0, 6).map((item, index) => (
-            <MediaItem key={index} media={item} isSmall />
+          {smallMediaItems.map((item, index) => (
+            <MediaItem
+              key={index}
+              item={item}
+              isSmall
+              isFirst={index === 0}
+              isLast={index === smallMediaItems.length - 1}
+            />
           ))}
         </div>
       )}

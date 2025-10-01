@@ -2,13 +2,16 @@ import { FC, useEffect, useState } from 'react';
 
 import cx from 'classnames';
 
-import { TMedia } from '@/types';
+import { useTranslation } from '@/hooks';
+import { EDayOfWeek, TMedia } from '@/types';
 
 import s from './s.module.styl';
 
 type TProps = {
-  media?: TMedia | null;
+  item?: (TMedia & { dayOfWeek?: EDayOfWeek }) | null;
   isSmall?: boolean;
+  isFirst?: boolean;
+  isLast?: boolean;
 };
 
 enum EMediaState {
@@ -17,12 +20,20 @@ enum EMediaState {
   VIDEO = 'video',
 }
 
-export const MediaItem: FC<TProps> = ({ media, isSmall = false }) => {
-  const { url, localPath, isVideo } = media || {};
+export const MediaItem: FC<TProps> = ({
+  item,
+  isSmall = false,
+  isFirst = false,
+  isLast = false,
+}) => {
+  const { t } = useTranslation();
+
+  const { url, localPath, isVideo, dayOfWeek } = item || {};
 
   const [mediaState, setMediaState] = useState<EMediaState>(EMediaState.PLACEHOLDER);
 
   const path = localPath || url;
+  const dayLabel = dayOfWeek ? t(`life.shortDays.${dayOfWeek}`) : '';
 
   useEffect(() => {
     if (!path) return;
@@ -43,8 +54,18 @@ export const MediaItem: FC<TProps> = ({ media, isSmall = false }) => {
     img.src = path;
   }, [path, isVideo]);
 
+  const addMedia = () => {
+    console.log('addMedia');
+  };
+
   return (
-    <div className={cx(s.mediaItem, { [s.smallMediaItem]: isSmall })}>
+    <div
+      className={cx(s.mediaItem, {
+        [s.smallMediaItem]: isSmall,
+        [s.first]: isFirst,
+        [s.last]: isLast,
+      })}
+    >
       {mediaState === EMediaState.VIDEO ? (
         <video
           className={s.video}
@@ -63,7 +84,10 @@ export const MediaItem: FC<TProps> = ({ media, isSmall = false }) => {
           onError={() => setMediaState(EMediaState.PLACEHOLDER)}
         />
       ) : (
-        <div className={s.placeholder} />
+        <div className={s.placeholder} onClick={addMedia}>
+          <div className={s.placeholderIcon}>+</div>
+          {dayLabel && <div className={s.dayLabel}>{dayLabel}</div>}
+        </div>
       )}
     </div>
   );

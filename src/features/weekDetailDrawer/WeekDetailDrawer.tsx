@@ -8,7 +8,7 @@ import { useDBWeekByIndex } from '@/store/clientDB';
 import { EModalKeys, TMedia, TMediaDatesMap } from '@/types';
 import { Drawer } from '@/ui-kit';
 
-import { MediaBlock } from './components';
+import { MediaBlock, WeekInfo } from './components';
 
 type TProps = {
   mediaData?: TMediaDatesMap<TMedia>;
@@ -17,7 +17,7 @@ type TProps = {
 export const WeekDetailDrawer: FC<TProps> = ({ mediaData }) => {
   // const { t } = useTranslation();
   const { weekIndex } = useParams();
-  const weekIndexNumber = weekIndex ? Number(weekIndex) : 0;
+  const weekIndexNumber = weekIndex ? Number(weekIndex) : 1;
   const week = useDBWeekByIndex(weekIndexNumber);
 
   const setDrawerKey = useSetOpenDrawerKey();
@@ -34,7 +34,7 @@ export const WeekDetailDrawer: FC<TProps> = ({ mediaData }) => {
       closeButton={false}
       topContent={<MediaBlock week={week} mediaData={mediaData} />}
     >
-      WeekDetailDrawer!!!
+      <WeekInfo week={week} />
     </Drawer>
   );
 };

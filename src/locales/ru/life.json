@@ -31,6 +31,22 @@
     "winter": "Зима",
     "spring": "Весна",
     "summer": "Лето",
-    "autumn": "Осень"
+    "autumn": "Осень",
+    "monday": "Понедельник",
+    "tuesday": "Вторник",
+    "wednesday": "Среда",
+    "thursday": "Четверг",
+    "friday": "Пятница",
+    "saturday": "Суббота",
+    "sunday": "Воскресенье",
+    "shortDays": {
+      "monday": "Пн",
+      "tuesday": "Вт",
+      "wednesday": "Ср",
+      "thursday": "Чт",
+      "friday": "Пт",
+      "saturday": "Сб",
+      "sunday": "Вс"
+    }
   }
 }
