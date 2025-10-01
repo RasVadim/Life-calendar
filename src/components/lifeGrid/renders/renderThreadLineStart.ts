@@ -1,37 +1,11 @@
-import { Container, Graphics } from 'pixi.js';
+import { Container, Renderer } from 'pixi.js';
 
 import { EMonthsEndsIndxsValues } from '@/types';
 
 import { THREAD_CIRCLE_GAP, WEEK_IN_MONTH_GAP } from '../constants';
+import { CIRCLE_OFFSET, DOUBLE_CIRCLE_GAP } from '../constants/thread';
 import { getCachedColor } from '../utils';
-
-// Constants for thread lines
-const THREAD_HEIGHT = 1;
-const THREAD_CIRCLE_RADIUS = 2;
-
-// Derived constants for optimization
-const CIRCLE_OFFSET = THREAD_CIRCLE_RADIUS;
-const DOUBLE_CIRCLE_GAP = THREAD_CIRCLE_GAP * 2;
-
-/**
- * Creates a circle Graphics object
- */
-const createCircle = (x: number, y: number, color: number): Graphics => {
-  const circle = new Graphics();
-  circle
-    .circle(x, y + THREAD_HEIGHT / 2, THREAD_CIRCLE_RADIUS)
-    .stroke({ color, width: THREAD_HEIGHT });
-  return circle;
-};
-
-/**
- * Creates a line Graphics object
- */
-const createLine = (x: number, y: number, width: number, color: number): Graphics => {
-  const line = new Graphics();
-  line.rect(x, y, width, THREAD_HEIGHT).fill(color);
-  return line;
-};
+import { createCircleSprite, createLine } from './utils';
 
 /**
  * Calculates positions for Half week type
@@ -90,6 +64,7 @@ type TRenderThreadLineStartParams = {
   weekWidth: number;
   largeWeekWidth: number;
   isPreview: boolean;
+  renderer: Renderer;
   // Pre-calculated color numbers for optimization
   currentColorNumber?: number;
   nextColorNumber?: number;
@@ -106,6 +81,7 @@ export const renderThreadLineStart = ({
   weekWidth,
   largeWeekWidth,
   isPreview,
+  renderer,
   currentColorNumber,
   nextColorNumber,
 }: TRenderThreadLineStartParams) => {
@@ -121,7 +97,7 @@ export const renderThreadLineStart = ({
       const { centerX, lineStartX, lineEndX } = calculateHalfPositions(weekX, actualWeekWidth);
 
       // Draw circle in center
-      const circle = createCircle(centerX, threadY, currentColorNum);
+      const circle = createCircleSprite(renderer, centerX, threadY, currentColorNum);
       container.addChild(circle);
 
       // Draw line from circle to right edge of current week
@@ -134,7 +110,7 @@ export const renderThreadLineStart = ({
       const { centerX, lineStartX, lineEndX } = calculateFullPositions(weekX, actualWeekWidth);
 
       // Draw circle in center
-      const circle = createCircle(centerX, threadY, currentColorNum);
+      const circle = createCircleSprite(renderer, centerX, threadY, currentColorNum);
       container.addChild(circle);
 
       // Draw line from circle to right edge of current week
@@ -158,7 +134,7 @@ export const renderThreadLineStart = ({
       );
 
       // Draw first circle
-      const circle1 = createCircle(centerX, threadY, currentColorNum);
+      const circle1 = createCircleSprite(renderer, centerX, threadY, currentColorNum);
       container.addChild(circle1);
 
       // Draw first line
@@ -171,20 +147,15 @@ export const renderThreadLineStart = ({
       container.addChild(thread);
 
       // Draw second circle
-      const circle2 = createCircle(circle2X, threadY, currentColorNum);
+      const circle2 = createCircleSprite(renderer, circle2X, threadY, currentColorNum);
       container.addChild(circle2);
 
       // Draw third circle
-      const circle3 = createCircle(circle3X, threadY, nextColorNum);
+      const circle3 = createCircleSprite(renderer, circle3X, threadY, nextColorNum);
       container.addChild(circle3);
 
       // Draw second line
-      const thread2 = createLine(
-        lineStartX2,
-        threadY,
-        lineEndX2 - lineStartX2 - THREAD_CIRCLE_GAP,
-        nextColorNum,
-      );
+      const thread2 = createLine(lineStartX2, threadY, lineEndX2, nextColorNum);
       container.addChild(thread2);
 
       break;
@@ -205,7 +176,7 @@ export const renderThreadLineStart = ({
       );
 
       // Draw first circle
-      const circle1 = createCircle(centerX, threadY, currentColorNum);
+      const circle1 = createCircleSprite(renderer, centerX, threadY, currentColorNum);
       container.addChild(circle1);
 
       // Draw first line
@@ -218,20 +189,15 @@ export const renderThreadLineStart = ({
       container.addChild(thread);
 
       // Draw second circle
-      const circle2 = createCircle(circle2X, threadY, currentColorNum);
+      const circle2 = createCircleSprite(renderer, circle2X, threadY, currentColorNum);
       container.addChild(circle2);
 
       // Draw third circle
-      const circle3 = createCircle(circle3X, threadY, nextColorNum);
+      const circle3 = createCircleSprite(renderer, circle3X, threadY, nextColorNum);
       container.addChild(circle3);
 
       // Draw second line
-      const thread2 = createLine(
-        lineStartX2,
-        threadY,
-        lineEndX2 - lineStartX2 - THREAD_CIRCLE_GAP,
-        nextColorNum,
-      );
+      const thread2 = createLine(lineStartX2, threadY, lineEndX2, nextColorNum);
       container.addChild(thread2);
 
       break;
@@ -247,7 +213,7 @@ export const renderThreadLineStart = ({
       const { circle2X } = calculateEndPositions(centerX, lineStartX, lineEndX);
 
       // Draw first circle
-      const circle1 = createCircle(centerX, threadY, currentColorNum);
+      const circle1 = createCircleSprite(renderer, centerX, threadY, currentColorNum);
       container.addChild(circle1);
 
       // Draw line
@@ -259,8 +225,13 @@ export const renderThreadLineStart = ({
       );
       container.addChild(thread);
 
-      // Draw second circle
-      const circle2 = createCircle(circle2X, threadY, currentColorNum);
+      // Draw second circle - adjust position to account for anchor centering
+      const circle2 = createCircleSprite(
+        renderer,
+        circle2X - CIRCLE_OFFSET,
+        threadY,
+        currentColorNum,
+      );
       container.addChild(circle2);
 
       break;
@@ -276,7 +247,7 @@ export const renderThreadLineStart = ({
       const { circle2X } = calculateEndPositions(centerX, lineStartX, lineEndX);
 
       // Draw first circle
-      const circle1 = createCircle(centerX, threadY, currentColorNum);
+      const circle1 = createCircleSprite(renderer, centerX, threadY, currentColorNum);
       container.addChild(circle1);
 
       // Draw line
@@ -288,8 +259,13 @@ export const renderThreadLineStart = ({
       );
       container.addChild(thread);
 
-      // Draw second circle
-      const circle2 = createCircle(circle2X, threadY, currentColorNum);
+      // Draw second circle - adjust position to account for anchor centering
+      const circle2 = createCircleSprite(
+        renderer,
+        circle2X - CIRCLE_OFFSET,
+        threadY,
+        currentColorNum,
+      );
       container.addChild(circle2);
 
       break;

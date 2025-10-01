@@ -7,3 +7,5 @@ export { getBGColor } from './getBGColor';
 export { getBorderColor } from './getBorderColor';
 
 export { getHandleWheel } from './getHandleWheel';
+
+export { clearPixiCache } from './clearPixiCache';

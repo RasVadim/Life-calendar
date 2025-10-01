@@ -1,110 +1,134 @@
-import { Container, Graphics, Sprite, Texture, Renderer } from 'pixi.js';
+import { Container, Renderer } from 'pixi.js';
 
-import { THREAD_CIRCLE_GAP } from '../constants';
-import { getCachedColor } from '../utils';
+import { EMonthsWeekIndxsValues } from '@/types';
 
-// Constants for thread lines
-const THREAD_HEIGHT = 1;
-const THREAD_CIRCLE_RADIUS = 2;
-
-// Cached textures for performance optimization
-let circleTexture: Texture | null = null;
-let lineTexture: Texture | null = null;
-
-/**
- * Creates cached circle texture
- */
-const getCircleTexture = (renderer: Renderer): Texture => {
-  if (!circleTexture) {
-    const graphics = new Graphics();
-    graphics.circle(0, 0, THREAD_CIRCLE_RADIUS).stroke({ color: 0xffffff, width: THREAD_HEIGHT });
-    circleTexture = renderer.generateTexture(graphics);
-  }
-  return circleTexture;
-};
-
-/**
- * Creates cached line texture
- */
-const getLineTexture = (renderer: Renderer): Texture => {
-  if (!lineTexture) {
-    const graphics = new Graphics();
-    graphics.rect(0, 0, 100, THREAD_HEIGHT).fill(0xffffff);
-    lineTexture = renderer.generateTexture(graphics);
-  }
-  return lineTexture;
-};
+import { THREAD_CIRCLE_GAP, WEEK_IN_MONTH_GAP } from '../constants';
+import { createCircleSprite, createLine } from './utils';
+import { THREAD_CIRCLE_RADIUS } from '../constants/thread';
 
 type TRenderRowThreadLineParams = {
   container: Container;
+  weekX: number;
   startX: number;
-  endX: number;
-  y: number;
-  currentColor: string;
-  nextColor: string;
+  threadY: number;
   containerWidth: number;
-  drawToLeftEdge?: boolean;
-  drawToRightEdge?: boolean;
+  weekType: EMonthsWeekIndxsValues;
+  weekWidth: number;
+  largeWeekWidth: number;
+  isPreview: boolean;
   renderer: Renderer;
+  // Pre-calculated color numbers for optimization
+  currentColorNumber: number;
+  nextColorNumber: number;
+  isFirstRow: boolean;
 };
 
-/**
- * Render thread line under a row of weeks with two hollow circles at the end
- */
 export const renderRowThreadLine = ({
   container,
+  weekX,
   startX,
-  endX,
-  y,
-  currentColor,
-  nextColor,
+  threadY,
   containerWidth,
-  drawToLeftEdge = true,
-  drawToRightEdge = true,
+  weekType,
+  weekWidth,
+  largeWeekWidth,
+  isPreview,
   renderer,
+  currentColorNumber,
+  nextColorNumber,
+  isFirstRow,
 }: TRenderRowThreadLineParams) => {
-  const currentColorNumber = getCachedColor(currentColor).toNumber();
-  const nextColorNumber = getCachedColor(nextColor).toNumber();
+  // Calculate positions based on week parameters
+  const actualWeekWidth = isPreview ? largeWeekWidth : weekWidth;
+  const y = threadY;
 
-  if (drawToLeftEdge) {
-    // Draw the line (shortened by circle radius to avoid overlap)
-    {
-      const lineEndX = endX - THREAD_CIRCLE_RADIUS;
-      const lineWidth = lineEndX - startX;
-      const thread = new Sprite(getLineTexture(renderer));
-      thread.tint = currentColorNumber;
-      thread.x = startX;
-      thread.y = y;
-      thread.width = lineWidth;
+  switch (weekType) {
+    case EMonthsWeekIndxsValues.First4:
+    case EMonthsWeekIndxsValues.First5: {
+      const lineWidth = weekX - startX + weekWidth;
+      const thread = createLine(startX, y, lineWidth, currentColorNumber);
       container.addChild(thread);
+      break;
     }
-  }
-  // Draw the first hollow circle (current month color)
-  const circle1 = new Sprite(getCircleTexture(renderer));
-  circle1.tint = currentColorNumber;
-  circle1.anchor.set(0.5, 0.5); // Center the sprite
-  circle1.x = endX;
-  circle1.y = y;
-  container.addChild(circle1);
+    case EMonthsWeekIndxsValues.FirstFull4: {
+      // First weeks: just a line (no circles)
+      const lineEndX =
+        startX + WEEK_IN_MONTH_GAP + THREAD_CIRCLE_RADIUS + THREAD_CIRCLE_GAP + weekWidth / 2;
+      const circle1 = createCircleSprite(renderer, lineEndX, y, currentColorNumber);
+      container.addChild(circle1);
 
-  if (drawToRightEdge) {
-    // Draw the second hollow circle (next month color)
-    const circle2X = endX + THREAD_CIRCLE_RADIUS * 2 + THREAD_CIRCLE_GAP;
-    const circle2 = new Sprite(getCircleTexture(renderer));
-    circle2.tint = nextColorNumber;
-    circle2.anchor.set(0.5, 0.5); // Center the sprite
-    circle2.x = circle2X;
-    circle2.y = y;
-    container.addChild(circle2);
+      const lineWidth = weekX - startX + weekWidth;
+      const thread = createLine(lineEndX + THREAD_CIRCLE_RADIUS, y, lineWidth, currentColorNumber);
+      container.addChild(thread);
+      break;
+    }
+    case EMonthsWeekIndxsValues.FirstFull5: {
+      // First weeks: just a line (no circles)
+      const lineEndX = startX + WEEK_IN_MONTH_GAP + THREAD_CIRCLE_RADIUS + THREAD_CIRCLE_GAP;
+      const circle1 = createCircleSprite(renderer, lineEndX, y, currentColorNumber);
+      container.addChild(circle1);
 
-    // Draw the second thread line from second circle to right edge of screen
-    const secondLineStartX = circle2X + THREAD_CIRCLE_RADIUS;
-    const secondLineWidth = containerWidth - secondLineStartX;
-    const secondThread = new Sprite(getLineTexture(renderer));
-    secondThread.tint = nextColorNumber;
-    secondThread.x = secondLineStartX;
-    secondThread.y = y;
-    secondThread.width = secondLineWidth;
-    container.addChild(secondThread);
+      const lineWidth = weekX - startX + weekWidth;
+      const thread = createLine(lineEndX + THREAD_CIRCLE_RADIUS, y, lineWidth, currentColorNumber);
+      container.addChild(thread);
+      break;
+    }
+
+    case EMonthsWeekIndxsValues.Border: {
+      // Border: line + two circles (current and next month colors)
+
+      // Draw the line (shortened by circle radius to avoid overlap)
+      const lineEndX = weekX + actualWeekWidth / 2;
+      const lineWidth = lineEndX - startX;
+      const thread = createLine(
+        startX + (isFirstRow ? 0 : weekWidth),
+        y,
+        lineWidth - THREAD_CIRCLE_RADIUS - (isFirstRow ? 0 : weekWidth),
+        currentColorNumber,
+      );
+      container.addChild(thread);
+
+      // Draw the first hollow circle (current month color)
+      const circle1 = createCircleSprite(renderer, lineEndX, y, currentColorNumber);
+      container.addChild(circle1);
+
+      // Draw the second hollow circle (next month color)
+      const circle2X = lineEndX + THREAD_CIRCLE_RADIUS * 2 + THREAD_CIRCLE_GAP;
+      const circle2 = createCircleSprite(renderer, circle2X, y, nextColorNumber);
+      container.addChild(circle2);
+
+      // Draw the second thread line from second circle to right edge of screen
+      const secondLineStartX = circle2X + THREAD_CIRCLE_RADIUS;
+      const secondLineWidth = containerWidth - secondLineStartX;
+      const secondThread = createLine(secondLineStartX, y, secondLineWidth, nextColorNumber);
+      container.addChild(secondThread);
+
+      break;
+    }
+
+    case EMonthsWeekIndxsValues.BorderEnd: {
+      // BorderEnd: line + one circle (current month color only)
+
+      // Draw the line (shortened by circle radius to avoid overlap)
+      const lineEndX = weekX + actualWeekWidth - THREAD_CIRCLE_GAP - THREAD_CIRCLE_RADIUS;
+      const lineWidth = lineEndX - startX;
+      const thread = createLine(startX, y, lineWidth, currentColorNumber);
+      container.addChild(thread);
+
+      // Draw the hollow circle (current month color)
+      const circle1 = createCircleSprite(
+        renderer,
+        weekX + actualWeekWidth - THREAD_CIRCLE_GAP,
+        y,
+        currentColorNumber,
+      );
+      container.addChild(circle1);
+
+      break;
+    }
+
+    default: {
+      break;
+    }
   }
 };

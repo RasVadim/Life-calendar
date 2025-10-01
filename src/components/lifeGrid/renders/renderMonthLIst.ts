@@ -191,41 +191,25 @@ export const renderMonthList = (state: TLifeGridState) => {
 
     // Check if this is the first week of life with EMonthsEndsIndxsValues type
     const isFirstWeekOfLife = i === 0;
-    const isFirstWeekEndsType =
-      isFirstWeekOfLife &&
-      monthData &&
-      Object.values(EMonthsEndsIndxsValues).includes(monthData.type as EMonthsEndsIndxsValues);
 
     // Render thread line for the last week of the row OR first week with special type
-    const shouldRenderThreadLine =
-      isFirstWeekEndsType ||
-      currentCol === weeksPerRow - 1 ||
-      (currentRow === 1 &&
-        drawWeekIndexes.monthOffset > 0 &&
-        currentCol === weeksPerRow - drawWeekIndexes.monthOffset - 1);
+    const shouldRenderThreadLine = !!monthFlag;
 
     if (shouldRenderThreadLine) {
       // Calculate thread line position and colors
       const threadY = baseY + weekHeight + THREAD_MARGIN_TOP;
       const monthNumber = parseInt(monthData?.month || '1', 10);
       const isEvenMonth = monthNumber % 2 === 0;
-      const currentThreadColor = isEvenMonth ? theme.primary2 : theme.primary;
 
-      // Calculate next month color (opposite of current)
+      const currentThreadColor = isEvenMonth ? theme.primary2 : theme.primary;
       const nextThreadColor = isEvenMonth ? theme.primary : theme.primary2;
 
-      // Calculate position of the center of this week (which is the last week in the row)
-      // If it's a preview week, add a small offset to reduce the left shift
-      let lastWeekCenterX = x + weekWidth / 2;
-      if (isMonthPreview) {
-        // Add half of the extra width to reduce the left shift
-        lastWeekCenterX += (largeWeekWidth - weekWidth) / 2;
-      }
+      const currentColorNumber = getCachedColor(currentThreadColor).toNumber();
+      const nextColorNumber = getCachedColor(nextThreadColor).toNumber();
 
-      if (isFirstWeekEndsType) {
+      if (isFirstWeekOfLife) {
         // Pre-calculate color numbers for optimization
-        const currentColorNumber = getCachedColor(currentThreadColor).toNumber();
-        const nextColorNumber = getCachedColor(nextThreadColor).toNumber();
+
         renderThreadLineStart({
           container: weekContainer,
           weekX: x,
@@ -237,6 +221,7 @@ export const renderMonthList = (state: TLifeGridState) => {
           weekWidth,
           largeWeekWidth,
           isPreview: !!isMonthPreview,
+          renderer,
           currentColorNumber,
           nextColorNumber,
         });
@@ -265,12 +250,17 @@ export const renderMonthList = (state: TLifeGridState) => {
         renderRowThreadLine({
           container: weekContainer,
           startX,
-          endX: lastWeekCenterX,
-          y: threadY,
-          currentColor: currentThreadColor,
-          nextColor: nextThreadColor,
+          weekX: x,
+          threadY,
           containerWidth: width,
+          weekType: monthData.type as EMonthsWeekIndxsValues,
+          weekWidth,
+          largeWeekWidth,
+          isPreview: !!isMonthPreview,
           renderer,
+          currentColorNumber,
+          nextColorNumber,
+          isFirstRow: currentRow === 1,
         });
       }
     }

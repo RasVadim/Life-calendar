@@ -4,6 +4,7 @@ import { addYears, format } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import { useNavigate, useLocation } from 'react-router-dom';
 
+import { clearPixiCache } from '@/components/lifeGrid/utils';
 import { ISO_DATE_FORMAT, DEFAULT_BIRTH_DATE } from '@/constants';
 import { useTranslation } from '@/hooks';
 import { OutlineProfileIcon } from '@/icons';
@@ -80,6 +81,10 @@ export const BirthDateDrawer = () => {
     if (birthDate) {
       setPageLoading(true);
       setPending(true);
+
+      // Clear texture cache when changing birth date
+      clearPixiCache();
+
       try {
         if (location.pathname !== '/') {
           navigate('/');

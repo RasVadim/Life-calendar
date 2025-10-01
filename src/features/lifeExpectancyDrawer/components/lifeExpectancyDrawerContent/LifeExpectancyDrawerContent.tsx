@@ -5,6 +5,7 @@ import { addYears, format, parseISO, differenceInHours } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import { useLocation, useNavigate } from 'react-router-dom';
 
+import { clearPixiCache } from '@/components/lifeGrid/utils';
 import { ISO_DATE_FORMAT } from '@/constants';
 import { useTranslation } from '@/hooks';
 import { useSetOpenDrawerKey, useSetPageLoading, useSetSyncPending } from '@/store/atoms';
@@ -97,6 +98,9 @@ export const LifeExpectancyDrawerContent = () => {
     if (lifeExpectancy) {
       setPending(true);
       setPageLoading(true);
+
+      // Clear texture cache when changing life expectancy
+      clearPixiCache();
 
       try {
         await updateDBUserData({ deathDate, lifeExpectancy });
