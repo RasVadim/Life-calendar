@@ -6,8 +6,8 @@
   height 95dvh
   background-color var(--background-front-color)
   opacity 0.97
-  border-top-left-radius 24px
-  border-top-right-radius 24px
+  border-top-left-radius var(--border-radius-large)
+  border-top-right-radius var(--border-radius-large)
   box-shadow 0 -4px 24px rgba(0, 0, 0, 0.15)
   z-index 150
   display flex
@@ -23,6 +23,9 @@
   display flex
   justify-content space-between
 
+  &.noPaddings
+    padding 0
+
 .drawerTitle
   display flex
   justify-content center
@@ -33,7 +36,7 @@
 .drawerContent
   flex 1
   overflow auto
-  padding: 5px 15px;
+  padding 5px 15px
 
 .drawerBlackout
   position fixed

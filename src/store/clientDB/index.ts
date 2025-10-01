@@ -23,6 +23,8 @@ export { updateDBSettings } from './mutations/settings/updateDBSettings';
 
 // Queries
 export { useDBWeeks } from './queries/life/useDBWeeks';
+export { useDBWeekById } from './queries/life/useDBWeekById';
+export { useDBWeekByIndex } from './queries/life/useDBWeekByIndex';
 export { useDBUserData } from './queries/life/useDBUserData';
 export { useDBTodayWeek } from './queries/life/useDBTodayWeek';
 export { useDBDrawWeekIndexes } from './queries/life/useDBDrawWeekIndexes';

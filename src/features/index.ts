@@ -8,4 +8,6 @@ export { BirthDateDrawer } from './birthDateDrawer/BirthDateDrawer';
 
 export { LifeExpectancyDrawer } from './lifeExpectancyDrawer/LifeExpectancyDrawer';
 
+export { WeekDetailDrawer } from './weekDetailDrawer/WeekDetailDrawer';
+
 export { UpdateNotification } from './updateNotification/UpdateNotification';

@@ -16,6 +16,7 @@ interface DrawerProps {
   children?: ReactNode;
   closeButton?: boolean;
   actions?: ReactNode;
+  topContent?: ReactNode;
   title?: string | ReactNode;
   disabledClose?: boolean;
   forceReRender?: boolean;
@@ -27,6 +28,7 @@ export const Drawer: FC<DrawerProps> = ({
   children,
   closeButton = true,
   actions,
+  topContent,
   title,
   disabledClose,
   forceReRender = false,
@@ -56,11 +58,12 @@ export const Drawer: FC<DrawerProps> = ({
         onClick={disabledClose ? undefined : onClose}
       />
       <div className={cx(s.drawerWrap, { [s.hidden]: !isOpen })}>
-        <div className={s.drawerHeader}>
+        <div className={cx(s.drawerHeader, { [s.noPaddings]: !closeButton })}>
           {closeButton && (
             <Button onClick={onClose} label={t('layout.close')} disabled={disabledClose} />
           )}
           {actions ?? actions}
+          {topContent ?? topContent}
         </div>
         {title && <div className={s.drawerTitle}>{title}</div>}
         <div className={s.drawerContent}>{showContent && children}</div>

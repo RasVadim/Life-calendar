@@ -29,7 +29,7 @@ export const Menu: FC<PropsType> = ({ isOpen }) => {
         label="Open User Data Drawer"
         active
         icon="settings"
-        onClick={() => setDrawerKey(EModalKeys.USER_BIRTH_DATE)}
+        onClick={() => setDrawerKey(EModalKeys.WEEK_DETAIL)}
       />
       <br />
     </div>

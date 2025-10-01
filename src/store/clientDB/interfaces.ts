@@ -26,6 +26,7 @@ export interface IHoliday {
 // Type for a week entity
 export interface IWeek {
   id: string;
+  index: number;
   dateStart: string;
   dateEnd: string;
   type: EWeekType;

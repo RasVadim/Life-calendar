@@ -66,6 +66,7 @@ export const generateWeek = ({
 
   return {
     id: weekId,
+    index: weekIndex,
     dateStart,
     dateEnd,
     type,

@@ -4,6 +4,7 @@
 export const realGenerateWeeksFirst10Fixture = [
   {
     id: '20250707_0001',
+    index: 0,
     dateStart: '2025-07-07',
     dateEnd: '2025-07-13',
     type: 'past',
@@ -27,6 +28,7 @@ export const realGenerateWeeksFirst10Fixture = [
         lifeDay: 0,
         comments: null,
         description: null,
+        media: '20250707',
       },
       {
         id: 'w1_d2',
@@ -37,6 +39,7 @@ export const realGenerateWeeksFirst10Fixture = [
         lifeDay: 1,
         comments: null,
         description: null,
+        media: null,
       },
       {
         id: 'w1_d3',
@@ -47,6 +50,7 @@ export const realGenerateWeeksFirst10Fixture = [
         lifeDay: 2,
         comments: null,
         description: null,
+        media: null,
       },
       {
         id: 'w1_d4',
@@ -57,6 +61,7 @@ export const realGenerateWeeksFirst10Fixture = [
         lifeDay: 3,
         comments: null,
         description: null,
+        media: null,
       },
       {
         id: 'w1_d5',
@@ -67,6 +72,7 @@ export const realGenerateWeeksFirst10Fixture = [
         lifeDay: 4,
         comments: null,
         description: null,
+        media: null,
       },
       {
         id: 'w1_d6',
@@ -77,6 +83,7 @@ export const realGenerateWeeksFirst10Fixture = [
         lifeDay: 5,
         comments: null,
         description: null,
+        media: null,
       },
       {
         id: 'w1_d7',
@@ -87,6 +94,7 @@ export const realGenerateWeeksFirst10Fixture = [
         lifeDay: 6,
         comments: null,
         description: null,
+        media: null,
       },
     ],
     media: '20250707',
@@ -97,6 +105,7 @@ export const realGenerateWeeksFirst10Fixture = [
   },
   {
     id: '20250714_0002',
+    index: 1,
     dateStart: '2025-07-14',
     dateEnd: '2025-07-20',
     type: 'past',
@@ -120,6 +129,7 @@ export const realGenerateWeeksFirst10Fixture = [
         lifeDay: 7,
         comments: null,
         description: null,
+        media: '20250714',
       },
       {
         id: 'w2_d2',
@@ -130,6 +140,7 @@ export const realGenerateWeeksFirst10Fixture = [
         lifeDay: 8,
         comments: null,
         description: null,
+        media: null,
       },
       {
         id: 'w2_d3',
@@ -140,6 +151,7 @@ export const realGenerateWeeksFirst10Fixture = [
         lifeDay: 9,
         comments: null,
         description: null,
+        media: null,
       },
       {
         id: 'w2_d4',
@@ -150,6 +162,7 @@ export const realGenerateWeeksFirst10Fixture = [
         lifeDay: 10,
         comments: null,
         description: null,
+        media: null,
       },
       {
         id: 'w2_d5',
@@ -160,6 +173,7 @@ export const realGenerateWeeksFirst10Fixture = [
         lifeDay: 11,
         comments: null,
         description: null,
+        media: null,
       },
       {
         id: 'w2_d6',
@@ -170,6 +184,7 @@ export const realGenerateWeeksFirst10Fixture = [
         lifeDay: 12,
         comments: null,
         description: null,
+        media: null,
       },
       {
         id: 'w2_d7',
@@ -180,6 +195,7 @@ export const realGenerateWeeksFirst10Fixture = [
         lifeDay: 13,
         comments: null,
         description: null,
+        media: null,
       },
     ],
     media: null,
@@ -190,6 +206,7 @@ export const realGenerateWeeksFirst10Fixture = [
   },
   {
     id: '20250721_0003',
+    index: 2,
     dateStart: '2025-07-21',
     dateEnd: '2025-07-27',
     type: 'past',
@@ -213,6 +230,7 @@ export const realGenerateWeeksFirst10Fixture = [
         lifeDay: 14,
         comments: null,
         description: null,
+        media: '20250721',
       },
       {
         id: 'w3_d2',
@@ -223,6 +241,7 @@ export const realGenerateWeeksFirst10Fixture = [
         lifeDay: 15,
         comments: null,
         description: null,
+        media: null,
       },
       {
         id: 'w3_d3',
@@ -233,6 +252,7 @@ export const realGenerateWeeksFirst10Fixture = [
         lifeDay: 16,
         comments: null,
         description: null,
+        media: null,
       },
       {
         id: 'w3_d4',
@@ -243,6 +263,7 @@ export const realGenerateWeeksFirst10Fixture = [
         lifeDay: 17,
         comments: null,
         description: null,
+        media: null,
       },
       {
         id: 'w3_d5',
@@ -253,6 +274,7 @@ export const realGenerateWeeksFirst10Fixture = [
         lifeDay: 18,
         comments: null,
         description: null,
+        media: null,
       },
       {
         id: 'w3_d6',
@@ -263,6 +285,7 @@ export const realGenerateWeeksFirst10Fixture = [
         lifeDay: 19,
         comments: null,
         description: null,
+        media: null,
       },
       {
         id: 'w3_d7',
@@ -273,6 +296,7 @@ export const realGenerateWeeksFirst10Fixture = [
         lifeDay: 20,
         comments: null,
         description: null,
+        media: null,
       },
     ],
     media: null,
@@ -283,6 +307,7 @@ export const realGenerateWeeksFirst10Fixture = [
   },
   {
     id: '20250728_0004',
+    index: 3,
     dateStart: '2025-07-28',
     dateEnd: '2025-08-03',
     type: 'past',
@@ -306,6 +331,7 @@ export const realGenerateWeeksFirst10Fixture = [
         lifeDay: 21,
         comments: null,
         description: null,
+        media: '20250728',
       },
       {
         id: 'w4_d2',
@@ -316,6 +342,7 @@ export const realGenerateWeeksFirst10Fixture = [
         lifeDay: 22,
         comments: null,
         description: null,
+        media: null,
       },
       {
         id: 'w4_d3',
@@ -326,6 +353,7 @@ export const realGenerateWeeksFirst10Fixture = [
         lifeDay: 23,
         comments: null,
         description: null,
+        media: null,
       },
       {
         id: 'w4_d4',
@@ -336,6 +364,7 @@ export const realGenerateWeeksFirst10Fixture = [
         lifeDay: 24,
         comments: null,
         description: null,
+        media: null,
       },
       {
         id: 'w4_d5',
@@ -346,6 +375,7 @@ export const realGenerateWeeksFirst10Fixture = [
         lifeDay: 25,
         comments: null,
         description: null,
+        media: null,
       },
       {
         id: 'w4_d6',
@@ -356,6 +386,7 @@ export const realGenerateWeeksFirst10Fixture = [
         lifeDay: 26,
         comments: null,
         description: null,
+        media: null,
       },
       {
         id: 'w4_d7',
@@ -366,6 +397,7 @@ export const realGenerateWeeksFirst10Fixture = [
         lifeDay: 27,
         comments: null,
         description: null,
+        media: null,
       },
     ],
     media: null,
@@ -376,6 +408,7 @@ export const realGenerateWeeksFirst10Fixture = [
   },
   {
     id: '20250804_0005',
+    index: 4,
     dateStart: '2025-08-04',
     dateEnd: '2025-08-10',
     type: 'past',
@@ -399,6 +432,7 @@ export const realGenerateWeeksFirst10Fixture = [
         lifeDay: 28,
         comments: null,
         description: null,
+        media: '20250804',
       },
       {
         id: 'w5_d2',
@@ -409,6 +443,7 @@ export const realGenerateWeeksFirst10Fixture = [
         lifeDay: 29,
         comments: null,
         description: null,
+        media: null,
       },
       {
         id: 'w5_d3',
@@ -419,6 +454,7 @@ export const realGenerateWeeksFirst10Fixture = [
         lifeDay: 30,
         comments: null,
         description: null,
+        media: null,
       },
       {
         id: 'w5_d4',
@@ -429,6 +465,7 @@ export const realGenerateWeeksFirst10Fixture = [
         lifeDay: 31,
         comments: null,
         description: null,
+        media: null,
       },
       {
         id: 'w5_d5',
@@ -439,6 +476,7 @@ export const realGenerateWeeksFirst10Fixture = [
         lifeDay: 32,
         comments: null,
         description: null,
+        media: null,
       },
       {
         id: 'w5_d6',
@@ -449,6 +487,7 @@ export const realGenerateWeeksFirst10Fixture = [
         lifeDay: 33,
         comments: null,
         description: null,
+        media: null,
       },
       {
         id: 'w5_d7',
@@ -459,6 +498,7 @@ export const realGenerateWeeksFirst10Fixture = [
         lifeDay: 34,
         comments: null,
         description: null,
+        media: null,
       },
     ],
     media: '20250804',
@@ -469,6 +509,7 @@ export const realGenerateWeeksFirst10Fixture = [
   },
   {
     id: '20250811_0006',
+    index: 5,
     dateStart: '2025-08-11',
     dateEnd: '2025-08-17',
     type: 'past',
@@ -492,6 +533,7 @@ export const realGenerateWeeksFirst10Fixture = [
         lifeDay: 35,
         comments: null,
         description: null,
+        media: '20250811',
       },
       {
         id: 'w6_d2',
@@ -502,6 +544,7 @@ export const realGenerateWeeksFirst10Fixture = [
         lifeDay: 36,
         comments: null,
         description: null,
+        media: null,
       },
       {
         id: 'w6_d3',
@@ -512,6 +555,7 @@ export const realGenerateWeeksFirst10Fixture = [
         lifeDay: 37,
         comments: null,
         description: null,
+        media: null,
       },
       {
         id: 'w6_d4',
@@ -522,6 +566,7 @@ export const realGenerateWeeksFirst10Fixture = [
         lifeDay: 38,
         comments: null,
         description: null,
+        media: null,
       },
       {
         id: 'w6_d5',
@@ -532,6 +577,7 @@ export const realGenerateWeeksFirst10Fixture = [
         lifeDay: 39,
         comments: null,
         description: null,
+        media: null,
       },
       {
         id: 'w6_d6',
@@ -542,6 +588,7 @@ export const realGenerateWeeksFirst10Fixture = [
         lifeDay: 40,
         comments: null,
         description: null,
+        media: null,
       },
       {
         id: 'w6_d7',
@@ -552,6 +599,7 @@ export const realGenerateWeeksFirst10Fixture = [
         lifeDay: 41,
         comments: null,
         description: null,
+        media: null,
       },
     ],
     media: null,
@@ -562,6 +610,7 @@ export const realGenerateWeeksFirst10Fixture = [
   },
   {
     id: '20250818_0007',
+    index: 6,
     dateStart: '2025-08-18',
     dateEnd: '2025-08-24',
     type: 'past',
@@ -585,6 +634,7 @@ export const realGenerateWeeksFirst10Fixture = [
         lifeDay: 42,
         comments: null,
         description: null,
+        media: '20250818',
       },
       {
         id: 'w7_d2',
@@ -595,6 +645,7 @@ export const realGenerateWeeksFirst10Fixture = [
         lifeDay: 43,
         comments: null,
         description: null,
+        media: null,
       },
       {
         id: 'w7_d3',
@@ -605,6 +656,7 @@ export const realGenerateWeeksFirst10Fixture = [
         lifeDay: 44,
         comments: null,
         description: null,
+        media: null,
       },
       {
         id: 'w7_d4',
@@ -615,6 +667,7 @@ export const realGenerateWeeksFirst10Fixture = [
         lifeDay: 45,
         comments: null,
         description: null,
+        media: null,
       },
       {
         id: 'w7_d5',
@@ -625,6 +678,7 @@ export const realGenerateWeeksFirst10Fixture = [
         lifeDay: 46,
         comments: null,
         description: null,
+        media: null,
       },
       {
         id: 'w7_d6',
@@ -635,6 +689,7 @@ export const realGenerateWeeksFirst10Fixture = [
         lifeDay: 47,
         comments: null,
         description: null,
+        media: null,
       },
       {
         id: 'w7_d7',
@@ -645,6 +700,7 @@ export const realGenerateWeeksFirst10Fixture = [
         lifeDay: 48,
         comments: null,
         description: null,
+        media: null,
       },
     ],
     media: null,
@@ -655,6 +711,7 @@ export const realGenerateWeeksFirst10Fixture = [
   },
   {
     id: '20250825_0008',
+    index: 7,
     dateStart: '2025-08-25',
     dateEnd: '2025-08-31',
     type: 'past',
@@ -678,6 +735,7 @@ export const realGenerateWeeksFirst10Fixture = [
         lifeDay: 49,
         comments: null,
         description: null,
+        media: '20250825',
       },
       {
         id: 'w8_d2',
@@ -688,6 +746,7 @@ export const realGenerateWeeksFirst10Fixture = [
         lifeDay: 50,
         comments: null,
         description: null,
+        media: null,
       },
       {
         id: 'w8_d3',
@@ -698,6 +757,7 @@ export const realGenerateWeeksFirst10Fixture = [
         lifeDay: 51,
         comments: null,
         description: null,
+        media: null,
       },
       {
         id: 'w8_d4',
@@ -708,6 +768,7 @@ export const realGenerateWeeksFirst10Fixture = [
         lifeDay: 52,
         comments: null,
         description: null,
+        media: null,
       },
       {
         id: 'w8_d5',
@@ -718,6 +779,7 @@ export const realGenerateWeeksFirst10Fixture = [
         lifeDay: 53,
         comments: null,
         description: null,
+        media: null,
       },
       {
         id: 'w8_d6',
@@ -728,6 +790,7 @@ export const realGenerateWeeksFirst10Fixture = [
         lifeDay: 54,
         comments: null,
         description: null,
+        media: null,
       },
       {
         id: 'w8_d7',
@@ -738,6 +801,7 @@ export const realGenerateWeeksFirst10Fixture = [
         lifeDay: 55,
         comments: null,
         description: null,
+        media: null,
       },
     ],
     media: null,
@@ -748,6 +812,7 @@ export const realGenerateWeeksFirst10Fixture = [
   },
   {
     id: '20250901_0009',
+    index: 8,
     dateStart: '2025-09-01',
     dateEnd: '2025-09-07',
     type: 'past',
@@ -771,6 +836,7 @@ export const realGenerateWeeksFirst10Fixture = [
         lifeDay: 56,
         comments: null,
         description: null,
+        media: '20250901',
       },
       {
         id: 'w9_d2',
@@ -781,6 +847,7 @@ export const realGenerateWeeksFirst10Fixture = [
         lifeDay: 57,
         comments: null,
         description: null,
+        media: null,
       },
       {
         id: 'w9_d3',
@@ -791,6 +858,7 @@ export const realGenerateWeeksFirst10Fixture = [
         lifeDay: 58,
         comments: null,
         description: null,
+        media: null,
       },
       {
         id: 'w9_d4',
@@ -801,6 +869,7 @@ export const realGenerateWeeksFirst10Fixture = [
         lifeDay: 59,
         comments: null,
         description: null,
+        media: null,
       },
       {
         id: 'w9_d5',
@@ -811,6 +880,7 @@ export const realGenerateWeeksFirst10Fixture = [
         lifeDay: 60,
         comments: null,
         description: null,
+        media: null,
       },
       {
         id: 'w9_d6',
@@ -821,6 +891,7 @@ export const realGenerateWeeksFirst10Fixture = [
         lifeDay: 61,
         comments: null,
         description: null,
+        media: null,
       },
       {
         id: 'w9_d7',
@@ -831,6 +902,7 @@ export const realGenerateWeeksFirst10Fixture = [
         lifeDay: 62,
         comments: null,
         description: null,
+        media: null,
       },
     ],
     media: '20250901',
@@ -841,6 +913,7 @@ export const realGenerateWeeksFirst10Fixture = [
   },
   {
     id: '20250908_0010',
+    index: 9,
     dateStart: '2025-09-08',
     dateEnd: '2025-09-14',
     type: 'past',
@@ -864,6 +937,7 @@ export const realGenerateWeeksFirst10Fixture = [
         lifeDay: 63,
         comments: null,
         description: null,
+        media: '20250908',
       },
       {
         id: 'w10_d2',
@@ -874,6 +948,7 @@ export const realGenerateWeeksFirst10Fixture = [
         lifeDay: 64,
         comments: null,
         description: null,
+        media: null,
       },
       {
         id: 'w10_d3',
@@ -884,6 +959,7 @@ export const realGenerateWeeksFirst10Fixture = [
         lifeDay: 65,
         comments: null,
         description: null,
+        media: null,
       },
       {
         id: 'w10_d4',
@@ -894,6 +970,7 @@ export const realGenerateWeeksFirst10Fixture = [
         lifeDay: 66,
         comments: null,
         description: null,
+        media: null,
       },
       {
         id: 'w10_d5',
@@ -904,6 +981,7 @@ export const realGenerateWeeksFirst10Fixture = [
         lifeDay: 67,
         comments: null,
         description: null,
+        media: null,
       },
       {
         id: 'w10_d6',
@@ -914,6 +992,7 @@ export const realGenerateWeeksFirst10Fixture = [
         lifeDay: 68,
         comments: null,
         description: null,
+        media: null,
       },
       {
         id: 'w10_d7',
@@ -924,6 +1003,7 @@ export const realGenerateWeeksFirst10Fixture = [
         lifeDay: 69,
         comments: null,
         description: null,
+        media: null,
       },
     ],
     media: null,

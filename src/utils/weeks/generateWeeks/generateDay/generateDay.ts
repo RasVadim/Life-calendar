@@ -56,5 +56,6 @@ export const generateDay = ({
     lifeDay,
     comments: null,
     description: null,
+    media: isWeekPreview ? format(weekStart, 'yyyyMMdd') : null,
   };
 };
