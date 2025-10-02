@@ -63,10 +63,12 @@ export const Drawer: FC<DrawerProps> = ({
             <Button onClick={onClose} label={t('layout.close')} disabled={disabledClose} />
           )}
           {actions ?? actions}
-          {topContent ?? topContent}
         </div>
-        {title && <div className={s.drawerTitle}>{title}</div>}
-        <div className={s.drawerContent}>{showContent && children}</div>
+        <div className={cx(s.drawerScrollableContent, { [s.borderRadius]: !!topContent })}>
+          {title && <div className={s.drawerTitle}>{title}</div>}
+          {topContent ?? topContent}
+          <div className={s.drawerContent}>{showContent && children}</div>
+        </div>
       </div>
     </>
   );

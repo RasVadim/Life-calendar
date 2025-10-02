@@ -26,17 +26,31 @@
   &.noPaddings
     padding 0
 
+.drawerScrollableContent
+  flex 1
+  overflow-y auto
+  overflow-x hidden
+  min-height 0
+  display flex
+  flex-direction column
+
+  &.borderRadius
+    border-top-left-radius var(--border-radius-large)
+    border-top-right-radius var(--border-radius-large)
+
 .drawerTitle
   display flex
   justify-content center
   font-size 13px
   font-weight 600
   color var(--text-color)
+  flex-shrink 0
+  padding 10px 15px 5px
 
 .drawerContent
   flex 1
-  overflow auto
-  padding 5px 15px
+  padding 5px 15px 20px
+  min-height 0
 
 .drawerBlackout
   position fixed

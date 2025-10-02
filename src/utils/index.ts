@@ -4,6 +4,7 @@ export { hexToRgb } from './common/hexToRgb';
 export { rgbToHex } from './common/rgbToHex';
 export { blendColors } from './common/blendColors';
 export { formatDateToUI } from './common/formatDateToUI';
+export { formatDateToKey } from './common/formatDateToKey';
 export { findWithIndex } from './common/findWithIndex';
 export { getUserTimezone, getUserTimezoneOffset } from './common/getUserTimezone';
 export { checkEvenMonth } from './common/checkEvenMonth';
@@ -31,3 +32,6 @@ export { actualizeWeeks } from './weeks/actualizeWeeks/actualizeWeeks';
 export { getWeekType } from './weeks/getWeekType';
 export { compareDatesWithoutYear } from './weeks/compareDatesWithoutYear';
 export { calculateTodayDayInfo } from './weeks/calculateTodayDayInfo';
+
+// files
+export { addFile } from './files/addFile';

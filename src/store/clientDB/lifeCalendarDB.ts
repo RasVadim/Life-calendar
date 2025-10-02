@@ -8,6 +8,7 @@ import {
   IHoliday,
   IMeta,
   IMedia,
+  IFileBlob,
 } from './interfaces';
 
 // Dexie database class
@@ -19,6 +20,7 @@ export class LifeCalendarDB extends Dexie {
   holidays!: Table<IHoliday, string>;
   meta!: Table<IMeta, string>;
   media!: Table<IMedia, string>;
+  fileBlobs!: Table<IFileBlob, string>;
 
   constructor() {
     super('LifeCalendarDB'); // Name of the database in IndexedDB
@@ -30,6 +32,7 @@ export class LifeCalendarDB extends Dexie {
       holidays: 'name', // Create 'holidays' table with primary key 'name'
       meta: 'id', // Create 'meta' table for global app info
       media: 'id', // Create 'media' table with primary key 'id'
+      fileBlobs: 'id', // Create 'fileBlobs' table for storing file blobs
     });
   }
 }

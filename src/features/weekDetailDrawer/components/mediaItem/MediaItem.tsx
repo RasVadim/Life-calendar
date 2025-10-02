@@ -3,12 +3,15 @@ import { FC, useEffect, useState } from 'react';
 import cx from 'classnames';
 
 import { useTranslation } from '@/hooks';
-import { EDayOfWeek, TMedia } from '@/types';
+import { useDBFileBlob } from '@/store/clientDB';
+import { uploadMediaFile } from '@/utils/files/uploadMediaFile';
+
+import { TMediaItem } from '../../types';
 
 import s from './s.module.styl';
 
 type TProps = {
-  item?: (TMedia & { dayOfWeek?: EDayOfWeek }) | null;
+  item?: TMediaItem | null;
   isSmall?: boolean;
   isFirst?: boolean;
   isLast?: boolean;
@@ -28,34 +31,57 @@ export const MediaItem: FC<TProps> = ({
 }) => {
   const { t } = useTranslation();
 
-  const { url, localPath, isVideo, dayOfWeek } = item || {};
+  const { fileId, isVideo, dayOfWeek, mediaIndex, weekIndex, dayIndex } = item || {};
+
+  const fileBlob = useDBFileBlob(fileId);
 
   const [mediaState, setMediaState] = useState<EMediaState>(EMediaState.PLACEHOLDER);
+  const [blobUrl, setBlobUrl] = useState<string>('');
 
-  const path = localPath || url;
   const dayLabel = dayOfWeek ? t(`life.shortDays.${dayOfWeek}`) : '';
 
+  // File upload options
+  const fileUploadOptions = {
+    dateKey: mediaIndex,
+    weekIndex,
+    dayIndex,
+    onError: (error: Error) => {
+      console.error('Error uploading file:', error);
+    },
+  };
+
+  // Create blob URL when file blob is loaded
   useEffect(() => {
-    if (!path) return;
+    if (fileBlob?.blob) {
+      const url = URL.createObjectURL(fileBlob.blob);
+      setBlobUrl(url);
+
+      // Cleanup previous URL
+      return () => {
+        URL.revokeObjectURL(url);
+      };
+    }
+  }, [fileBlob]);
+
+  useEffect(() => {
+    if (!blobUrl) return;
 
     if (isVideo) {
       const videoEl = document.createElement('video');
       videoEl.oncanplaythrough = () => setMediaState(EMediaState.VIDEO);
-      videoEl.onerror = () => {}; // Stay on photo if video fails
-      videoEl.src = path;
+      videoEl.onerror = () => setMediaState(EMediaState.PLACEHOLDER); // Fallback to placeholder
+      videoEl.src = blobUrl;
       videoEl.load();
+    } else {
+      const img = new Image();
+      img.onload = () => setMediaState(EMediaState.PHOTO);
+      img.onerror = () => setMediaState(EMediaState.PLACEHOLDER); // Fallback to placeholder
+      img.src = blobUrl;
     }
-
-    const img = new Image();
-    img.onload = () => {
-      setMediaState(EMediaState.PHOTO);
-    };
-    img.onerror = () => {}; // Stay on placeholder if photo fail  s
-    img.src = path;
-  }, [path, isVideo]);
+  }, [blobUrl, isVideo]);
 
   const addMedia = () => {
-    console.log('addMedia');
+    uploadMediaFile(fileUploadOptions);
   };
 
   return (
@@ -69,7 +95,7 @@ export const MediaItem: FC<TProps> = ({
       {mediaState === EMediaState.VIDEO ? (
         <video
           className={s.video}
-          src={path}
+          src={blobUrl}
           muted
           loop
           playsInline
@@ -79,7 +105,7 @@ export const MediaItem: FC<TProps> = ({
       ) : mediaState === EMediaState.PHOTO ? (
         <img
           className={s.photo}
-          src={path}
+          src={blobUrl}
           alt={'photo'}
           onError={() => setMediaState(EMediaState.PLACEHOLDER)}
         />

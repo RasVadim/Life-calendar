@@ -23,7 +23,6 @@ export interface IHoliday {
   type: EHolidayType;
 }
 
-// Type for a week entity
 export interface IWeek {
   id: string;
   index: number;
@@ -62,16 +61,14 @@ export interface IDrawWeekIndexes {
   lastWeekIndex: number;
 }
 
-// Type for user data entity
 export interface IUserData {
-  id: string; // unique id, for example 'main' or user id
-  birthDate: string | null; // user's birth date (ISO string)
+  id: string;
+  birthDate: string | null;
   lifeExpectancy: number | null; // expected lifespan in years
   deathDate: string | null; // calculated death date (ISO string)
   timezone?: string | null; // user's timezone (e.g. 'Europe/Moscow', 'America/New_York')
 }
 
-// Meta entity for storing global app info
 export interface IMeta {
   id: string;
   todayWeekId: string;
@@ -81,16 +78,19 @@ export interface IMeta {
   todayDayIndex: number;
 }
 
-// Type for user settings entity
 export interface ISettings {
-  id: string; // unique id, for example 'main' or user id
+  id: string;
   theme: EThemeMode;
   language: TLanguage;
   zodiacMode: EZodiacMode;
 }
 
-// Type for media entity
 export interface IMedia {
-  id: string; // unique id, for example 'main' or user id
+  id: string;
   media: TMediaDatesMap<TMedia>;
+}
+
+export interface IFileBlob {
+  id: string;
+  blob: Blob;
 }

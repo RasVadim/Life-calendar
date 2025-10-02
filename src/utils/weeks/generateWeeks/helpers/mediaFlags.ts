@@ -1,6 +1,5 @@
-import { format } from 'date-fns';
-
 import { TMedia, TMediaDatesMap } from '@/types';
+import { formatDateToKey } from '@/utils';
 
 /**
  * Sets a preview flag in the media object and returns the media key
@@ -14,7 +13,7 @@ export const setPreviewFlag = (
   media: TMediaDatesMap<TMedia>,
   previewType: 'isMonthPreview' | 'isSeasonPreview',
 ): string => {
-  const weekStartDate = format(weekStart, 'yyyyMMdd');
+  const weekStartDate = formatDateToKey(weekStart);
   // Merge with existing flags instead of overwriting
   media[weekStartDate] = {
     ...media[weekStartDate],
@@ -35,7 +34,7 @@ export const setMultiplePreviewFlags = (
   media: TMediaDatesMap<TMedia>,
   previewTypes: ('isMonthPreview' | 'isSeasonPreview' | 'isWeekPreview')[],
 ): string => {
-  const weekStartDate = format(weekStart, 'yyyyMMdd');
+  const weekStartDate = formatDateToKey(weekStart);
 
   // Merge with existing flags instead of overwriting
   const existingFlags = media[weekStartDate] || {};
