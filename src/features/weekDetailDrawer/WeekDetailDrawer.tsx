@@ -17,7 +17,7 @@ type TProps = {
 export const WeekDetailDrawer: FC<TProps> = ({ mediaData }) => {
   // const { t } = useTranslation();
   const { weekIndex } = useParams();
-  const weekIndexNumber = weekIndex ? Number(weekIndex) : 1;
+  const weekIndexNumber = weekIndex ? Number(weekIndex) : 3;
   const week = useDBWeekByIndex(weekIndexNumber);
 
   const setDrawerKey = useSetOpenDrawerKey();

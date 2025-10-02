@@ -35,3 +35,8 @@ export { calculateTodayDayInfo } from './weeks/calculateTodayDayInfo';
 
 // files
 export { addFile } from './files/addFile';
+export { uploadMediaFile } from './files/uploadMediaFile';
+export { compressImage } from './files/compressImage/compressImage';
+export { compressImageWithWorker } from './files/compressImage/compressImageWithWorker';
+export { compressVideo } from './files/compressVideo';
+export { compress } from './files/compress';

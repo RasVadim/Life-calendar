@@ -94,3 +94,8 @@ export interface IFileBlob {
   id: string;
   blob: Blob;
 }
+
+export interface IThumbnailBlob {
+  id: string;
+  thumbnail: Blob;
+}

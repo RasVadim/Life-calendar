@@ -1,4 +1,6 @@
-import { saveDBFileBlob } from '@/store/clientDB';
+import { saveDBFileBlob, saveDBThumbnail } from '@/store/clientDB';
+
+import { compress } from './compress';
 
 export type TAddFileOptions = {
   accept?: string;
@@ -31,15 +33,15 @@ export const addFile = async (dateKey?: string | null, options: TAddFileOptions 
       const file = (event.target as HTMLInputElement).files?.[0];
       if (file) {
         try {
-          // Determine if file is video
-          const isVideo = file.type.startsWith('video/');
+          const { compressedFile, thumbnail, isVideo } = await compress(file);
 
           // Generate file ID based on date and file type
           const fileExtension = isVideo ? 'v' : 'p';
           const fileId = `${dateKey}${fileExtension}`;
 
           // Save file to IndexedDB
-          await saveDBFileBlob(fileId, file);
+          await saveDBFileBlob(fileId, compressedFile);
+          await saveDBThumbnail(fileId, thumbnail);
 
           onSuccess?.(fileId, isVideo, file.size);
         } catch (error) {

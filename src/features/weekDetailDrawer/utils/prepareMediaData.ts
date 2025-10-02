@@ -19,6 +19,7 @@ export const prepareMediaData = ({ days, mediaData, weekIndex }: TPrepareMediaDa
         mediaIndex: mediaIndex || formatDateToKey(date),
         weekIndex,
         dayIndex: index,
+        isWeekPreview,
         ...(mediaIndex ? mediaData?.[mediaIndex] : {}),
       };
 

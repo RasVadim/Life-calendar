@@ -9,6 +9,7 @@ export type {
   IMeta,
   IMedia,
   IFileBlob,
+  IThumbnailBlob,
 } from './interfaces';
 
 // Mutations
@@ -24,6 +25,7 @@ export { updateDBSettings } from './mutations/settings/updateDBSettings';
 export { updateDBMedia } from './mutations/media/updateDBMedia';
 export { safeUpdateDBMedia } from './mutations/media/safeUpdateDBMedia';
 export { saveDBFileBlob } from './mutations/media/saveDBFileBlob';
+export { saveDBThumbnail } from './mutations/media/saveDBThumbnail';
 export { addDBMediaItem } from './mutations/media/addDBMediaItem';
 
 // Queries
@@ -37,6 +39,7 @@ export { useDBSettings } from './queries/settings/useDBSettings';
 
 export { useDBMedia } from './queries/media/useDBMedia';
 export { useDBFileBlob } from './queries/media/useDBFileBlob';
+export { useDBThumbnail } from './queries/media/useDBThumbnail';
 
 // initializers
 export { initDefaultWeeks } from './initializers/initDefaultWeeks';

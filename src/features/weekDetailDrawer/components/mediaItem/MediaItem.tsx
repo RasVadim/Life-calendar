@@ -3,8 +3,8 @@ import { FC, useEffect, useState } from 'react';
 import cx from 'classnames';
 
 import { useTranslation } from '@/hooks';
-import { useDBFileBlob } from '@/store/clientDB';
-import { uploadMediaFile } from '@/utils/files/uploadMediaFile';
+import { useDBFileBlob, useDBThumbnail } from '@/store/clientDB';
+import { uploadMediaFile } from '@/utils';
 
 import { TMediaItem } from '../../types';
 
@@ -31,9 +31,12 @@ export const MediaItem: FC<TProps> = ({
 }) => {
   const { t } = useTranslation();
 
-  const { fileId, isVideo, dayOfWeek, mediaIndex, weekIndex, dayIndex } = item || {};
+  const { fileId, isVideo, dayOfWeek, mediaIndex, weekIndex, dayIndex, isWeekPreview } = item || {};
 
-  const fileBlob = useDBFileBlob(fileId);
+  const { blob } = useDBFileBlob({ fileId, enabled: isWeekPreview });
+  const { thumbnail } = useDBThumbnail({ fileId, enabled: !isWeekPreview });
+
+  const mediaBlob = isWeekPreview ? blob : thumbnail;
 
   const [mediaState, setMediaState] = useState<EMediaState>(EMediaState.PLACEHOLDER);
   const [blobUrl, setBlobUrl] = useState<string>('');
@@ -52,8 +55,8 @@ export const MediaItem: FC<TProps> = ({
 
   // Create blob URL when file blob is loaded
   useEffect(() => {
-    if (fileBlob?.blob) {
-      const url = URL.createObjectURL(fileBlob.blob);
+    if (mediaBlob) {
+      const url = URL.createObjectURL(mediaBlob);
       setBlobUrl(url);
 
       // Cleanup previous URL
@@ -61,7 +64,7 @@ export const MediaItem: FC<TProps> = ({
         URL.revokeObjectURL(url);
       };
     }
-  }, [fileBlob]);
+  }, [mediaBlob]);
 
   useEffect(() => {
     if (!blobUrl) return;
