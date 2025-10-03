@@ -16,6 +16,8 @@ export { NavigationButton } from './navigationButton/NavigationButton';
 // Modals
 export { Drawer } from './drawer/Drawer';
 
+export { FullscreenMediaViewer } from './fullscreenMediaViewer/FullscreenMediaViewer';
+
 // Pickers
 export { NativeDatePicker } from './nativeDatePicker/NativeDataPicker';
 

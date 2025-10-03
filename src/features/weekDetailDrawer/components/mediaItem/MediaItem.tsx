@@ -3,6 +3,7 @@ import { FC, useEffect, useState } from 'react';
 import cx from 'classnames';
 
 import { useTranslation } from '@/hooks';
+import { useSetFullscreenViewer } from '@/store/atoms';
 import { useDBFileBlob, useDBThumbnail } from '@/store/clientDB';
 import { uploadMediaFile } from '@/utils';
 
@@ -40,6 +41,8 @@ export const MediaItem: FC<TProps> = ({
 
   const [mediaState, setMediaState] = useState<EMediaState>(EMediaState.PLACEHOLDER);
   const [blobUrl, setBlobUrl] = useState<string>('');
+
+  const setMediaItem = useSetFullscreenViewer();
 
   const dayLabel = dayOfWeek ? t(`life.shortDays.${dayOfWeek}`) : '';
 
@@ -87,6 +90,12 @@ export const MediaItem: FC<TProps> = ({
     uploadMediaFile(fileUploadOptions);
   };
 
+  const handleMediaClick = () => {
+    if (mediaState === EMediaState.PHOTO || mediaState === EMediaState.VIDEO) {
+      setMediaItem(item!);
+    }
+  };
+
   return (
     <div
       className={cx(s.mediaItem, {
@@ -104,6 +113,7 @@ export const MediaItem: FC<TProps> = ({
           playsInline
           autoPlay
           onError={() => setMediaState(EMediaState.PHOTO)}
+          onClick={handleMediaClick}
         />
       ) : mediaState === EMediaState.PHOTO ? (
         <img
@@ -111,6 +121,7 @@ export const MediaItem: FC<TProps> = ({
           src={blobUrl}
           alt={'photo'}
           onError={() => setMediaState(EMediaState.PLACEHOLDER)}
+          onClick={handleMediaClick}
         />
       ) : (
         <div className={s.placeholder} onClick={addMedia}>

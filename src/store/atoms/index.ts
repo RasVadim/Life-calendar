@@ -15,3 +15,8 @@ export { usePageLoading, useSetPageLoading } from './pageLoading/usePageLoading'
 export { useOpenDrawerKey, useSetOpenDrawerKey } from './openDrawer/useOpenDrawerKey';
 
 export { usePrevRoute, useSetPrevRoute } from './prevRoute/usePrevRoute';
+
+export {
+  useFullscreenViewer,
+  useSetFullscreenViewer,
+} from './fullscreenViewer/useFullscreenViewer';
