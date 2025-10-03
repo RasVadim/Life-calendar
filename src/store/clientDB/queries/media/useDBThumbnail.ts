@@ -13,7 +13,7 @@ type TUseDBThumbnailParams = {
  * React hook to get a thumbnail by its ID from IndexedDB reactively
  * @param fileId - The ID of the thumbnail to retrieve
  * @param enabled - Whether to fetch the thumbnail (default: true)
- * @returns {IThumbnail | undefined} The thumbnail object or undefined if not found
+ * @returns {IThumbnailBlob | undefined} The thumbnail object or undefined if not found
  */
 export const useDBThumbnail = ({
   fileId,

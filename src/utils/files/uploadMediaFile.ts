@@ -1,6 +1,7 @@
 import { addFile, TAddFileOptions } from './addFile';
 import { connectFileToMedia } from './connectFileToMedia';
 import { connectMediaToDay } from './connectMediaToDay';
+import { updatePreviewFlags } from './updatePreviewFlags/updatePreviewFlags';
 
 type TUploadMediaFileOptions = TAddFileOptions & {
   dateKey?: string | null;
@@ -18,9 +19,12 @@ export const uploadMediaFile = async ({
 
   addFile(dateKey, {
     ...options,
-    onSuccess: (fileId, isVideo, size) => {
-      connectFileToMedia({ dateKey, fileId, isVideo, size });
+    onSuccess: async (fileId, isVideo, size) => {
+      await connectFileToMedia({ dateKey, fileId, isVideo, size });
       connectMediaToDay({ weekIndex, dayIndex, dateKey });
+      // Update preview flags for week, month, and season
+      updatePreviewFlags({ dateKey, weekIndex, dayIndex });
+
       options.onSuccess?.(fileId, isVideo, size);
     },
   });

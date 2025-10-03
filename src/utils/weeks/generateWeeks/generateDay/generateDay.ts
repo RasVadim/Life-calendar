@@ -52,7 +52,6 @@ export const generateDay = ({
     id,
     date: format(date, ISO_DATE_FORMAT),
     dayOfWeek,
-    isWeekPreview,
     holidays: dayHolidays.length > 0 ? dayHolidays : null,
     lifeDay,
     comments: null,

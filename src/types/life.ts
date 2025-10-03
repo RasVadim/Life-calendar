@@ -42,7 +42,6 @@ export type TDay = {
   id: string;
   date: string;
   dayOfWeek: EDayOfWeek;
-  isWeekPreview: boolean;
   holidays: THolidayName[] | null;
   lifeDay: number;
   comments: string | null;

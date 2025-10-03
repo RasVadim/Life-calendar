@@ -10,9 +10,11 @@ type TPrepareMediaDataParams = {
 };
 
 export const prepareMediaData = ({ days, mediaData, weekIndex }: TPrepareMediaDataParams) => {
-  return days.reduce(
+  const result = days.reduce(
     (acc, day, index) => {
-      const { media: mediaIndex, dayOfWeek, isWeekPreview, date } = day;
+      const { media: mediaIndex, dayOfWeek, date } = day;
+
+      const isWeekPreview = mediaIndex ? mediaData?.[mediaIndex]?.isWeekPreview : false;
 
       const baseMediaItem = {
         dayOfWeek,
@@ -33,4 +35,11 @@ export const prepareMediaData = ({ days, mediaData, weekIndex }: TPrepareMediaDa
     },
     { previewMedia: null as TMediaItem | null, smallMediaItems: [] as TMediaItem[] },
   );
+
+  if (!result.previewMedia) {
+    result.previewMedia = result.smallMediaItems[0];
+    result.smallMediaItems = result.smallMediaItems.slice(1);
+  }
+
+  return result;
 };

@@ -21,6 +21,7 @@ export { updateDBTodayWeek } from './mutations/life/updateDBTodayWeek';
 export { updateDBDay } from './mutations/life/updateDBDay';
 export { updateDBUserData } from './mutations/life/updateDBUserData';
 export { updateDBSettings } from './mutations/settings/updateDBSettings';
+export { updateDBMonthWeekIndexes } from './mutations/life/updateDBMonthWeekIndexes';
 
 export { updateDBMedia } from './mutations/media/updateDBMedia';
 export { safeUpdateDBMedia } from './mutations/media/safeUpdateDBMedia';
@@ -40,6 +41,10 @@ export { useDBSettings } from './queries/settings/useDBSettings';
 export { useDBMedia } from './queries/media/useDBMedia';
 export { useDBFileBlob } from './queries/media/useDBFileBlob';
 export { useDBThumbnail } from './queries/media/useDBThumbnail';
+
+// Getters
+export { getDataForUpdatePreviewFlags } from './getters/getDataForUpdatePreviewFlags';
+export { getWeeksInPeriods } from './getters/getWeeksInPeriods';
 
 // initializers
 export { initDefaultWeeks } from './initializers/initDefaultWeeks';

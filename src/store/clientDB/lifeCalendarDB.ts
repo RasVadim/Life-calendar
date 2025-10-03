@@ -27,7 +27,7 @@ export class LifeCalendarDB extends Dexie {
   constructor() {
     super('LifeCalendarDB'); // Name of the database in IndexedDB
     this.version(1).stores({
-      weeks: 'id, index, dateStart, dateEnd, type', // Create 'weeks' table with primary key 'id' and indexes on 'dateStart', 'dateEnd', 'type'
+      weeks: 'id, index, dateStart, dateEnd, type, month, season', // Create 'weeks' table with primary key 'id' and indexes on 'dateStart', 'dateEnd', 'type', 'month', 'season'
       drawWeekIndexes: 'id', // Create 'drawWeekIndexes' table with primary key 'id'
       userData: 'id', // Create 'userData' table with primary key 'id'
       settings: 'id', // Create 'settings' table with primary key 'id'

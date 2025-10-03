@@ -52,7 +52,7 @@ export type TMedia = {
 } | null;
 
 export type TMonthsIndxsValue = {
-  type: EMonthsWeekIndxsValues | EMonthsEndsIndxsValues;
+  type?: EMonthsWeekIndxsValues | EMonthsEndsIndxsValues;
   media?: string;
   month?: string;
   year?: string;
