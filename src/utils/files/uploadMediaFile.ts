@@ -27,5 +27,8 @@ export const uploadMediaFile = async ({
 
       options.onSuccess?.(fileId, isVideo, size);
     },
+    onCancel: () => {
+      options.onCancel?.();
+    },
   });
 };

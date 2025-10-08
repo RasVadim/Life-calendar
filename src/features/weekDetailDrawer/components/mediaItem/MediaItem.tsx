@@ -24,6 +24,12 @@ enum EMediaState {
   VIDEO = 'video',
 }
 
+enum EPlaceholderState {
+  IDLE = 'idle',
+  LOADING = 'loading',
+  UPLOADING = 'uploading',
+}
+
 export const MediaItem: FC<TProps> = ({
   item,
   isSmall = false,
@@ -41,6 +47,9 @@ export const MediaItem: FC<TProps> = ({
 
   const [mediaState, setMediaState] = useState<EMediaState>(EMediaState.PLACEHOLDER);
   const [blobUrl, setBlobUrl] = useState<string>('');
+  const [placeholderState, setPlaceholderState] = useState<EPlaceholderState>(
+    EPlaceholderState.IDLE,
+  );
 
   const setMediaItem = useSetFullscreenViewer();
 
@@ -84,10 +93,25 @@ export const MediaItem: FC<TProps> = ({
       img.onerror = () => setMediaState(EMediaState.PLACEHOLDER); // Fallback to placeholder
       img.src = blobUrl;
     }
+    setPlaceholderState(EPlaceholderState.IDLE);
   }, [blobUrl, isVideo]);
 
   const addMedia = () => {
-    uploadMediaFile(fileUploadOptions);
+    // Start skeleton animation immediately
+    setPlaceholderState(EPlaceholderState.LOADING);
+
+    // Start file upload
+    uploadMediaFile({
+      ...fileUploadOptions,
+      onSuccess: () => {
+        // File selected and upload started
+        setPlaceholderState(EPlaceholderState.UPLOADING);
+      },
+      onCancel: () => {
+        // User cancelled file selection
+        setPlaceholderState(EPlaceholderState.IDLE);
+      },
+    });
   };
 
   const handleMediaClick = () => {
@@ -124,9 +148,15 @@ export const MediaItem: FC<TProps> = ({
           onClick={handleMediaClick}
         />
       ) : (
-        <div className={s.placeholder} onClick={addMedia}>
+        <div
+          className={cx(s.placeholder, {
+            [s.skeletonActive]: placeholderState !== EPlaceholderState.IDLE,
+          })}
+          onClick={addMedia}
+        >
           <div className={s.placeholderIcon}>+</div>
           {dayLabel && <div className={s.dayLabel}>{dayLabel}</div>}
+          {placeholderState !== EPlaceholderState.IDLE && <div className={s.skeleton} />}
         </div>
       )}
     </div>

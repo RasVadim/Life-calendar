@@ -7,6 +7,7 @@ export type TAddFileOptions = {
   multiple?: boolean;
   onSuccess?: (fileId: string, isVideo: boolean, size: number) => void;
   onError?: (error: Error) => void;
+  onCancel?: () => void;
 };
 
 /**
@@ -20,7 +21,7 @@ export const addFile = async (dateKey?: string | null, options: TAddFileOptions 
     return;
   }
 
-  const { accept = 'image/*,video/*', multiple = false, onSuccess, onError } = options;
+  const { accept = 'image/*,video/*', multiple = false, onSuccess, onError, onCancel } = options;
 
   try {
     // Create file input element
@@ -47,8 +48,24 @@ export const addFile = async (dateKey?: string | null, options: TAddFileOptions 
         } catch (error) {
           onError?.(error as Error);
         }
+      } else {
+        // User cancelled file selection
+        onCancel?.();
       }
     };
+
+    // Handle window focus to detect cancellation
+    const handleWindowFocus = () => {
+      // Small delay to allow file dialog to close
+      setTimeout(() => {
+        if (!input.files || input.files.length === 0) {
+          onCancel?.();
+        }
+        window.removeEventListener('focus', handleWindowFocus);
+      }, 100);
+    };
+
+    window.addEventListener('focus', handleWindowFocus);
 
     // Trigger file selection
     input.click();
