@@ -86,21 +86,9 @@
 @keyframes skeleton-shimmer
   0%
     background-position -200% 0
+
   100%
     background-position 200% 0
-
-.smallMediaItem .placeholder
-  .placeholderIcon
-    font-size 18px
-    font-weight 100
-    line-height 24px
-    opacity 0.8
-
-  &:hover
-    .placeholderIcon
-      font-size 24px
-      cursor default
-      opacity 1
 
 .dayLabel
   font-size 10px
@@ -117,15 +105,28 @@
 // Small size media item
 .smallMediaItem
   width 100%
-  min-height 60px
+  min-height 56px
+  aspect-ratio 1
   overflow hidden
   border-radius 0
+
+  .placeholder
+    .placeholderIcon
+      font-size 18px
+      font-weight 100
+      line-height 24px
+      opacity 0.8
+
+    &:hover
+      .placeholderIcon
+        font-size 24px
+        cursor default
+        opacity 1
 
   &.first
     border-bottom-left-radius var(--border-radius)
 
   &.last
     border-bottom-right-radius var(--border-radius)
-
   @media (min-width $mobile-width)
-    min-height 80px
+    height 80px  // ← Фиксированная высота вместо min-height
