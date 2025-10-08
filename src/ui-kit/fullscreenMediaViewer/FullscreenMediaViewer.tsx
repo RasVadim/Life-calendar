@@ -2,7 +2,7 @@ import { FC, useCallback, useEffect, useMemo } from 'react';
 
 import cx from 'classnames';
 
-import { useDragGesture, useBodyScrollLock } from './hooks';
+import { useDragGesture, useBodyScrollLock, useBrowserZoom } from './hooks';
 import { MediaElement } from './MediaElement/MediaElement';
 
 import s from './s.module.styl';
@@ -18,12 +18,13 @@ type TProps = {
 export const FullscreenMediaViewer: FC<TProps> = ({
   url,
   isVideo = false,
-  hint = 'Swipe down or tap to close',
+  hint = 'Swipe down or tap to close • Pinch to zoom',
   isOpen = false,
   onClose,
 }) => {
   // Custom hooks
   useBodyScrollLock(isOpen);
+  useBrowserZoom(isOpen); // Enable browser zoom when fullscreen is open
 
   const { dragOffset, isDragging, handleTouchStart, handleTouchMove, handleTouchEnd, resetDrag } =
     useDragGesture(isOpen, onClose);
