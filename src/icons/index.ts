@@ -22,6 +22,12 @@ export { ChevronIcon } from './chevronIcon';
 
 export { CheckIcon } from './checkIcon';
 
+export { HolidayIcon } from './holidayIcon';
+
+export { CircleLineIcon } from './circleLineIcon';
+
+export { LeapIcon } from './leapIcon';
+
 export { MoonIcon, SunIcon, StarIcon, PaletteIcon, RocketIcon } from './themeIcons';
 
 // Zodiac

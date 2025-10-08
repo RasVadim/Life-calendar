@@ -1,14 +1,12 @@
 import { FC } from 'react';
 
-import cx from 'classnames';
-
-import { useTranslation, useZodiacIconSet } from '@/hooks';
-import { SEASONS_ICONS } from '@/icons';
-import { useLanguage } from '@/store/atoms';
+import { useTranslation } from '@/hooks';
+import { CircleLineIcon } from '@/icons';
 import { IWeek } from '@/store/clientDB';
-import { ESeason, TWeekZodiac } from '@/types';
 import { checkEvenMonth, checkEvenSeason } from '@/utils';
-import { getFemaleWordOrdinal, getYearsWordDative, getMonthsWord, getWereWord } from '@/utils';
+
+import { Comments, Holidays, Seasons, WeekTitle } from './components';
+import { EAgeTextType, useAgeText } from '../../hooks';
 
 import s from './s.module.styl';
 
@@ -18,9 +16,15 @@ type TProps = {
 
 export const WeekInfo: FC<TProps> = ({ week }) => {
   const { t } = useTranslation();
-  const [language] = useLanguage();
 
-  const zodiacIconSet = useZodiacIconSet({ jsx: true, first: true });
+  // Get age text using custom hook - must be called before early return
+  const { weekNumberText, ageText } = useAgeText({
+    lifeYear: week?.lifeYear,
+    lifeMonth: week?.lifeMonth,
+    weekIndex: week?.index,
+  });
+
+  if (!week) return null;
 
   const {
     description,
@@ -35,112 +39,56 @@ export const WeekInfo: FC<TProps> = ({ week }) => {
     comments,
     isLeapYear,
     secondYear,
-    index,
-    lifeYear,
-    lifeMonth,
     yearZodiacLabel,
-  } = week || {};
+  } = week;
 
+  // Format labels
   const monthLabel = t(`life.${month}`);
   const secondMonthLabel = secondMonth ? t(`life.${secondMonth}`) : '';
-  const seasonLabel = season ? t(`life.${season}`) : '';
-  const secondSeasonLabel = secondSeason ? t(`life.${secondSeason}`) : '';
 
+  // Format dates
   const dates = `${dateStart?.slice(8, 10)} - ${dateEnd?.slice(8, 10)}`;
 
+  // Check even states
   const isEvenMonth = checkEvenMonth(month);
-
   const isEvenSeason = checkEvenSeason(season);
 
-  // Week number text
-  const weekNumberText =
-    index !== undefined && index !== null
-      ? getFemaleWordOrdinal(index + 1, language || 'en') + ' ' + t('layout.weekOfLife')
-      : '';
-
-  // Age text
-  const remainingMonths = lifeMonth ? lifeMonth % 12 : 0;
-  const ageText =
-    lifeYear !== undefined && lifeMonth !== undefined
-      ? lifeYear === 1
-        ? t('layout.youWereMonthsOld', {
-            wasWord: getWereWord(lifeMonth, language || 'en'),
-            months: lifeMonth,
-            monthsWord: getMonthsWord(lifeMonth, language || 'en'),
-          })
-        : remainingMonths > 0
-          ? t('layout.youWereYearsOld', {
-              wasWord: getWereWord(lifeYear, language || 'en'),
-              years: lifeYear - 1,
-              yearsWord: getYearsWordDative(lifeYear - 1, language || 'en'),
-              months: remainingMonths,
-              monthsWord: getMonthsWord(remainingMonths, language || 'en'),
-            })
-          : t('layout.youWereYearsOldNoMonths', {
-              wasWord: getWereWord(lifeYear, language || 'en'),
-              years: lifeYear - 1,
-              yearsWord: getYearsWordDative(lifeYear - 1, language || 'en'),
-            })
-      : '';
-
+  // Format holidays text
   const holidaysText = holidays?.map((holiday) => t(`life.holidays.${holiday}`)).join(', ');
-
-  const ZodiacIcon = zodiacIconSet?.[yearZodiacLabel as TWeekZodiac];
-
-  const SeasonIcon = SEASONS_ICONS?.[season as ESeason];
-  const SecondSeasonIcon = SEASONS_ICONS?.[secondSeason as ESeason];
 
   return (
     <div className={s.wrapper}>
-      <div className={cx(s.title, { [s.secondColor]: isEvenMonth })}>
-        {isLeapYear && <div className={s.leapIcon}>leap</div>}
-        {ZodiacIcon && <ZodiacIcon size={'14'} />}
-        <div className={s.year}>{year}</div>
-        <div className={cx(s.month, { [s.secondColor]: isEvenMonth })}>{monthLabel}</div>
-        <div className={s.dates}>{dates}</div>
-        {secondMonthLabel && (
-          <div className={cx(s.month, { [s.secondColor]: !isEvenMonth })}>{secondMonthLabel}</div>
-        )}
-        {secondYear && <div className={s.year}>{secondYear}</div>}
+      <WeekTitle
+        year={year}
+        secondYear={secondYear}
+        monthLabel={monthLabel}
+        secondMonthLabel={secondMonthLabel}
+        dates={dates}
+        isLeapYear={isLeapYear}
+        isEvenMonth={!!isEvenMonth}
+        yearZodiacLabel={yearZodiacLabel}
+      />
+
+      <div className={s.weekNumber}>
+        <CircleLineIcon size={'10'} />
+        {weekNumberText} {t('layout.weekOfLife')}
       </div>
 
-      <div className={s.weekNumber}>{weekNumberText}</div>
-      <div className={s.age}>{ageText}</div>
-
-      {seasonLabel && (
-        <div className={s.seasons}>
-          <span className={cx(s.seasonItem, { [s.secondColor]: isEvenSeason })}>
-            {SeasonIcon && <SeasonIcon size={'14'} />}
-            {seasonLabel}
-          </span>
-          {secondSeasonLabel && (
-            <span className={cx(s.seasonItem, { [s.secondColor]: !isEvenSeason })}>
-              <span className={s.separator}>/</span>
-              {secondSeasonLabel}
-              {SecondSeasonIcon && <SecondSeasonIcon size={'14'} />}
-            </span>
-          )}
+      {ageText && (
+        <div className={s.age}>
+          {ageText.type === EAgeTextType.Months && t('layout.youWereMonthsOld', ageText)}
+          {ageText.type === EAgeTextType.YearsWithMonths && t('layout.youWereYearsOld', ageText)}
+          {ageText.type === EAgeTextType.YearsOnly && t('layout.youWereYearsOldNoMonths', ageText)}
         </div>
       )}
 
-      {holidaysText && (
-        <div className={s.holidays}>
-          <div className={s.holidaysList}>
-            <span key={index} className={s.holidayItem}>
-              {holidaysText}
-            </span>
-          </div>
-        </div>
-      )}
+      <Seasons season={season} secondSeason={secondSeason} isEvenSeason={!!isEvenSeason} />
+
+      <Holidays holidaysText={holidaysText} />
 
       {description && <div className={s.description}>{description}</div>}
 
-      {comments && (
-        <div className={s.comments}>
-          <div className={s.commentsLabel}>{t('layout.comments')}:</div>
-          <div className={s.commentsText}>{comments}</div>
-        </div>
-      )}
+      <Comments comments={comments} />
     </div>
   );
 };
