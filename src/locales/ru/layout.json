@@ -41,6 +41,11 @@
     "circles": "Кружки",
     "natural": "Природа",
     "off": "Откл.",
-    "swipeToClose": "Swipe down or tap to close"
+    "swipeToClose": "Swipe down or tap to close",
+    "comments": "Комментарии",
+    "weekOfLife": "неделя жизни",
+    "youWereYearsOld": "вам {{wasWord}} {{years}} {{yearsWord}} (+{{months}} {{monthsWord}})",
+    "youWereYearsOldNoMonths": "вам {{wasWord}} {{years}} {{yearsWord}}",
+    "youWereMonthsOld": "вам {{wasWord}} {{months}} {{monthsWord}}"
   }
 }

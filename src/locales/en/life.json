@@ -47,6 +47,12 @@
       "friday": "Fri",
       "saturday": "Sat",
       "sunday": "Sun"
+    },
+    "holidays": {
+      "newYear": "New Year",
+      "birthday": "Birthday",
+      "feb23": "February 23",
+      "mar8": "March 8"
     }
   }
 }

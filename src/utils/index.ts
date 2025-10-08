@@ -8,6 +8,7 @@ export { formatDateToKey } from './common/formatDateToKey';
 export { findWithIndex } from './common/findWithIndex';
 export { getUserTimezone, getUserTimezoneOffset } from './common/getUserTimezone';
 export { checkEvenMonth } from './common/checkEvenMonth';
+export { checkEvenSeason } from './common/checkEvenSeason';
 
 // mobile
 export { changeByDrawerStatusBarColor } from './mobile/changeByDrawerStatusBarColor';
@@ -25,6 +26,8 @@ export { getWeeksWord } from './getRightWordEnd/getWeeksWord';
 export { getDaysWord } from './getRightWordEnd/getDaysWord';
 export { getHoursWord } from './getRightWordEnd/getHoursWord';
 export { getRestDaysSentence } from './getRightWordEnd/getRestDaysSentence';
+export { getFemaleWordOrdinal } from './getRightWordEnd/getFemaleWordOrdinal';
+export { getWereWord } from './getRightWordEnd/getWereWord';
 
 // weeks
 export { generateWeeks } from './weeks/generateWeeks/generateWeeks';
