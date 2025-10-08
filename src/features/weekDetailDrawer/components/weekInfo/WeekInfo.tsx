@@ -2,9 +2,11 @@ import { FC } from 'react';
 
 import cx from 'classnames';
 
-import { useTranslation } from '@/hooks';
+import { useTranslation, useZodiacIconSet } from '@/hooks';
+import { SEASONS_ICONS } from '@/icons';
 import { useLanguage } from '@/store/atoms';
 import { IWeek } from '@/store/clientDB';
+import { ESeason, TWeekZodiac } from '@/types';
 import { checkEvenMonth, checkEvenSeason } from '@/utils';
 import { getFemaleWordOrdinal, getYearsWordDative, getMonthsWord, getWereWord } from '@/utils';
 
@@ -17,6 +19,8 @@ type TProps = {
 export const WeekInfo: FC<TProps> = ({ week }) => {
   const { t } = useTranslation();
   const [language] = useLanguage();
+
+  const zodiacIconSet = useZodiacIconSet({ jsx: true, first: true });
 
   const {
     description,
@@ -34,6 +38,7 @@ export const WeekInfo: FC<TProps> = ({ week }) => {
     index,
     lifeYear,
     lifeMonth,
+    yearZodiacLabel,
   } = week || {};
 
   const monthLabel = t(`life.${month}`);
@@ -80,10 +85,16 @@ export const WeekInfo: FC<TProps> = ({ week }) => {
 
   const holidaysText = holidays?.map((holiday) => t(`life.holidays.${holiday}`)).join(', ');
 
+  const ZodiacIcon = zodiacIconSet?.[yearZodiacLabel as TWeekZodiac];
+
+  const SeasonIcon = SEASONS_ICONS?.[season as ESeason];
+  const SecondSeasonIcon = SEASONS_ICONS?.[secondSeason as ESeason];
+
   return (
     <div className={s.wrapper}>
-      <div className={s.title}>
+      <div className={cx(s.title, { [s.secondColor]: isEvenMonth })}>
         {isLeapYear && <div className={s.leapIcon}>leap</div>}
+        {ZodiacIcon && <ZodiacIcon size={'14'} />}
         <div className={s.year}>{year}</div>
         <div className={cx(s.month, { [s.secondColor]: isEvenMonth })}>{monthLabel}</div>
         <div className={s.dates}>{dates}</div>
@@ -96,18 +107,19 @@ export const WeekInfo: FC<TProps> = ({ week }) => {
       <div className={s.weekNumber}>{weekNumberText}</div>
       <div className={s.age}>{ageText}</div>
 
-      {(seasonLabel || secondSeasonLabel) && (
+      {seasonLabel && (
         <div className={s.seasons}>
-          <div className={s.seasonItem}>
-            <span className={cx(s.seasonValue, { [s.secondColor]: isEvenSeason })}>
-              {seasonLabel}
+          <span className={cx(s.seasonItem, { [s.secondColor]: isEvenSeason })}>
+            {SeasonIcon && <SeasonIcon size={'14'} />}
+            {seasonLabel}
+          </span>
+          {secondSeasonLabel && (
+            <span className={cx(s.seasonItem, { [s.secondColor]: !isEvenSeason })}>
+              <span className={s.separator}>/</span>
+              {secondSeasonLabel}
+              {SecondSeasonIcon && <SecondSeasonIcon size={'14'} />}
             </span>
-            {secondSeasonLabel && (
-              <span className={cx(s.seasonValue, { [s.secondColor]: !isEvenSeason })}>
-                / {secondSeasonLabel}
-              </span>
-            )}
-          </div>
+          )}
         </div>
       )}
 

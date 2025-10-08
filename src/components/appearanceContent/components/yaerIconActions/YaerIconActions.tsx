@@ -23,7 +23,7 @@ export const YaerIconActions: FC = () => {
             zodiacMode: value as EZodiacMode,
           });
         }}
-        defaultValue={settings?.zodiacMode}
+        defaultValue={settings?.zodiacMode || EZodiacMode.OFF}
         value={settings?.zodiacMode}
       />
     </div>

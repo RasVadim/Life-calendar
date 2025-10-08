@@ -26,7 +26,7 @@ export const MediaBlock: FC<TProps> = ({ week, mediaData }) => {
         <div className={s.smallMediaContainer}>
           {smallMediaItems.map((item, index) => (
             <MediaItem
-              key={item.dayOfWeek}
+              key={item.mediaIndex}
               item={item}
               isSmall
               isFirst={index === 0}

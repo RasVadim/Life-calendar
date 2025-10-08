@@ -2,12 +2,12 @@ import { useLiveQuery } from 'dexie-react-hooks';
 
 import { lifeCalendarDB } from '@/store/clientDB';
 
-import { Settings } from '../../lifeCalendarDB';
+import { ISettings } from '../../interfaces';
 
 /**
  * React hook to get settings from IndexedDB reactively
- * @returns {Settings} Settings data
+ * @returns {ISettings} Settings data
  */
-export const useDBSettings = (): Settings | undefined => {
+export const useDBSettings = (): ISettings | undefined => {
   return useLiveQuery(() => lifeCalendarDB.settings.toCollection().first(), []);
 };

@@ -52,6 +52,13 @@ export { SnakeCircleIcon } from './zodiac/circles/snakeCircleIcon';
 export { TigerCircleIcon } from './zodiac/circles/tigerCircleIcon';
 export { BullCircleIcon } from './zodiac/circles/bullCircleIcon';
 
+// Seasons
+export { WinterIcon } from './seasons/winterIcon';
+export { SpringIcon } from './seasons/springIcon';
+export { SummerIcon } from './seasons/summerIcon';
+export { AutumnIcon } from './seasons/autumnIcon';
+
 // Icon Sets
 export { ZODIAC_CIRCLES_ICONS, ZODIAC_CIRCLES_PNG_PATHS } from './iconSets/zodiacCircles';
 export { ZODIAC_ICONS, ZODIAC_PNG_PATHS } from './iconSets/zodiac';
+export { SEASONS_ICONS } from './iconSets/seasons';
