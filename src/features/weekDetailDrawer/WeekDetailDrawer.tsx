@@ -3,6 +3,7 @@ import { FC } from 'react';
 
 import { useParams } from 'react-router-dom';
 
+import { useDevice } from '@/hooks';
 import { useSetOpenDrawerKey } from '@/store/atoms';
 import { useDBWeekByIndex } from '@/store/clientDB';
 import { EModalKeys, TMedia, TMediaDatesMap } from '@/types';
@@ -15,9 +16,10 @@ type TProps = {
 };
 
 export const WeekDetailDrawer: FC<TProps> = ({ mediaData }) => {
+  const { isMobile } = useDevice();
   // const { t } = useTranslation();
   const { weekIndex } = useParams();
-  const weekIndexNumber = weekIndex ? Number(weekIndex) : 0;
+  const weekIndexNumber = weekIndex ? Number(weekIndex) : 1;
   const week = useDBWeekByIndex(weekIndexNumber);
 
   const setDrawerKey = useSetOpenDrawerKey();
@@ -31,7 +33,7 @@ export const WeekDetailDrawer: FC<TProps> = ({ mediaData }) => {
       title={''}
       keyProp={EModalKeys.WEEK_DETAIL}
       onClose={handleClose}
-      closeButton={false}
+      closeButton={!isMobile}
       topContent={<MediaBlock week={week} mediaData={mediaData} />}
     >
       <WeekInfo week={week} />

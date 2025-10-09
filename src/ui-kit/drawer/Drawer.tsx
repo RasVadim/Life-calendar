@@ -58,9 +58,14 @@ export const Drawer: FC<DrawerProps> = ({
         onClick={disabledClose ? undefined : onClose}
       />
       <div className={cx(s.drawerWrap, { [s.hidden]: !isOpen })}>
-        <div className={cx(s.drawerHeader, { [s.noPaddings]: !closeButton })}>
+        <div className={cx(s.drawerHeader, { [s.noPaddings]: !closeButton || topContent })}>
           {closeButton && (
-            <Button onClick={onClose} label={t('layout.close')} disabled={disabledClose} />
+            <Button
+              onClick={onClose}
+              label={t('layout.close')}
+              disabled={disabledClose}
+              className={s.closeButton}
+            />
           )}
           {actions ?? actions}
         </div>

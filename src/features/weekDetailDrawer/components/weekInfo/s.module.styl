@@ -1,5 +1,12 @@
+@import '../../../../styles/vars.styl'
+
 .wrapper
   padding 30px 10px
+  max-width var(--mobile-width)
+  margin 0 auto
+
+  @media (min-width $mobile-width)
+    padding 30px
 
 .weekNumber
   font-size 12px

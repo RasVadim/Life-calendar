@@ -11,7 +11,7 @@ export const connectMediaToDay = async ({
   dayIndex,
   dateKey,
 }: TConnectMediaToDayOptions) => {
-  if (!weekIndex || !dayIndex || !dateKey) {
+  if (typeof weekIndex !== 'number' || typeof dayIndex !== 'number' || !dateKey) {
     console.error('Week index, day index and date key are required');
     return;
   }

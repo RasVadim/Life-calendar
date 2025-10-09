@@ -5,7 +5,7 @@ type PropsType = {
   color?: string;
 };
 
-export const AutumnIcon: FC<PropsType> = ({ size = '20', color = '#9DB2CE' }) => (
+export const ReplaceIcon: FC<PropsType> = ({ size = '20', color = '#9DB2CE' }) => (
   <svg
     width={size}
     height={size}
@@ -14,7 +14,21 @@ export const AutumnIcon: FC<PropsType> = ({ size = '20', color = '#9DB2CE' }) =>
     xmlns="http://www.w3.org/2000/svg"
   >
     <path
-      d="M16.61 19.9999C17.95 20.0099 19.24 19.5099 20.23 18.6099C23.5 15.7499 21.75 10.0099 17.44 9.46995C15.9 0.129949 2.42998 3.66995 5.61998 12.5599"
+      d="M12 2V8L14 6"
+      stroke={color}
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M12 8L10 6"
+      stroke={color}
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M7 12C3 12 3 13.79 3 16V17C3 19.76 3 22 8 22H16C20 22 21 19.76 21 17V16C21 13.79 21 12 17 12C16 12 15.72 12.21 15.2 12.6L14.18 13.68C13 14.94 11 14.94 9.81 13.68L8.8 12.6C8.28 12.21 8 12 7 12Z"
       stroke={color}
       strokeWidth="1.5"
       strokeMiterlimit="10"
@@ -22,7 +36,7 @@ export const AutumnIcon: FC<PropsType> = ({ size = '20', color = '#9DB2CE' }) =>
       strokeLinejoin="round"
     />
     <path
-      d="M7.28011 12.97C6.75011 12.7 6.16011 12.56 5.57011 12.57C0.910109 12.9 0.920108 19.68 5.57011 20.01"
+      d="M5 12V8.00004C5 5.99004 5 4.33004 8 4.04004"
       stroke={color}
       strokeWidth="1.5"
       strokeMiterlimit="10"
@@ -30,39 +44,7 @@ export const AutumnIcon: FC<PropsType> = ({ size = '20', color = '#9DB2CE' }) =>
       strokeLinejoin="round"
     />
     <path
-      d="M15.8201 9.88998C16.3401 9.62998 16.9001 9.48998 17.4801 9.47998"
-      stroke={color}
-      strokeWidth="1.5"
-      strokeMiterlimit="10"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-    <path
-      d="M9.96997 20L7.96997 22"
-      stroke={color}
-      strokeWidth="1.5"
-      strokeMiterlimit="10"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-    <path
-      d="M13.97 20L11.97 22"
-      stroke={color}
-      strokeWidth="1.5"
-      strokeMiterlimit="10"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-    <path
-      d="M13.97 16L11.97 18"
-      stroke={color}
-      strokeWidth="1.5"
-      strokeMiterlimit="10"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-    <path
-      d="M9.96997 16L7.96997 18"
+      d="M19 12V8.00004C19 5.99004 19 4.33004 16 4.04004"
       stroke={color}
       strokeWidth="1.5"
       strokeMiterlimit="10"

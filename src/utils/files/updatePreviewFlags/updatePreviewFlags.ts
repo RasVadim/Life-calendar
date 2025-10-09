@@ -12,7 +12,7 @@ export const updatePreviewFlags = async ({
   weekIndex,
   dayIndex,
 }: UpdatePreviewFlagsParams) => {
-  if (!weekIndex || !dayIndex) return;
+  if (typeof weekIndex !== 'number' || typeof dayIndex !== 'number') return;
 
   try {
     const data = await getDataForUpdatePreviewFlags(weekIndex);

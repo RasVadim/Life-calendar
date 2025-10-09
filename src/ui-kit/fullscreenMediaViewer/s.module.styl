@@ -1,3 +1,5 @@
+@import '../../styles/vars.styl'
+
 .fullscreenContainer
   position fixed
   top 0
@@ -38,16 +40,36 @@
   display flex
   justify-content center
   align-items center
-  padding 20px
+  padding 0
   box-sizing border-box
+
+.actionButtons
+  position absolute
+  bottom 0
+  width 100%
+  padding 15px
+  display flex
+  justify-content space-between
+  gap 8px
+  z-index 10
+
+.actionButton
+  background-color var(--background-front-color)
+  opacity 0.5
+
+  svg
+    stroke var(--contrast-color)
+
+    path
+      stroke var(--contrast-color)
 
 .closeHint
   position absolute
-  bottom 40px
+  bottom 20px
   left 50%
   transform translateX(-50%)
   color rgba(255, 255, 255, 0.7)
-  font-size 14px
+  font-size 10px
   text-align center
   pointer-events none
   opacity 0
@@ -83,13 +105,14 @@
     transform scale(0.9)
 
 // Mobile optimizations
-@media (max-width 768px)
+@media (min-width $medium-width)
   .mediaWrapper
-    padding 0
+    padding 20px
 
-  .closeHint
-    bottom 20px
-    font-size 12px
+  .actionButtons
+    padding 25px 40px
+    gap 12px
+    justify-content right
 
 // Prevent scrolling on body when fullscreen is open
 body.fullscreen-open

@@ -16,6 +16,7 @@ type TProps = {
   isSmall?: boolean;
   isFirst?: boolean;
   isLast?: boolean;
+  isOnlyOne?: boolean;
 };
 
 enum EMediaState {
@@ -35,6 +36,7 @@ export const MediaItem: FC<TProps> = ({
   isSmall = false,
   isFirst = false,
   isLast = false,
+  isOnlyOne = false,
 }) => {
   const { t } = useTranslation();
 
@@ -43,7 +45,7 @@ export const MediaItem: FC<TProps> = ({
   const { blob } = useDBFileBlob({ fileId, enabled: isWeekPreview });
   const { thumbnail } = useDBThumbnail({ fileId, enabled: !isWeekPreview });
 
-  const mediaBlob = isWeekPreview ? blob : thumbnail;
+  const mediaBlob = isSmall ? thumbnail : blob;
 
   const [mediaState, setMediaState] = useState<EMediaState>(EMediaState.PLACEHOLDER);
   const [blobUrl, setBlobUrl] = useState<string>('');
@@ -126,6 +128,7 @@ export const MediaItem: FC<TProps> = ({
         [s.smallMediaItem]: isSmall,
         [s.first]: isFirst,
         [s.last]: isLast,
+        [s.bottomRadius]: !isSmall && isOnlyOne,
       })}
     >
       {mediaState === EMediaState.VIDEO ? (

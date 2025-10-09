@@ -28,6 +28,10 @@ export { CircleLineIcon } from './circleLineIcon';
 
 export { LeapIcon } from './leapIcon';
 
+export { DeleteIcon } from './deleteIcon';
+
+export { ReplaceIcon } from './replaceIcon';
+
 export { MoonIcon, SunIcon, StarIcon, PaletteIcon, RocketIcon } from './themeIcons';
 
 // Zodiac
