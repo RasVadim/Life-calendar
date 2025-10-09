@@ -20,7 +20,10 @@ jobs:
         cache: 'npm'
 
     - name: Install dependencies
-      run: npm install --legacy-peer-deps
+      run: |
+        npm cache clean --force
+        rm -rf node_modules package-lock.json
+        npm install --legacy-peer-deps
 
     - name: Lint check (errors only)
       run: npm run lint -- --quiet
