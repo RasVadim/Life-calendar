@@ -1,1 +1,1 @@
-export { useAgeText, EAgeTextType } from './useAgeText';
+export { useAgeText } from './useAgeText';

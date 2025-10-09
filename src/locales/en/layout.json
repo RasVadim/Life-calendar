@@ -43,9 +43,6 @@
     "off": "Off",
     "swipeToClose": "Swipe down or tap to close",
     "comments": "Comments",
-    "weekOfLife": "week of life",
-    "youWereYearsOld": "you {{wasWord}} {{years}} {{yearsWord}} old (+{{months}} {{monthsWord}})",
-    "youWereYearsOldNoMonths": "you {{wasWord}} {{years}} {{yearsWord}} old",
-    "youWereMonthsOld": "you {{wasWord}} {{months}} {{monthsWord}} old"
+    "weekOfLife": "week of life"
   }
 }

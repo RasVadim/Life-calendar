@@ -53,6 +53,10 @@
       "birthday": "День Рождения",
       "feb23": "23 Февраля",
       "mar8": "8 Марта"
-    }
+    },
+    "lessThanMonth": "Тут вам еще нет месяца",
+    "youWereYearsOld": "тут вам {{willWord}} {{years}} {{yearsWord}} (+{{months}} {{monthsWord}})",
+    "youWereYearsOldNoMonths": "тут вам {{willWord}} {{years}} {{yearsWord}}",
+    "youWereMonthsOld": "тут вам {{willWord}} {{months}} {{monthsWord}}"
   }
 }

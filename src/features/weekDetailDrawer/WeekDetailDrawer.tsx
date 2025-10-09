@@ -1,4 +1,3 @@
-// import { useTranslation } from '@/hooks';
 import { FC } from 'react';
 
 import { useParams } from 'react-router-dom';
@@ -17,9 +16,8 @@ type TProps = {
 
 export const WeekDetailDrawer: FC<TProps> = ({ mediaData }) => {
   const { isMobile } = useDevice();
-  // const { t } = useTranslation();
   const { weekIndex } = useParams();
-  const weekIndexNumber = weekIndex ? Number(weekIndex) : 0;
+  const weekIndexNumber = weekIndex ? Number(weekIndex) : 1796;
   const week = useDBWeekByIndex(weekIndexNumber);
 
   const setDrawerKey = useSetOpenDrawerKey();

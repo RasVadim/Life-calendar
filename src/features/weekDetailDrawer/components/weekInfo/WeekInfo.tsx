@@ -6,7 +6,7 @@ import { IWeek } from '@/store/clientDB';
 import { checkEvenMonth, checkEvenSeason } from '@/utils';
 
 import { Comments, Holidays, Seasons, WeekTitle } from './components';
-import { EAgeTextType, useAgeText } from '../../hooks';
+import { useAgeText } from '../../hooks';
 
 import s from './s.module.styl';
 
@@ -22,6 +22,7 @@ export const WeekInfo: FC<TProps> = ({ week }) => {
     lifeYear: week?.lifeYear,
     lifeMonth: week?.lifeMonth,
     weekIndex: week?.index,
+    dateStart: week?.dateStart,
   });
 
   if (!week) return null;
@@ -74,13 +75,7 @@ export const WeekInfo: FC<TProps> = ({ week }) => {
         {weekNumberText} {t('layout.weekOfLife')}
       </div>
 
-      {ageText && (
-        <div className={s.age}>
-          {ageText.type === EAgeTextType.Months && t('layout.youWereMonthsOld', ageText)}
-          {ageText.type === EAgeTextType.YearsWithMonths && t('layout.youWereYearsOld', ageText)}
-          {ageText.type === EAgeTextType.YearsOnly && t('layout.youWereYearsOldNoMonths', ageText)}
-        </div>
-      )}
+      {ageText && <div className={s.age}>{ageText}</div>}
 
       <Seasons season={season} secondSeason={secondSeason} isEvenSeason={!!isEvenSeason} />
 

@@ -20,6 +20,7 @@ export { toggleTheme } from './toggleTheme/toggleTheme';
 // getRightWordEnd
 export { getYearsWordGenitive } from './getRightWordEnd/getYearsWordGenitive';
 export { getYearsWordDative } from './getRightWordEnd/getYearsWordDative';
+export { getWillWord } from './getRightWordEnd/getWillWord';
 export { getWeekdayPrepositional } from './getRightWordEnd/getWeekdayPrepositional';
 export { getMonthsWord } from './getRightWordEnd/getMonthsWord';
 export { getWeeksWord } from './getRightWordEnd/getWeeksWord';
@@ -27,7 +28,6 @@ export { getDaysWord } from './getRightWordEnd/getDaysWord';
 export { getHoursWord } from './getRightWordEnd/getHoursWord';
 export { getRestDaysSentence } from './getRightWordEnd/getRestDaysSentence';
 export { getFemaleWordOrdinal } from './getRightWordEnd/getFemaleWordOrdinal';
-export { getWereWord } from './getRightWordEnd/getWereWord';
 
 // weeks
 export { generateWeeks } from './weeks/generateWeeks/generateWeeks';
