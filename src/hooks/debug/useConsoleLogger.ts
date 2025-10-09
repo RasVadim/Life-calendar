@@ -5,7 +5,7 @@ export const useConsoleLogger = () => {
 
   useEffect(() => {
     const originalLog = console.log;
-    console.log = (...args: any[]) => {
+    console.log = (...args: unknown[]) => {
       setLogs((prev) => [...prev.slice(-20), args.map(String).join(' ')]);
       originalLog(...args);
     };
