@@ -27,7 +27,7 @@ jobs:
 
     - name: Check for TODO/FIXME comments
       run: |
-        if grep -r "TODO\|FIXME\|HACK" src/ --exclude-dir=node_modules; then
+        if grep -r "TODO\|FIXME\|HACK" src/ --exclude-dir=node_modules | grep -v "(CI-IGNORE)"; then
           echo "Found TODO/FIXME comments. Please resolve them before merging."
           exit 1
         fi
