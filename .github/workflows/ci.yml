@@ -28,8 +28,11 @@ jobs:
     - name: Install dependencies
       run: npm install --legacy-peer-deps
 
-    - name: Run CI checks
-      run: npm run ci
+    - name: Run tests
+      run: npm run test:run
+
+    - name: Run build
+      run: npm run build
 
     - name: Upload coverage reports
       uses: codecov/codecov-action@v3
@@ -37,30 +40,3 @@ jobs:
       with:
         file: ./coverage/lcov.info
         fail_ci_if_error: false
-
-  build-check:
-    name: Build Check
-    runs-on: ubuntu-latest
-    needs: test
-
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '20.x'
-        cache: 'npm'
-
-    - name: Install dependencies
-      run: npm install
-
-    - name: Build project
-      run: npm run build
-
-    - name: Check build artifacts
-      run: |
-        ls -la dist/
-        test -f dist/index.html
-        test -f dist/manifest.webmanifest

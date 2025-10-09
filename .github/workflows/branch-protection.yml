@@ -5,8 +5,8 @@ on:
     types: [opened, synchronize, reopened]
 
 jobs:
-  required-checks:
-    name: Required Checks
+  quality-checks:
+    name: Quality Checks
     runs-on: ubuntu-latest
 
     steps:
@@ -24,12 +24,6 @@ jobs:
 
     - name: Lint check (errors only)
       run: npm run lint -- --quiet
-
-    - name: Test check
-      run: npm run test:run
-
-    - name: Build check
-      run: npm run build
 
     - name: Check for TODO/FIXME comments
       run: |
