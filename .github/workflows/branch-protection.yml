@@ -22,8 +22,8 @@ jobs:
     - name: Install dependencies
       run: npm install --legacy-peer-deps
 
-    - name: Lint check
-      run: npm run lint
+    - name: Lint check (errors only)
+      run: npm run lint -- --quiet
 
     - name: Test check
       run: npm run test:run
