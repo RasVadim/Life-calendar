@@ -25,10 +25,7 @@ jobs:
         cache: 'npm'
 
     - name: Install dependencies
-      run: |
-        npm cache clean --force
-        rm -rf node_modules package-lock.json
-        npm install --legacy-peer-deps
+      run: npm install --legacy-peer-deps
 
     - name: Run tests
       run: npm test
