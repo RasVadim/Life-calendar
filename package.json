@@ -11,6 +11,8 @@
     "test": "vitest",
     "test:ui": "vitest --ui",
     "test:run": "vitest run",
+    "ci": "npm run test:run && npm run build",
+    "ci:strict": "npm run lint && npm run test:run && npm run build",
     "generate-pwa-assets": "pwa-assets-generator --preset minimal public/logo.svg",
     "js-themes": "node scripts/js-themes.cjs"
   },

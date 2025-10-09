@@ -1,1 +1,1 @@
-export { LifeActions } from './LifeActions'; 
+export { LifeActions } from './LifeActions';

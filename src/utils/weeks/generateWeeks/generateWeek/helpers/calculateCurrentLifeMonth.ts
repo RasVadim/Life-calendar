@@ -16,11 +16,17 @@ export const calculateCurrentLifeMonth = (
   const birthMonth = birthDate.getMonth(); // 0-11
 
   // Base calculation: years lived + month difference
-  let monthsLived = lifeYear * 12 + (currentMonth - birthMonth);
+  let monthsLived = (lifeYear - 1) * 12 + (currentMonth - birthMonth);
 
   // Adjust for case when current month is earlier in year than birth month
   if (currentMonth < birthMonth) {
     monthsLived += 12;
+  }
+
+  // Special case: if we're in the same month as birth month but in next year,
+  // we're in the 13th month of life
+  if (currentMonth === birthMonth && weekStart.getFullYear() > birthDate.getFullYear()) {
+    monthsLived = 12;
   }
 
   // Adjust if we haven't reached the birth day in the current month yet

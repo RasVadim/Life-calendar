@@ -36,7 +36,6 @@ describe('generateDay', () => {
       id: 'w1_d5', // Friday = 5
       date: '2024-03-01',
       dayOfWeek: EDayOfWeek.Friday,
-      isWeekPreview: true,
       holidays: null,
       lifeDay: expect.any(Number), // Days since birth
       comments: null,
@@ -121,7 +120,7 @@ describe('generateDay', () => {
       weekIndex: mockWeekIndex,
       birthDate: mockBirthDate,
     });
-    expect(result1.isWeekPreview).toBe(true);
+    expect(result1.media).toBe('20240301');
 
     // Test when date is different from weekStart
     const differentDate = new Date('2024-03-02T00:00:00.000Z');
@@ -131,7 +130,7 @@ describe('generateDay', () => {
       weekIndex: mockWeekIndex,
       birthDate: mockBirthDate,
     });
-    expect(result2.isWeekPreview).toBe(false);
+    expect(result2.media).toBe(null);
   });
 
   it('should handle holidays correctly when present', () => {

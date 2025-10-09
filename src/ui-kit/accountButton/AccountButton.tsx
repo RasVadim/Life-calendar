@@ -1,21 +1,17 @@
-import { FC } from "react";
+import { FC } from 'react';
 
-import { DefaultUserIcon } from "@/icons";
+import { DefaultUserIcon } from '@/icons';
 
-import s from "./s.module.styl";
+import s from './s.module.styl';
 
 type PropsType = {
   imageUrl?: string;
 };
 
-export const AccountButton: FC<PropsType> = ({ imageUrl = "" }) => {
+export const AccountButton: FC<PropsType> = ({ imageUrl = '' }) => {
   return (
     <button className={s.button}>
-      {imageUrl ? (
-        <img className={s.image} alt="user image" src={imageUrl} />
-      ) : (
-        <DefaultUserIcon />
-      )}
+      {imageUrl ? <img className={s.image} alt="user image" src={imageUrl} /> : <DefaultUserIcon />}
     </button>
   );
 };
