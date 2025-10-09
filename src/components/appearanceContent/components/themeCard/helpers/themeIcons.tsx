@@ -1,4 +1,4 @@
-// TODO: unused icons
+// TODO: unused icons (CI-IGNORE)
 import { MoonIcon, PaletteIcon, RocketIcon, StarIcon, SunIcon } from '@/icons';
 import { EThemeMode } from '@/types';
 
