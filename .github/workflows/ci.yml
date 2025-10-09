@@ -8,7 +8,7 @@ on:
 
 jobs:
   test:
-    name: Test Suite
+    name: Tests, Build, Coverage
     runs-on: ubuntu-latest
 
     strategy:

@@ -1,4 +1,4 @@
-name: Branch Protection Tests
+name: Branch Protection (Linting)
 
 on:
   pull_request:
