@@ -55,8 +55,6 @@ export const deleteMediaFile = async ({
       // Update preview flags after media removal
       // updatePreviewFlags({ dateKey, weekIndex, dayIndex });
     }
-
-    console.log(`Media deleted successfully for date: ${dateKey}`);
   } catch (error) {
     console.error('Error deleting media file:', error);
     throw error;

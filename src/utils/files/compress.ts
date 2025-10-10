@@ -1,5 +1,5 @@
 import { compressImageWithWorker } from './compressImage/compressImageWithWorker';
-import { compressVideo } from './compressVideo';
+import { compressVideo } from './compressVideo/compressVideo';
 
 export const compress = async (file: File) => {
   const isImage = file.type.startsWith('image/');

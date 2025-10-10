@@ -10,6 +10,6 @@ export { LifeExpectancyDrawer } from './lifeExpectancyDrawer/LifeExpectancyDrawe
 
 export { WeekDetailDrawer } from './weekDetailDrawer/WeekDetailDrawer';
 
-export { UpdateNotification } from './updateNotification/UpdateNotification';
-
 export { MediaViewer } from './mediaViewer/MediaViewer';
+
+export { NotificationProvider } from './notificationProvider/NotificationProvider';

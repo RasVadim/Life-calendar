@@ -43,6 +43,10 @@
     "off": "Off",
     "swipeToClose": "Swipe down or tap to close",
     "comments": "Comments",
-    "weekOfLife": "week of life"
+    "weekOfLife": "week of life",
+    "videoFormatWarning": {
+      "message": "Video in {{format}} format could not be processed.\nThis format or the codec used ({{codec}}) may not be supported.\nTry saving the video in another format, such as MP4.",
+      "close": "Got it"
+    }
   }
 }

@@ -42,5 +42,5 @@ export { uploadMediaFile } from './files/uploadMediaFile';
 export { deleteMediaFile } from './files/deleteMediaFile';
 export { compressImage } from './files/compressImage/compressImage';
 export { compressImageWithWorker } from './files/compressImage/compressImageWithWorker';
-export { compressVideo } from './files/compressVideo';
+export { compressVideo } from './files/compressVideo/compressVideo';
 export { compress } from './files/compress';

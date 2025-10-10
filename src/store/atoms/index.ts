@@ -16,6 +16,8 @@ export { useOpenDrawerKey, useSetOpenDrawerKey } from './openDrawer/useOpenDrawe
 
 export { usePrevRoute, useSetPrevRoute } from './prevRoute/usePrevRoute';
 
+export { useNotification, useSetNotification } from './notification/useNotification';
+
 export {
   useFullscreenViewer,
   useSetFullscreenViewer,

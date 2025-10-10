@@ -2,12 +2,13 @@ import { useEffect, useRef, useLayoutEffect } from 'react';
 
 import { useLocation } from 'react-router-dom';
 
-import { useInitLanguage, useActualizeWeeks } from '@/hooks';
+import { useInitLanguage, useActualizeWeeks, useCheckUpdates } from '@/hooks';
 import { Routes } from '@/Routes';
 import { useThemeMode, useSetPrevRoute } from '@/store/atoms';
 import { initDefaultWeeks } from '@/store/clientDB';
 
-import { BirthDateDrawer, UpdateNotification } from './features';
+import { NotificationProvider } from './features';
+import { BirthDateDrawer } from './features';
 import { MediaViewer } from './features';
 import { toggleTheme } from './utils';
 
@@ -48,6 +49,9 @@ const App = () => {
   // Actualize weeks at startup and by timer until the next 01:00
   useActualizeWeeks();
 
+  // Check for app updates
+  useCheckUpdates();
+
   // Save previous route for navigation purposes
   useLayoutEffect(() => {
     setPrevRoute(prevPathRef.current);
@@ -58,8 +62,8 @@ const App = () => {
     <>
       <Routes prevPath={prevPathRef.current} />
       <BirthDateDrawer />
-      <UpdateNotification />
       <MediaViewer />
+      <NotificationProvider />
     </>
   );
 };
