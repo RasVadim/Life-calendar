@@ -37,18 +37,22 @@ export enum EMonthsEndsIndxsValues {
 }
 
 export type TMedia = {
-  url?: string;
-  localPath?: string;
+  fileId?: string; // Reference to IFileBlob.id
   isWeekPreview?: boolean;
   isSeasonPreview?: boolean;
   isMonthPreview?: boolean;
   isVideo?: boolean;
   source?: 'LC' | 'Instagram' | 'Telegram' | 'Other';
-  // days?: Omit<TMedia, 'days'>[];
+  // File metadata
+  width?: number;
+  height?: number;
+  duration?: number; // Video duration in seconds
+  size?: number; // File size in bytes
+  createdAt?: string;
 } | null;
 
 export type TMonthsIndxsValue = {
-  type: EMonthsWeekIndxsValues | EMonthsEndsIndxsValues;
+  type?: EMonthsWeekIndxsValues | EMonthsEndsIndxsValues;
   media?: string;
   month?: string;
   year?: string;

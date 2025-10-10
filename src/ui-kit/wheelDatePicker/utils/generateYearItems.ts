@@ -8,4 +8,4 @@ export const generateYearItems = (currentYear: number, range: number = 120): TIt
     const year = currentYear - i;
     return { value: year, label: year.toString() };
   });
-}; 
+};

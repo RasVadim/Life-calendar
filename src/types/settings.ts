@@ -2,6 +2,15 @@ import { FC } from 'react';
 
 import { TWeekZodiac } from './life';
 
+export enum ESettings {
+  PROFILE = 'profile',
+  STORAGE = 'storage',
+  APPEARANCE = 'appearance',
+  LANGUAGE = 'language',
+  PREMIUM = 'premium',
+  ABOUT = 'about',
+}
+
 export enum EThemeMode {
   LIGHT = 'light',
   DARK = 'dark',

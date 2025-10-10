@@ -31,6 +31,32 @@
     "winter": "Winter",
     "spring": "Spring",
     "summer": "Summer",
-    "autumn": "Autumn"
+    "autumn": "Autumn",
+    "monday": "Monday",
+    "tuesday": "Tuesday",
+    "wednesday": "Wednesday",
+    "thursday": "Thursday",
+    "friday": "Friday",
+    "saturday": "Saturday",
+    "sunday": "Sunday",
+    "shortDays": {
+      "monday": "Mon",
+      "tuesday": "Tue",
+      "wednesday": "Wed",
+      "thursday": "Thu",
+      "friday": "Fri",
+      "saturday": "Sat",
+      "sunday": "Sun"
+    },
+    "holidays": {
+      "newYear": "New Year",
+      "birthday": "Birthday",
+      "feb23": "February 23",
+      "mar8": "March 8"
+    },
+    "lessThanMonth": "You are not yet a month old here",
+    "youWereYearsOld": "here you {{willWord}} {{years}} {{yearsWord}} old (+{{months}} {{monthsWord}})",
+    "youWereYearsOldNoMonths": "here you {{willWord}} {{years}} {{yearsWord}} old",
+    "youWereMonthsOld": "here you {{willWord}} {{months}} {{monthsWord}} old"
   }
 }

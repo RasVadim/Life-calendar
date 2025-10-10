@@ -1,0 +1,34 @@
+@import '../../../../styles/vars.styl'
+
+.wrapper
+  padding 30px 10px
+  max-width var(--mobile-width)
+  margin 0 auto
+
+  @media (min-width $mobile-width)
+    padding 30px
+
+.weekNumber
+  font-size 12px
+  font-weight 100
+  color var(--contrast-color)
+  display flex
+  align-items center
+  gap 4px
+
+  svg
+    stroke var(--contrast-color)
+
+    path
+      stroke var(--contrast-color)
+
+.age
+  margin-bottom 10px
+  font-size 12px
+  font-weight 100
+  color var(--secondary-color)
+
+.description
+  margin-top 20px
+  color var(--text-color)
+  line-height 1.5

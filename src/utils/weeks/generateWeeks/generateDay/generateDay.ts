@@ -2,6 +2,7 @@ import { differenceInDays, format } from 'date-fns';
 
 import { ISO_DATE_FORMAT } from '@/constants';
 import { EDayOfWeek, TDay } from '@/types';
+import { formatDateToKey } from '@/utils';
 
 import { getWeekHolidays } from '../helpers';
 
@@ -51,10 +52,10 @@ export const generateDay = ({
     id,
     date: format(date, ISO_DATE_FORMAT),
     dayOfWeek,
-    isWeekPreview,
     holidays: dayHolidays.length > 0 ? dayHolidays : null,
     lifeDay,
     comments: null,
     description: null,
+    media: isWeekPreview ? formatDateToKey(weekStart) : null,
   };
 };

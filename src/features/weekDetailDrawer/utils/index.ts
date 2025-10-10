@@ -1,0 +1,1 @@
+export { prepareMediaData } from './prepareMediaData';

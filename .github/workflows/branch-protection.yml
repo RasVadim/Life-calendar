@@ -1,0 +1,36 @@
+name: Branch Protection (Linting)
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  quality-checks:
+    name: Quality Checks
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup timezone
+      run: sudo timedatectl set-timezone Europe/Moscow
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20.x'
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm install --legacy-peer-deps
+
+    - name: Lint check (errors only)
+      run: npm run lint -- --quiet
+
+    - name: Check for TODO/FIXME comments
+      run: |
+        if grep -r "TODO\|FIXME\|HACK" src/ --exclude-dir=node_modules | grep -v "(CI-IGNORE)"; then
+          echo "Found TODO/FIXME comments. Please resolve them before merging."
+          exit 1
+        fi

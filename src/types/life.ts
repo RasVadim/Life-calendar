@@ -1,6 +1,5 @@
 import { HOLIDAY_NAMES } from '@/constants';
-import type { IWeek } from '@/store/clientDB';
-import { IMeta } from '@/store/clientDB/lifeCalendarDB';
+import type { IWeek, IMeta } from '@/store/clientDB';
 
 export enum EWeekType {
   Past = 'past',
@@ -43,13 +42,11 @@ export type TDay = {
   id: string;
   date: string;
   dayOfWeek: EDayOfWeek;
-  isWeekPreview: boolean;
   holidays: THolidayName[] | null;
   lifeDay: number;
   comments: string | null;
   description: string | null;
-  photoUrl?: string;
-  photoLocalPath?: string;
+  media: string | null;
 };
 
 export type THolidayName = (typeof HOLIDAY_NAMES)[keyof typeof HOLIDAY_NAMES];

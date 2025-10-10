@@ -77,7 +77,6 @@ export const YearsGrid = ({ weeks, isByWidth, lifeMode, zodiacIconSet }: PropsTy
       const elem = document.elementFromPoint(x, y);
       const weekId = elem?.getAttribute('data-week-id');
       if (weekId) {
-        console.log('Pinch center weekId:', weekId);
         setZoomCentralWeekId(weekId);
       }
     };

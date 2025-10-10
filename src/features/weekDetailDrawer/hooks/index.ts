@@ -1,0 +1,1 @@
+export { useAgeText } from './useAgeText';

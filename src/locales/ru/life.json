@@ -31,6 +31,32 @@
     "winter": "Зима",
     "spring": "Весна",
     "summer": "Лето",
-    "autumn": "Осень"
+    "autumn": "Осень",
+    "monday": "Понедельник",
+    "tuesday": "Вторник",
+    "wednesday": "Среда",
+    "thursday": "Четверг",
+    "friday": "Пятница",
+    "saturday": "Суббота",
+    "sunday": "Воскресенье",
+    "shortDays": {
+      "monday": "Пн",
+      "tuesday": "Вт",
+      "wednesday": "Ср",
+      "thursday": "Чт",
+      "friday": "Пт",
+      "saturday": "Сб",
+      "sunday": "Вс"
+    },
+    "holidays": {
+      "newYear": "Новый Год",
+      "birthday": "День Рождения",
+      "feb23": "23 Февраля",
+      "mar8": "8 Марта"
+    },
+    "lessThanMonth": "Тут вам еще нет месяца",
+    "youWereYearsOld": "тут вам {{willWord}} {{years}} {{yearsWord}} (+{{months}} {{monthsWord}})",
+    "youWereYearsOldNoMonths": "тут вам {{willWord}} {{years}} {{yearsWord}}",
+    "youWereMonthsOld": "тут вам {{willWord}} {{months}} {{monthsWord}}"
   }
 }

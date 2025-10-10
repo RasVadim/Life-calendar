@@ -1,0 +1,74 @@
+@import '../../styles/vars.styl'
+
+.fullscreenContainer
+  position fixed
+  top 0
+  left 0
+  right 0
+  bottom 0
+  width 100vw
+  height 100vh
+  background-color rgba(0, 0, 0, 0.8)
+  z-index 200
+  display flex
+  flex-direction column
+  justify-content center
+  align-items center
+  opacity 0
+  visibility hidden
+  transform scale(0.9)
+  animation 0.3s showFullscreen cubic-bezier(0.4, 0, 0.2, 1)
+  animation-fill-mode forwards
+  will-change transform, opacity
+  backdrop-filter blur(10px)
+  -webkit-backdrop-filter blur(10px)
+
+  &.isOpen
+    opacity 1
+    visibility visible
+    transform scale(1)
+
+.hidden
+  animation 0.3s hideFullscreen cubic-bezier(0.4, 0, 0.2, 1)
+  animation-fill-mode forwards
+  pointer-events none
+
+.mediaWrapper
+  position relative
+  width 100%
+  height 100%
+  display flex
+  justify-content center
+  align-items center
+  padding 0
+  box-sizing border-box
+
+
+@keyframes showFullscreen
+  from
+    opacity 0
+    transform scale(0.9)
+
+  to
+    opacity 1
+    transform scale(1)
+
+@keyframes hideFullscreen
+  from
+    opacity 1
+    transform scale(1)
+
+  to
+    opacity 0
+    transform scale(0.9)
+
+// Mobile optimizations
+@media (min-width $medium-width)
+  .mediaWrapper
+    padding 20px
+
+// Prevent scrolling on body when fullscreen is open
+body.fullscreen-open
+  overflow hidden
+  position fixed
+  width 100%

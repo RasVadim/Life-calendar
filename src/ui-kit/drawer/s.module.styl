@@ -6,8 +6,8 @@
   height 95dvh
   background-color var(--background-front-color)
   opacity 0.97
-  border-top-left-radius 24px
-  border-top-right-radius 24px
+  border-top-left-radius var(--border-radius-large)
+  border-top-right-radius var(--border-radius-large)
   box-shadow 0 -4px 24px rgba(0, 0, 0, 0.15)
   z-index 150
   display flex
@@ -21,7 +21,27 @@
   padding 16px 16px 0
   text-align center
   display flex
-  justify-content space-between
+  justify-content flex-end
+
+  &.noPaddings
+    padding 0
+
+.closeButton
+  position absolute
+  left 16px
+  top 16px
+
+.drawerScrollableContent
+  flex 1
+  overflow-y auto
+  overflow-x hidden
+  min-height 0
+  display flex
+  flex-direction column
+
+  &.borderRadius
+    border-top-left-radius var(--border-radius-large)
+    border-top-right-radius var(--border-radius-large)
 
 .drawerTitle
   display flex
@@ -29,11 +49,13 @@
   font-size 13px
   font-weight 600
   color var(--text-color)
+  flex-shrink 0
+  padding 10px 15px 5px
 
 .drawerContent
   flex 1
-  overflow auto
-  padding: 5px 15px;
+  padding 5px 15px 20px
+  min-height 0
 
 .drawerBlackout
   position fixed

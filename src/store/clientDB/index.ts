@@ -8,6 +8,8 @@ export type {
   ISettings,
   IMeta,
   IMedia,
+  IFileBlob,
+  IThumbnailBlob,
 } from './interfaces';
 
 // Mutations
@@ -15,19 +17,34 @@ export { saveDBWeeks } from './mutations/life/saveDBWeeks';
 export { saveDBDrawWeekIndexes } from './mutations/life/saveDBDrawWeekIndexes';
 export { resetDBWeeks } from './mutations/life/resetDBWeeks';
 export { updateDBWeek } from './mutations/life/updateDBWeek';
-export { updateDBMedia } from './mutations/life/updateDBMedia';
-export { safeUpdateDBMedia } from './mutations/life/safeUpdateDBMedia';
 export { updateDBTodayWeek } from './mutations/life/updateDBTodayWeek';
+export { updateDBDay } from './mutations/life/updateDBDay';
 export { updateDBUserData } from './mutations/life/updateDBUserData';
 export { updateDBSettings } from './mutations/settings/updateDBSettings';
+export { updateDBMonthWeekIndexes } from './mutations/life/updateDBMonthWeekIndexes';
+
+export { updateDBMedia } from './mutations/media/updateDBMedia';
+export { safeUpdateDBMedia } from './mutations/media/safeUpdateDBMedia';
+export { saveDBFileBlob } from './mutations/media/saveDBFileBlob';
+export { saveDBThumbnail } from './mutations/media/saveDBThumbnail';
+export { addDBMediaItem } from './mutations/media/addDBMediaItem';
 
 // Queries
 export { useDBWeeks } from './queries/life/useDBWeeks';
+export { useDBWeekById } from './queries/life/useDBWeekById';
+export { useDBWeekByIndex } from './queries/life/useDBWeekByIndex';
 export { useDBUserData } from './queries/life/useDBUserData';
 export { useDBTodayWeek } from './queries/life/useDBTodayWeek';
 export { useDBDrawWeekIndexes } from './queries/life/useDBDrawWeekIndexes';
-export { useDBMedia } from './queries/life/useDBMedia';
 export { useDBSettings } from './queries/settings/useDBSettings';
+
+export { useDBMedia } from './queries/media/useDBMedia';
+export { useDBFileBlob } from './queries/media/useDBFileBlob';
+export { useDBThumbnail } from './queries/media/useDBThumbnail';
+
+// Getters
+export { getDataForUpdatePreviewFlags } from './getters/getDataForUpdatePreviewFlags';
+export { getWeeksInPeriods } from './getters/getWeeksInPeriods';
 
 // initializers
 export { initDefaultWeeks } from './initializers/initDefaultWeeks';

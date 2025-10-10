@@ -7,7 +7,7 @@ import { BUTTON_ICONS, type TIconName } from './buttonIcons';
 import s from './s.module.styl';
 
 type PropsType = {
-  onClick?: () => void;
+  onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
   icon?: TIconName | ReactElement;
   label?: string;
   size?: 'small' | 'medium' | 'large';
