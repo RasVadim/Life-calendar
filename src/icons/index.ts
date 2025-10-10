@@ -32,8 +32,6 @@ export { DeleteIcon } from './deleteIcon';
 
 export { ReplaceIcon } from './replaceIcon';
 
-export { MoonIcon, SunIcon, StarIcon, PaletteIcon, RocketIcon } from './themeIcons';
-
 // Zodiac
 export { BullIcon } from './zodiac/bullIcon';
 export { DragonIcon } from './zodiac/dragonIcon';
@@ -68,7 +66,16 @@ export { SpringIcon } from './seasons/springIcon';
 export { SummerIcon } from './seasons/summerIcon';
 export { AutumnIcon } from './seasons/autumnIcon';
 
+// Settings
+export { ProfileSettingsIcon } from './settings/profileSettingsIcon';
+export { DataStorageIcon } from './settings/dataStorageIcon';
+export { AppearanceIcon } from './settings/appearanceIcon';
+export { LanguageIcon } from './settings/languageIcon';
+export { PremiumIcon } from './settings/premiumIcon';
+export { AboutIcon } from './settings/aboutIcon';
+
 // Icon Sets
 export { ZODIAC_CIRCLES_ICONS, ZODIAC_CIRCLES_PNG_PATHS } from './iconSets/zodiacCircles';
 export { ZODIAC_ICONS, ZODIAC_PNG_PATHS } from './iconSets/zodiac';
 export { SEASONS_ICONS } from './iconSets/seasons';
+export { SETTINGS_ICONS } from './iconSets/settings';

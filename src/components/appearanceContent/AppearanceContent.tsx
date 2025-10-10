@@ -40,7 +40,7 @@ export const AppearanceContent: FC = () => {
       <SettingsGroup>
         <SettingBlock
           title={t('layout.yearIcons')}
-          rightText={t(`layout.${settings?.zodiacMode}`)}
+          rightText={t(`layout.${settings?.zodiacMode || 'off'}`)}
           expandedPreview={<YaerIconActions />}
           arrow={false}
           unclickable

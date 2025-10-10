@@ -3,7 +3,6 @@ import { FC } from 'react';
 import { useTranslation } from '@/hooks';
 import { CircleLineIcon } from '@/icons';
 import { IWeek } from '@/store/clientDB';
-import { checkEvenMonth, checkEvenSeason } from '@/utils';
 
 import { Comments, Holidays, Seasons, WeekTitle } from './components';
 import { useAgeText } from '../../hooks';
@@ -43,16 +42,8 @@ export const WeekInfo: FC<TProps> = ({ week }) => {
     yearZodiacLabel,
   } = week;
 
-  // Format labels
-  const monthLabel = t(`life.${month}`);
-  const secondMonthLabel = secondMonth ? t(`life.${secondMonth}`) : '';
-
   // Format dates
   const dates = `${dateStart?.slice(8, 10)} - ${dateEnd?.slice(8, 10)}`;
-
-  // Check even states
-  const isEvenMonth = checkEvenMonth(month);
-  const isEvenSeason = checkEvenSeason(season);
 
   // Format holidays text
   const holidaysText = holidays?.map((holiday) => t(`life.holidays.${holiday}`)).join(', ');
@@ -62,11 +53,10 @@ export const WeekInfo: FC<TProps> = ({ week }) => {
       <WeekTitle
         year={year}
         secondYear={secondYear}
-        monthLabel={monthLabel}
-        secondMonthLabel={secondMonthLabel}
+        month={month}
+        secondMonth={secondMonth}
         dates={dates}
         isLeapYear={isLeapYear}
-        isEvenMonth={!!isEvenMonth}
         yearZodiacLabel={yearZodiacLabel}
       />
 
@@ -77,7 +67,7 @@ export const WeekInfo: FC<TProps> = ({ week }) => {
 
       {ageText && <div className={s.age}>{ageText}</div>}
 
-      <Seasons season={season} secondSeason={secondSeason} isEvenSeason={!!isEvenSeason} />
+      <Seasons season={season} secondSeason={secondSeason} />
 
       <Holidays holidaysText={holidaysText} />
 

@@ -2,35 +2,40 @@ import { FC } from 'react';
 
 import cx from 'classnames';
 
-import { useZodiacIconSet } from '@/hooks';
+import { useTranslation, useZodiacIconSet } from '@/hooks';
 import { LeapIcon } from '@/icons';
 import { TWeekZodiac } from '@/types';
+import { checkEvenMonth } from '@/utils';
 
 import s from './s.module.styl';
 
 type TWeekTitleProps = {
   year: string;
   secondYear?: string | null;
-  monthLabel: string;
-  secondMonthLabel?: string;
+  month: string;
+  secondMonth?: string | null;
   dates: string;
   isLeapYear: boolean;
-  isEvenMonth: boolean;
   yearZodiacLabel?: TWeekZodiac | null;
 };
 
 export const WeekTitle: FC<TWeekTitleProps> = ({
   year,
   secondYear,
-  monthLabel,
-  secondMonthLabel,
+  month,
+  secondMonth,
   dates,
   isLeapYear,
-  isEvenMonth,
   yearZodiacLabel,
 }) => {
+  const { t } = useTranslation();
+
   const zodiacIconSet = useZodiacIconSet({ jsx: true, first: true });
   const ZodiacIcon = zodiacIconSet?.[yearZodiacLabel as TWeekZodiac];
+  const isEvenMonth = checkEvenMonth(month);
+
+  const monthLabel = t(`life.${month}`);
+  const secondMonthLabel = secondMonth ? t(`life.${secondMonth}`) : '';
 
   return (
     <div className={cx(s.title, { [s.secondColor]: isEvenMonth })}>
