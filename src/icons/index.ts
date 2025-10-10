@@ -32,6 +32,8 @@ export { DeleteIcon } from './deleteIcon';
 
 export { ReplaceIcon } from './replaceIcon';
 
+export { CloseIcon } from './closeIcon';
+
 // Zodiac
 export { BullIcon } from './zodiac/bullIcon';
 export { DragonIcon } from './zodiac/dragonIcon';

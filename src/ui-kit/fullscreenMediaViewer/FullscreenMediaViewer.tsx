@@ -2,12 +2,8 @@ import { FC, useCallback, useEffect, useMemo } from 'react';
 
 import cx from 'classnames';
 
-import { useDevice } from '@/hooks';
-import { DeleteIcon, ReplaceIcon } from '@/icons';
-
+import { MediaElement, Actions, Hint } from './components';
 import { useDragGesture, useBodyScrollLock, useBrowserZoom } from './hooks';
-import { MediaElement } from './MediaElement/MediaElement';
-import { Button } from '../button/Button';
 
 import s from './s.module.styl';
 
@@ -24,13 +20,12 @@ type TProps = {
 export const FullscreenMediaViewer: FC<TProps> = ({
   url,
   isVideo = false,
-  hint = 'Swipe down or tap to close • Pinch to zoom',
+  hint = 'Swipe down or tap to close',
   isOpen = false,
   onClose,
   onReplaceMedia,
   onDeleteMedia,
 }) => {
-  const { isMedium } = useDevice();
   // Custom hooks
   useBodyScrollLock(isOpen);
   useBrowserZoom(isOpen); // Enable browser zoom when fullscreen is open
@@ -104,38 +99,8 @@ export const FullscreenMediaViewer: FC<TProps> = ({
           isOpen={isOpen}
         />
       </div>
-      {/* Action buttons */}
-      {(onReplaceMedia || onDeleteMedia) && (
-        <div className={s.actionButtons}>
-          {onReplaceMedia && (
-            <Button
-              className={s.actionButton}
-              onClick={(e) => {
-                e.stopPropagation();
-                onReplaceMedia();
-              }}
-              onlyIcon
-              gost
-              size="medium"
-              icon={<ReplaceIcon />}
-            />
-          )}
-          {onDeleteMedia && (
-            <Button
-              className={s.actionButton}
-              onClick={(e) => {
-                e.stopPropagation();
-                onDeleteMedia();
-              }}
-              onlyIcon
-              gost
-              size="medium"
-              icon={<DeleteIcon />}
-            />
-          )}
-        </div>
-      )}
-      {isMedium && <div className={s.closeHint}>{hint}</div>}
+      <Actions onReplaceMedia={onReplaceMedia} onDeleteMedia={onDeleteMedia} />
+      <Hint hint={hint} />
     </div>
   );
 };

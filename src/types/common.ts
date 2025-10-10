@@ -6,4 +6,6 @@ export type TNotification = {
   children?: React.ReactNode;
   className?: string;
   autoHide?: boolean;
+  closable?: boolean;
+  onClose?: () => void;
 };

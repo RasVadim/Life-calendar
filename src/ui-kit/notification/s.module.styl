@@ -5,9 +5,10 @@
   justify-content center
   align-items center
   bottom 80px
-  z-index 170
+  z-index 240
 
 .content
+  position relative
   display flex
   align-items center
   justify-content center
@@ -22,10 +23,23 @@
 .autoHide
   animation fadeIn 0.3s ease, fadeOut 0.3s ease 5.7s forwards
 
+.closeButton
+  position absolute
+  left 8px
+
+  svg
+    stroke var(--text-color)
+
+    path
+      stroke var(--text-color)
+
 .message
   margin 0
   font-size 12px
   color var(--text-color)
+
+.marginLeft
+  margin-left 30px
 
 @keyframes fadeIn
   from

@@ -47,6 +47,10 @@
     "videoFormatWarning": {
       "message": "Video in {{format}} format could not be processed.\nThis format or the codec used ({{codec}}) may not be supported.\nTry saving the video in another format, such as MP4.",
       "close": "Got it"
+    },
+    "confirmDelete": {
+      "message": "Are you sure you want to delete this file?",
+      "delete": "Delete"
     }
   }
 }

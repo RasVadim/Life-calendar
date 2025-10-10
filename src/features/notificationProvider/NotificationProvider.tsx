@@ -4,7 +4,7 @@ import { useNotifications } from '@/hooks';
 import { Notification } from '@/ui-kit';
 
 export const NotificationProvider: FC = () => {
-  const { notification } = useNotifications();
+  const { notification, hideNotification } = useNotifications();
 
   if (!notification) {
     return null;
@@ -12,11 +12,9 @@ export const NotificationProvider: FC = () => {
 
   return (
     <Notification
-      message={notification.message}
-      buttonLabel={notification.buttonLabel}
-      onButtonClick={notification.onButtonClick}
+      {...notification}
       className={notification.className}
-      autoHide={notification.autoHide}
+      onClose={notification.onClose || hideNotification}
     >
       {notification.children}
     </Notification>

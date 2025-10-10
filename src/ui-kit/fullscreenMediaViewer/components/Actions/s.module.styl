@@ -1,0 +1,27 @@
+@import '../../../../styles/vars.styl'
+
+.actionButtons
+  position absolute
+  bottom 0
+  width 100%
+  padding 15px
+  display flex
+  justify-content space-between
+  gap 8px
+  z-index 10
+
+.actionButton
+  background-color var(--background-front-color)
+  opacity 0.5
+
+  svg
+    stroke var(--contrast-color)
+
+    path
+      stroke var(--contrast-color)
+
+@media (min-width $medium-width)
+  .actionButtons
+    padding 25px 40px
+    gap 12px
+    justify-content right
