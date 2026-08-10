@@ -29,7 +29,6 @@ export const LifeGrid: React.FC<TProps> = ({ drawWeekIndexes, today, media }) =>
 
   const pixiContainerRef = useRef<HTMLDivElement>(null);
 
-  // state
   const stateRef = useRef<TLifeGridState>({
     drawWeekIndexes,
     media,
@@ -43,29 +42,26 @@ export const LifeGrid: React.FC<TProps> = ({ drawWeekIndexes, today, media }) =>
     scrollContainer: null,
   });
 
+  // Sync latest props into the mutable state and repaint the Pixi scene
   const render = () => {
-    // update state
-    stateRef.current.drawWeekIndexes = drawWeekIndexes;
-    stateRef.current.media = media;
-    stateRef.current.today = today;
-    stateRef.current.theme = theme;
-    stateRef.current.lifeMode = lifeMode;
-    stateRef.current.zodiacIconSet = zodiacIconSet;
-
-    // rerender
+    Object.assign(stateRef.current, {
+      drawWeekIndexes,
+      media,
+      today,
+      theme,
+      lifeMode,
+      zodiacIconSet,
+    });
     stateRef.current.scrollContainer = renderLife(stateRef.current) || null;
   };
 
-  // 1. Initialize PixiJS
+  // Initialize Pixi once, wire resize, cleanup on unmount
   useEffect(() => {
     if (!pixiContainerRef.current) return;
 
     const initApp = async () => {
-      // Initialize PixiJS
       const app = await initPixi(pixiContainerRef.current!);
       stateRef.current.app = app;
-
-      // Add canvas to DOM
       pixiContainerRef.current!.appendChild(app.canvas);
       stateRef.current.container = pixiContainerRef.current;
       render();
@@ -73,56 +69,22 @@ export const LifeGrid: React.FC<TProps> = ({ drawWeekIndexes, today, media }) =>
 
     initApp();
 
-    const onResizeGrid = () => {
-      resizeYearsList(stateRef.current);
-    };
-
-    // Add resize listener
+    const onResizeGrid = () => resizeYearsList(stateRef.current);
     window.addEventListener('resize', onResizeGrid);
 
-    // Cleanup
     return () => {
       window.removeEventListener('resize', onResizeGrid);
-      if (stateRef.current.app) {
-        stateRef.current.app.destroy(true, { children: true });
-      }
+      stateRef.current.app?.destroy(true, { children: true });
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // 2. Rerender weeks on parameters change
+  // Repaint on any visual input change
   useEffect(() => {
     if (!stateRef.current.app) return;
-
     render();
-  }, [drawWeekIndexes.lastWeekIndex, theme, lifeMode]);
-
-  useEffect(() => {
-    if (!stateRef.current.app) return;
-
-    render();
-  }, [zodiacIconSet]);
-
-  useEffect(() => {
-    if (!stateRef.current.app) return;
-
-    render();
-  }, [today.todayWeekIndex]);
-
-  // wheel scroll for seasons mode
-  // useEffect(() => {
-  //   if (!pixiContainerRef.current) return;
-  //   const canvas = pixiContainerRef.current.querySelector('canvas');
-  //   if (!canvas) return;
-  //   const handleWheel = getHandleWheel({
-  //     lifeMode,
-  //     scrollContainer: stateRef.current.scrollContainer,
-  //     app: stateRef.current.app,
-  //   });
-  //   canvas.addEventListener('wheel', handleWheel, { passive: false });
-  //   return () => {
-  //     canvas.removeEventListener('wheel', handleWheel);
-  //   };
-  // }, [lifeMode]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [drawWeekIndexes.lastWeekIndex, theme, lifeMode, zodiacIconSet, today.todayWeekIndex]);
 
   return <div ref={pixiContainerRef} className={s.pixiContainer} />;
 };

@@ -4,14 +4,12 @@ import { THREAD_HEIGHT, THREAD_CIRCLE_RADIUS } from '../../constants/thread';
 
 // Cached textures for performance optimization
 let circleTexture: Texture | null = null;
-let lineTexture: Texture | null = null;
 
 /**
  * Clears cached textures (call when changing birth date or re-rendering)
  */
 export const clearTextureCache = (): void => {
   circleTexture = null;
-  lineTexture = null;
 };
 
 /**
@@ -31,16 +29,4 @@ export const getCircleTexture = (renderer: Renderer): Texture => {
     circleTexture = renderer.generateTexture(graphics);
   }
   return circleTexture!;
-};
-
-/**
- * Creates cached line texture for Sprite usage
- */
-export const getLineTexture = (renderer: Renderer): Texture => {
-  if (!isTextureValid(lineTexture)) {
-    const graphics = new Graphics();
-    graphics.rect(0, 0, 100, THREAD_HEIGHT).fill(0xffffff);
-    lineTexture = renderer.generateTexture(graphics);
-  }
-  return lineTexture!;
 };

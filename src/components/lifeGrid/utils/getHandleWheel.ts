@@ -1,14 +1,16 @@
 import { Application, Container } from 'pixi.js';
 
+import { ELifeMode } from '@/types';
+
 type TGetHandleWheelOptions = {
-  lifeMode: string;
+  lifeMode: ELifeMode;
   scrollContainer: Container | null;
   app: Application | null;
 };
 
 export const getHandleWheel = ({ lifeMode, scrollContainer, app }: TGetHandleWheelOptions) => {
   const handleWheel = (e: WheelEvent) => {
-    if (lifeMode !== 'seasons') return;
+    if (lifeMode !== ELifeMode.Seasons) return;
     if (!scrollContainer) return;
     e.preventDefault();
     scrollContainer.y -= e.deltaY;

@@ -2,9 +2,9 @@ export { renderLife } from './renderLife';
 
 export { renderYearList } from './renderYearList';
 
-export { renderSeasonList } from './renderSeasosLIst';
+export { renderSeasonList } from './renderSeasonList';
 
-export { renderMonthList } from './renderMonthLIst';
+export { renderMonthList } from './renderMonthList';
 
 export { renderWeek } from './renderWeek';
 

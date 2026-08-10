@@ -1,6 +1,8 @@
 import { HOLIDAY_NAMES } from '@/constants';
 import { THolidayName } from '@/types';
 
+import { TTheme } from '../types';
+
 /**
  * Returns HEX color for week background based on holidays and theme.
  *
@@ -9,10 +11,7 @@ import { THolidayName } from '@/types';
  * @returns HEX color string for the background of the week.
  *
  */
-export const getBGColor = (
-  theme: Record<string, string>,
-  holidays?: THolidayName | null,
-): string => {
+export const getBGColor = (theme: TTheme, holidays?: THolidayName | null): string => {
   if (!holidays) return theme.defaultWeekBg;
   if (holidays === HOLIDAY_NAMES.newYear) return theme.newYear;
   if (holidays === HOLIDAY_NAMES.birthday) return theme.birthday;

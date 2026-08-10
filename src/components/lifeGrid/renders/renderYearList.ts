@@ -3,56 +3,27 @@ import { Container } from 'pixi.js';
 import { ESide, EWeekType, EYearsWeekIndxsValues, THolidayName } from '@/types';
 
 import { renderWeek } from './renderWeek';
-import {
-  CONTAINER_LABELS,
-  GRID_GAP,
-  PADDING_BOTTOM,
-  PADDING_DESKTOP,
-  PADDING_TOP,
-  QUADRATIC_WEEK_ROWS_LEVEL,
-} from '../constants';
+import { CONTAINER_LABELS } from '../constants';
+import { computeYearsLayout } from '../layouts';
 import { TLifeGridState } from '../types';
+import { getWeekType } from '../utils';
 
 type TRenderProps = { half: ESide | false; weekType?: EWeekType | null; stage?: Container | null };
 
 export const renderYearList = (state: TLifeGridState) => {
-  const { app, drawWeekIndexes, theme, isScreenMedium, lifeMode, today, container } = state;
+  const { app, drawWeekIndexes, theme, isScreenMedium, lifeMode, today } = state;
 
   if (!app) return;
 
-  const { lastWeekIndex, yearsIndxs, yearRows } = drawWeekIndexes;
+  const { lastWeekIndex, yearsIndxs } = drawWeekIndexes;
 
   const weekContainer = app.stage.getChildByLabel(CONTAINER_LABELS.weeks);
-  const width = container?.clientWidth || app.renderer.width;
-  const height = container?.clientHeight || app.renderer.height;
-  const screenSize = isScreenMedium ? 'small' : 'large';
 
-  // Fixed number of elements per row (53)
-  const cols = 53;
-  const isMoreThanQuadratic = yearRows > QUADRATIC_WEEK_ROWS_LEVEL;
-  const rows = isMoreThanQuadratic ? yearRows : QUADRATIC_WEEK_ROWS_LEVEL;
-  const gridGap = GRID_GAP[screenSize];
+  const layout = computeYearsLayout(state);
+  const { cellWidth, cellHeight, positionAt } = layout;
 
-  // Padding for header and navbar in years mode
-  const paddingTop = isScreenMedium ? PADDING_TOP : PADDING_DESKTOP;
-  const paddingBottom = isScreenMedium ? PADDING_BOTTOM : PADDING_DESKTOP;
-
-  const availableHeight = height - paddingTop - paddingBottom;
-
-  const cellHeight = (availableHeight - gridGap * (rows + 1)) / rows;
-  const cellWidth = (width - gridGap * (cols + 1)) / cols;
-  const actualGap = isMoreThanQuadratic
-    ? gridGap
-    : (availableHeight - cellHeight * rows) / (rows + 1);
-
-  //Render week list
   let currentRow = 0;
   let currentCol = 0;
-
-  const getPosition = () => ({
-    x: currentCol * (cellWidth + gridGap) + gridGap,
-    y: paddingTop + currentRow * (cellHeight + actualGap) + actualGap,
-  });
 
   const baseProps = {
     theme,
@@ -69,20 +40,14 @@ export const renderYearList = (state: TLifeGridState) => {
     const drawType = yearsIndxs[i];
 
     const holiday = drawWeekIndexes.holidaysIndxs[i];
-    const weekType =
-      i > today.todayWeekIndex
-        ? EWeekType.Future
-        : i === today.todayWeekIndex
-          ? EWeekType.Present
-          : EWeekType.Past;
 
     baseProps.holiday = holiday;
-    baseProps.weekType = weekType;
+    baseProps.weekType = getWeekType(i, today.todayWeekIndex);
 
     const render = ({ half, weekType, stage }: TRenderProps) => {
       renderWeek({
         ...baseProps,
-        ...getPosition(),
+        ...positionAt(currentRow, currentCol),
         ...(weekType ? { weekType } : {}),
         ...(stage ? { stage } : {}),
         half,

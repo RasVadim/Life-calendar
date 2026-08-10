@@ -2,8 +2,8 @@ import { Container } from 'pixi.js';
 
 import { ELifeMode } from '@/types';
 
-import { renderMonthList } from './renderMonthLIst';
-import { renderSeasonList } from './renderSeasosLIst';
+import { renderMonthList } from './renderMonthList';
+import { renderSeasonList } from './renderSeasonList';
 import { renderYearList } from './renderYearList';
 import { CONTAINER_LABELS } from '../constants';
 import { TLifeGridState } from '../types';

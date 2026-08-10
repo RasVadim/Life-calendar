@@ -21,7 +21,7 @@ import { renderLabel } from './renderLabel';
 import { renderRowThreadLine } from './renderRowThreadLine';
 import { renderThreadLineStart } from './renderThreadLineStart';
 import { calculateMonthWeekXPosition, getMonthDynamicWeekWidth } from './utils';
-import { getCachedColor } from '../utils';
+import { getCachedColor, getWeekType } from '../utils';
 
 // Constants for months mode
 const ROW_GAP = 72; // Gap between month rows
@@ -87,15 +87,9 @@ export const renderMonthList = (state: TLifeGridState) => {
     const monthData: TMonthsIndxsValue = monthsIndxs[i];
     const monthFlag = monthData?.type;
     const holiday = drawWeekIndexes.holidaysIndxs[i];
-    const weekType =
-      i > today.todayWeekIndex
-        ? EWeekType.Future
-        : i === today.todayWeekIndex
-          ? EWeekType.Present
-          : EWeekType.Past;
 
     baseProps.holiday = holiday;
-    baseProps.weekType = weekType;
+    baseProps.weekType = getWeekType(i, today.todayWeekIndex);
 
     // Check if this week is a month preview week (has media in monthData)
     const isMonthPreview = monthData?.media && media[monthData.media]?.isMonthPreview === true;
