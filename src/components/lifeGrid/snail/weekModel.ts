@@ -17,12 +17,12 @@ export type TWeekModel = {
 
 /**
  * Build the canonical, index-ordered model list from draw indexes.
- * One model per week in `[0, lastWeekIndex)`.
+ * One model per week in `[0, lastWeekIndex]` — inclusive of the real death week.
  */
 export const buildWeekModels = (draw: IDrawWeekIndexes, today: TTodayData): TWeekModel[] => {
   const models: TWeekModel[] = [];
 
-  for (let index = 0; index < draw.lastWeekIndex; index += 1) {
+  for (let index = 0; index <= draw.lastWeekIndex; index += 1) {
     models.push({
       index,
       weekType: getWeekType(index, today.todayWeekIndex),

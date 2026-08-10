@@ -25,8 +25,12 @@ export const generateWeekTimePoints = (birthDate: Date, deathDate: Date): TWeekT
     weekStart = addDays(firstWeekEnd, 1);
   }
 
-  // Generate regular weeks
-  while (weekStart < deathDate) {
+  // Generate regular weeks. Inclusive bound (`<=`): the death day is always the
+  // last day of the final week (clamped by `actualWeekEnd`). Without it, a death
+  // landing exactly on a Monday (weekStart === deathDate) would be dropped, so a
+  // Monday death would collapse onto the previous Sunday — making distinct death
+  // dates render an identical last week.
+  while (weekStart <= deathDate) {
     const weekEnd = addDays(weekStart, DAYS_IN_WEEK);
     const actualWeekEnd = weekEnd > deathDate ? deathDate : weekEnd;
 

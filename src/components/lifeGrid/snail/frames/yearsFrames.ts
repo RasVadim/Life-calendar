@@ -14,7 +14,7 @@ export const computeYearsFrames = (state: TLifeGridState): RectsDataBuffer => {
   const { lastWeekIndex, yearsIndxs } = state.drawWeekIndexes;
   const { cellWidth, cellHeight, positionAt } = computeYearsLayout(state);
 
-  const buffer = new RectsDataBuffer(lastWeekIndex);
+  const buffer = new RectsDataBuffer(lastWeekIndex + 1);
 
   const put = (index: number, row: number, col: number): void => {
     const { x, y } = positionAt(row, col);
@@ -28,12 +28,13 @@ export const computeYearsFrames = (state: TLifeGridState): RectsDataBuffer => {
   let row = 0;
   let col = 0;
 
-  for (let i = 0; i < lastWeekIndex; i += 1) {
+  for (let i = 0; i <= lastWeekIndex; i += 1) {
     switch (yearsIndxs[i]) {
       case EYearsWeekIndxsValues.Half:
         if (i === 0) {
           put(i, 0, 0);
-        } else if (i === lastWeekIndex - 1) {
+        } else if (i === lastWeekIndex) {
+          col += 1;
           put(i, row, col);
         } else {
           col += 1;

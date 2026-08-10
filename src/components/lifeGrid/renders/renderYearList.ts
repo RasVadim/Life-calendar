@@ -36,7 +36,7 @@ export const renderYearList = (state: TLifeGridState) => {
     holiday: null as THolidayName | null,
   };
 
-  for (let i = 0; i < lastWeekIndex; i++) {
+  for (let i = 0; i <= lastWeekIndex; i++) {
     const drawType = yearsIndxs[i];
 
     const holiday = drawWeekIndexes.holidaysIndxs[i];
@@ -58,7 +58,9 @@ export const renderYearList = (state: TLifeGridState) => {
       case EYearsWeekIndxsValues.Half:
         if (i === 0) {
           render({ half: ESide.Right });
-        } else if (i === lastWeekIndex - 1) {
+        } else if (i === lastWeekIndex) {
+          // Real death week that died mid-week: only its left (earlier) half exists.
+          currentCol++;
           render({ half: ESide.Left });
         } else {
           let leftWeekType: EWeekType | null = null;

@@ -32,7 +32,7 @@ export const computeMonthsFrames = (state: TLifeGridState): RectsDataBuffer => {
   const weekHeight = weekWidth;
   const largeWeekWidth = weekWidth * LARGE_MONTH_WEEK_SIZE_MULTIPLIER;
 
-  const buffer = new RectsDataBuffer(lastWeekIndex);
+  const buffer = new RectsDataBuffer(lastWeekIndex + 1);
 
   const put = (index: number, x: number, y: number, w: number, h: number): void => {
     const ref = buffer.getRef(index);
@@ -46,13 +46,24 @@ export const computeMonthsFrames = (state: TLifeGridState): RectsDataBuffer => {
   let col = 0;
   let weeksPerRow = 5;
   let accumulatedOffsetX = 0;
+  let currentRowMonth = '';
+  let currentRowYear = '';
 
-  for (let i = 0; i < lastWeekIndex; i += 1) {
+  // Inclusive of the death week (see renderMonthList) so it morphs into place.
+  for (let i = 0; i <= lastWeekIndex; i += 1) {
     const monthData: TMonthsIndxsValue = monthsIndxs[i];
     const monthFlag = monthData?.type;
 
+    // The death week carries an end-cap type; it still opens a new row when it
+    // begins a fresh month — mirror of renderMonthList so morph endpoints match.
+    const deathWeekOpensMonth =
+      i === lastWeekIndex &&
+      !!monthData?.month &&
+      (monthData.month !== currentRowMonth || monthData.year !== currentRowYear);
+
     const isFirst =
       i === 0 ||
+      deathWeekOpensMonth ||
       monthFlag === EMonthsWeekIndxsValues.FirstFull5 ||
       monthFlag === EMonthsWeekIndxsValues.FirstFull4 ||
       monthFlag === EMonthsWeekIndxsValues.First5 ||
@@ -67,6 +78,10 @@ export const computeMonthsFrames = (state: TLifeGridState): RectsDataBuffer => {
         monthFlag === EMonthsWeekIndxsValues.First4
           ? 4
           : 5;
+      if (monthData?.month && monthData?.year) {
+        currentRowMonth = monthData.month;
+        currentRowYear = monthData.year;
+      }
     } else {
       col += 1;
     }

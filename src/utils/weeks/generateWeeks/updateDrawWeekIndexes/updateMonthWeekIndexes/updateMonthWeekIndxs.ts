@@ -65,10 +65,10 @@ export const updateMonthWeekIndexes = ({
     return;
   }
 
-  // Special case: last week of life
+  // Last week of life (the real, possibly partial death week). Rendered like the
+  // first week — an extreme end cap that terminates the thread inside the week.
   if (currentWeekIndex === weekTimePoints.length - 1) {
-    const lastWeekType = calculateMonthExtremeWeekType(weekTimePoints, EWeekPosition.Last);
-    setMonthType(lastWeekType);
+    setMonthType(calculateMonthExtremeWeekType(weekTimePoints, EWeekPosition.Last));
     return;
   }
 

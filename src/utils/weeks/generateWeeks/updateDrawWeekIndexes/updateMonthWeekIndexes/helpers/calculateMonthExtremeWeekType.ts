@@ -15,6 +15,8 @@ export const calculateMonthExtremeWeekType = (
   weekTimePoints: { weekStart: Date; weekEnd: Date }[],
   position: EWeekPosition,
 ): EMonthsEndsIndxsValues => {
+  // First week is index 0; last week is the real (possibly partial) death week
+  // at length-1 — it ends exactly on the death date, so its day may be any weekday.
   const weekIndex = position === EWeekPosition.First ? 0 : weekTimePoints.length - 1;
   const weekStart = weekTimePoints[weekIndex].weekStart;
   const weekEnd = weekTimePoints[weekIndex].weekEnd;

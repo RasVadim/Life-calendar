@@ -84,7 +84,10 @@ export const SnailGrid: FC<TProps> = ({ drawWeekIndexes, today, media }) => {
     if (!scroller || !spacer) return;
 
     const scrollable = mode === ELifeMode.Months;
-    spacer.style.height = scrollable ? `${contentHeight}px` : '0px';
+    // Extra room past the content so the final month can be scrolled up toward
+    // the screen center instead of being stuck at the bottom edge / behind nav.
+    const bottomPad = scrollable ? scroller.clientHeight * 0.35 : 0;
+    spacer.style.height = scrollable ? `${contentHeight + bottomPad}px` : '0px';
     scroller.style.pointerEvents = scrollable ? 'auto' : 'none';
     scroller.scrollTop = 0;
   };
