@@ -6,7 +6,7 @@ import { getCachedColor } from '../utils';
 
 // Constants for month labels
 const LABEL_FONT_SIZE = 13;
-const LABEL_MARGIN_BOTTOM = 21;
+const LABEL_MARGIN_BOTTOM = 36;
 const LABEL_GAP = 8;
 const LABEL_LEFT_MARGIN = 26;
 

@@ -33,3 +33,7 @@ export const BORDER_WIDTH_MAP = {
 export const LARGE_MONTH_WEEK_SIZE_MULTIPLIER = 1.3; // Size multiplier for large weeks
 
 export const WEEK_IN_MONTH_GAP = 6; // Gap between weeks in the same month row
+
+// Vertical gap between month rows. Single source of truth: rest render and the
+// morph frame builder must share it, otherwise years→months snaps at settle.
+export const MONTHS_ROW_GAP = 120;

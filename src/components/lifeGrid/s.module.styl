@@ -18,3 +18,22 @@
 
   @media (min-height 1500px)
     max-width 1111px
+
+// Transparent native scroller overlaying the canvas — reuses browser
+// momentum / rubber-band; its scrollTop drives the pixi week container.
+.scroller
+  position absolute
+  inset 0
+  overflow-y auto
+  overflow-x hidden
+  overscroll-behavior contain
+  -webkit-overflow-scrolling touch
+  touch-action pan-y
+  scrollbar-width none
+
+  &::-webkit-scrollbar
+    display none
+
+.scrollSpacer
+  width 1px
+  height 0

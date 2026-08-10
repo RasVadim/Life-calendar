@@ -4,6 +4,7 @@ import { EMonthsWeekIndxsValues, TMonthsIndxsValue } from '@/types';
 
 import {
   LARGE_MONTH_WEEK_SIZE_MULTIPLIER,
+  MONTHS_ROW_GAP,
   PADDING_DESKTOP,
   PADDING_TOP,
   WEEK_IN_MONTH_GAP,
@@ -11,8 +12,8 @@ import {
 import { calculateMonthWeekXPosition, getMonthDynamicWeekWidth } from '../../renders/utils';
 import { TLifeGridState } from '../../types';
 
-// Mirrors the constant used inside renderMonthList (kept in sync manually).
-const ROW_GAP = 72;
+// Shared with renderMonthList so morph endpoints match the rest render exactly.
+const ROW_GAP = MONTHS_ROW_GAP;
 
 /**
  * One rect per week matching the original months grid geometry, laid out for

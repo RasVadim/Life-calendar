@@ -36,8 +36,9 @@ const effectiveMode = (mode: ELifeMode): ELifeMode =>
 
 /**
  * Grid with animated mode transitions. Rest states are drawn by the original,
- * pixel-exact renderers (half weeks, month threads); only the transition is a
- * cheap sprite morph between geometry that matches those renderers.
+ * pixel-exact renderers; the transition is a cheap sprite morph. Scrolling
+ * (months) reuses a native, transparent DOM scroller synced to the canvas, so
+ * momentum and iOS rubber-banding come for free.
  */
 export const SnailGrid: FC<TProps> = ({ drawWeekIndexes, today, media }) => {
   const [lifeMode] = useLifeGridMode();
@@ -46,6 +47,9 @@ export const SnailGrid: FC<TProps> = ({ drawWeekIndexes, today, media }) => {
   const theme = THEMES[themeMode];
 
   const containerRef = useRef<HTMLDivElement>(null);
+  const scrollerRef = useRef<HTMLDivElement>(null);
+  const spacerRef = useRef<HTMLDivElement>(null);
+
   const stateRef = useRef<TLifeGridState>({
     drawWeekIndexes,
     media,
@@ -63,16 +67,38 @@ export const SnailGrid: FC<TProps> = ({ drawWeekIndexes, today, media }) => {
   const morphRef = useRef<SnailGridRenderer | null>(null);
   const rafRef = useRef<number>(0);
   const paintedRef = useRef<ELifeMode>(effectiveMode(lifeMode));
+  const scrollRef = useRef<number>(0);
 
   const framesFor = (mode: ELifeMode) =>
     mode === ELifeMode.Months
       ? computeMonthsFrames(stateRef.current)
       : computeYearsFrames(stateRef.current);
 
+  const weeksContainer = () =>
+    stateRef.current.app?.stage.getChildByLabel(CONTAINER_LABELS.weeks) ?? null;
+
+  // Configure the native scroller for the given mode (only months scrolls).
+  const setupScroller = (mode: ELifeMode, contentHeight: number) => {
+    const scroller = scrollerRef.current;
+    const spacer = spacerRef.current;
+    if (!scroller || !spacer) return;
+
+    const scrollable = mode === ELifeMode.Months;
+    spacer.style.height = scrollable ? `${contentHeight}px` : '0px';
+    scroller.style.pointerEvents = scrollable ? 'auto' : 'none';
+    scroller.scrollTop = 0;
+  };
+
   const paint = (mode: ELifeMode) => {
-    stateRef.current.lifeMode = mode;
-    renderLife(stateRef.current);
+    const state = stateRef.current;
+    state.lifeMode = mode;
+    renderLife(state);
     paintedRef.current = mode;
+
+    scrollRef.current = 0;
+    const weeks = weeksContainer();
+    if (weeks) weeks.y = 0;
+    setupScroller(mode, weeks?.height ?? 0);
   };
 
   const stopMorph = () => {
@@ -91,9 +117,15 @@ export const SnailGrid: FC<TProps> = ({ drawWeekIndexes, today, media }) => {
     const to = framesFor(toMode);
     const models = modelsRef.current;
 
-    // Hide the exact rest layer while the sprite morph plays on top.
+    // Start the morph from where a scrolled months view currently sits.
+    if (fromMode === ELifeMode.Months && scrollRef.current !== 0) {
+      from.translate(0, scrollRef.current);
+    }
+
+    // Hide the exact rest layer + disable scrolling while the morph plays.
     const weeks = state.app.stage.getChildByLabel(CONTAINER_LABELS.weeks);
     if (weeks) weeks.visible = false;
+    if (scrollerRef.current) scrollerRef.current.style.pointerEvents = 'none';
 
     // Corner ratio so a month-sized square matches the months border radius.
     const screenSize = state.isScreenMedium ? 'small' : 'large';
@@ -123,15 +155,26 @@ export const SnailGrid: FC<TProps> = ({ drawWeekIndexes, today, media }) => {
     rafRef.current = requestAnimationFrame(tick);
   };
 
-  // Init Pixi once, paint the initial rest state, wire resize.
+  // Init Pixi once, paint the initial rest state, wire native scroll + resize.
   useEffect(() => {
     let disposed = false;
     const el = containerRef.current;
-    if (!el) return;
+    const scroller = scrollerRef.current;
+    if (!el || !scroller) return;
 
     const onResize = () => {
       stateRef.current.isScreenMedium = window.innerWidth < DEVICE_SCREEN_WIDTH.medium;
       if (!morphRef.current) paint(paintedRef.current);
+    };
+
+    // Native scroll drives the canvas: sync weekContainer.y to scrollTop.
+    // Snap to whole pixels so thin borders/threads don't shimmer while moving.
+    const onScroll = () => {
+      if (paintedRef.current !== ELifeMode.Months || morphRef.current) return;
+      const y = -Math.round(scroller.scrollTop);
+      scrollRef.current = y;
+      const weeks = weeksContainer();
+      if (weeks) weeks.y = y;
     };
 
     (async () => {
@@ -143,6 +186,8 @@ export const SnailGrid: FC<TProps> = ({ drawWeekIndexes, today, media }) => {
       // Drop textures cached against a previous renderer (HMR / remount).
       clearPixiCache();
       el.appendChild(app.canvas);
+      // Let touches fall through the canvas to the native scroller above it.
+      app.canvas.style.pointerEvents = 'none';
       stateRef.current.app = app;
       stateRef.current.container = el;
       modelsRef.current = buildWeekModels(stateRef.current.drawWeekIndexes, stateRef.current.today);
@@ -150,11 +195,13 @@ export const SnailGrid: FC<TProps> = ({ drawWeekIndexes, today, media }) => {
     })();
 
     window.addEventListener('resize', onResize);
+    scroller.addEventListener('scroll', onScroll, { passive: true });
 
     return () => {
       disposed = true;
       stopMorph();
       window.removeEventListener('resize', onResize);
+      scroller.removeEventListener('scroll', onScroll);
       stateRef.current.app?.destroy(true, { children: true });
       stateRef.current.app = null;
       // Invalidate textures bound to the destroyed renderer.
@@ -192,5 +239,11 @@ export const SnailGrid: FC<TProps> = ({ drawWeekIndexes, today, media }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [drawWeekIndexes.lastWeekIndex, today.todayWeekIndex]);
 
-  return <div ref={containerRef} className={s.pixiContainer} />;
+  return (
+    <div ref={containerRef} className={s.pixiContainer}>
+      <div ref={scrollerRef} className={s.scroller}>
+        <div ref={spacerRef} className={s.scrollSpacer} />
+      </div>
+    </div>
+  );
 };

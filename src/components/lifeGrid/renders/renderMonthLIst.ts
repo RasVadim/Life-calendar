@@ -12,6 +12,7 @@ import { renderWeek } from './renderWeek';
 import {
   CONTAINER_LABELS,
   LARGE_MONTH_WEEK_SIZE_MULTIPLIER,
+  MONTHS_ROW_GAP,
   PADDING_DESKTOP,
   PADDING_TOP,
   WEEK_IN_MONTH_GAP,
@@ -24,10 +25,9 @@ import { calculateMonthWeekXPosition, getMonthDynamicWeekWidth } from './utils';
 import { getCachedColor, getWeekType } from '../utils';
 
 // Constants for months mode
-const ROW_GAP = 72; // Gap between month rows
-const MONTHS_MODE_WEEK_COUNT = 50; // Number of weeks to show in months mode
+const ROW_GAP = MONTHS_ROW_GAP; // Gap between month rows (shared with morph frames)
 
-const THREAD_MARGIN_TOP = 22; // Increased margin to position threads lower
+const THREAD_MARGIN_TOP = 36; // Scaled with ROW_GAP to sit in the row gap
 
 export const renderMonthList = (state: TLifeGridState) => {
   const { app, drawWeekIndexes, theme, isScreenMedium, lifeMode, today, container, media } = state;
@@ -83,7 +83,7 @@ export const renderMonthList = (state: TLifeGridState) => {
   // Track current row state
   let accumulatedOffsetX = 0; // Accumulated offset from large weeks in current row
 
-  for (let i = 0; i < Math.min(MONTHS_MODE_WEEK_COUNT, lastWeekIndex); i++) {
+  for (let i = 0; i < lastWeekIndex; i++) {
     const monthData: TMonthsIndxsValue = monthsIndxs[i];
     const monthFlag = monthData?.type;
     const holiday = drawWeekIndexes.holidaysIndxs[i];
