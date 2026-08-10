@@ -10,33 +10,54 @@ import { TWeekModel } from './weekModel';
 // Base size of the rounded sprite texture; corner radius scales with the sprite.
 const TEXTURE_SIZE = 128;
 
+const makeRoundedTexture = (renderer: Renderer, cornerRatio: number): Texture => {
+  const radius = Math.min(TEXTURE_SIZE / 2, TEXTURE_SIZE * cornerRatio);
+  const shape = new Graphics().roundRect(0, 0, TEXTURE_SIZE, TEXTURE_SIZE, radius).fill(0xffffff);
+  const texture = renderer.generateTexture(shape);
+  shape.destroy();
+  return texture;
+};
+
 /**
  * Lightweight morph layer: one reusable rounded sprite per week, positioned by
  * interpolating two frame buffers. The corner radius is baked into the texture
  * as a fraction of size, so it grows smoothly as squares scale between modes.
+ * Big (preview) weeks get their own texture/ratio so they settle on the fixed
+ * big-week radius instead of a size-scaled small-week one.
  */
 export class SnailGridRenderer {
   private readonly root = new Container();
   private readonly sprites: Sprite[] = [];
   private readonly texture: Texture;
+  private readonly bigTexture: Texture | null;
+  private readonly bigIndices: ReadonlySet<number>;
 
   constructor(
     private readonly stage: Container,
     renderer: Renderer,
     private theme: TTheme,
     cornerRatio: number,
+    bigCornerRatio: number = cornerRatio,
+    bigIndices: ReadonlySet<number> = new Set(),
   ) {
     this.stage.addChild(this.root);
 
-    const radius = Math.min(TEXTURE_SIZE / 2, TEXTURE_SIZE * cornerRatio);
-    const shape = new Graphics().roundRect(0, 0, TEXTURE_SIZE, TEXTURE_SIZE, radius).fill(0xffffff);
-    this.texture = renderer.generateTexture(shape);
-    shape.destroy();
+    this.texture = makeRoundedTexture(renderer, cornerRatio);
+    this.bigIndices = bigIndices;
+    // Only spin up a second texture when big weeks actually need a different curve.
+    this.bigTexture =
+      bigIndices.size > 0 && bigCornerRatio !== cornerRatio
+        ? makeRoundedTexture(renderer, bigCornerRatio)
+        : null;
+  }
+
+  private textureFor(index: number): Texture {
+    return this.bigTexture && this.bigIndices.has(index) ? this.bigTexture : this.texture;
   }
 
   private ensure(count: number, models: TWeekModel[]): void {
     for (let i = this.sprites.length; i < count; i += 1) {
-      const sprite = new Sprite(this.texture);
+      const sprite = new Sprite(this.textureFor(i));
       this.root.addChild(sprite);
       this.sprites.push(sprite);
     }
@@ -76,6 +97,7 @@ export class SnailGridRenderer {
   destroy(): void {
     this.root.destroy({ children: true });
     this.texture.destroy(true);
+    this.bigTexture?.destroy(true);
     this.sprites.length = 0;
   }
 }

@@ -1,6 +1,7 @@
 import { Container } from 'pixi.js';
 
 import {
+  ELifeMode,
   EMonthsWeekIndxsValues,
   EMonthsEndsIndxsValues,
   EWeekType,
@@ -10,6 +11,7 @@ import {
 
 import { renderWeek } from './renderWeek';
 import {
+  BIG_BORDER_RADIUS_MAP,
   CONTAINER_LABELS,
   LARGE_MONTH_WEEK_SIZE_MULTIPLIER,
   MONTHS_ROW_GAP,
@@ -204,13 +206,17 @@ export const renderMonthList = (state: TLifeGridState) => {
 
     const y = baseY + verticalCenteringOffset;
 
-    // Render the week
+    // Render the week. The big (preview) week gets its own larger corner radius,
+    // independent of the small-week value (small↔big gap tuned per mode).
     renderWeek({
       ...baseProps,
       x,
       y,
       cellWidth,
       cellHeight,
+      ...(isMonthPreview
+        ? { borderRadius: BIG_BORDER_RADIUS_MAP[ELifeMode.Months][isScreenMedium ? 'small' : 'large'] }
+        : {}),
     });
 
     // First / last week carry EMonthsEndsIndxsValues (start / end caps).

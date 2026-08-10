@@ -17,11 +17,18 @@ export const PADDING_TOP = 45;
 export const PADDING_BOTTOM = 74;
 export const PADDING_DESKTOP = 3;
 
-// Week
+// Week — corner radius of a normal (small) week per mode & screen size.
 export const BORDER_RADIUS_MAP = {
   [ELifeMode.Years]: { small: 2, large: 3 },
-  [ELifeMode.Seasons]: { small: 4, large: 6 },
+  [ELifeMode.Seasons]: { small: 6, large: 10 },
   [ELifeMode.Months]: { small: 14, large: 22 },
+};
+
+// Corner radius of the big (preview) week. It's a separate, larger value than the
+// small week — and the small↔big gap differs per mode, so tune months/seasons here.
+export const BIG_BORDER_RADIUS_MAP = {
+  [ELifeMode.Seasons]: { small: 24, large: 32 },
+  [ELifeMode.Months]: { small: 24, large: 32 },
 };
 
 export const BORDER_WIDTH_MAP = {

@@ -1,5 +1,7 @@
 import { IDrawWeekIndexes } from '@/store/clientDB';
 
+import { ESeason } from './life';
+
 export type TWeekIndxsMap<T = string> = { [k: number]: T };
 export type TMediaDatesMap<T = object> = { [k: string]: T };
 
@@ -52,6 +54,17 @@ export type TMonthsIndxsValue = {
   media?: string;
   month?: string;
   year?: string;
+} | null;
+
+// Per-week data for seasons mode. Unlike months (where flags drive row breaks),
+// the seasons renderer groups weeks into blocks and lays out a 2-row grid around
+// the "big" (season-preview) week, so here we store identity + boundary info.
+export type TSeasonsIndxsValue = {
+  season: ESeason;
+  secondSeason: ESeason | null; // set when the week straddles two seasons (mid-week border)
+  year: string; // winter-aware label year (Dec belongs to its own year, Jan/Feb to the prev)
+  isStart: boolean; // first week of the season block
+  media?: string | null; // media key; the block's big week is the one flagged isSeasonPreview
 } | null;
 
 export type TDrawWeekIndexes = Omit<IDrawWeekIndexes, 'id'>;

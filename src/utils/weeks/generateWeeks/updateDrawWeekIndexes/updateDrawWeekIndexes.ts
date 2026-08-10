@@ -1,7 +1,12 @@
 import { IWeek } from '@/store/clientDB';
 import { TDrawWeekIndexes, THolidayName } from '@/types';
 
-import { updateHolidaysIndxs, updateMonthWeekIndexes, updateYearWeekIndexes } from './';
+import {
+  updateHolidaysIndxs,
+  updateMonthWeekIndexes,
+  updateSeasonWeekIndexes,
+  updateYearWeekIndexes,
+} from './';
 import { TWeekMeta } from '../types';
 
 type TUpdateDrawWeekIndexesParams = {
@@ -51,6 +56,17 @@ export const updateDrawWeekIndexes = ({
     currentWeekIndex,
     weekTimePoints,
     meta,
+    previousWeek,
+  });
+
+  updateSeasonWeekIndexes({
+    drawWeekIndexes,
+    currentWeekIndex,
+    season: meta.season,
+    secondSeason: meta.secondSeason,
+    month: meta.month,
+    year: meta.year,
+    media: meta.media,
     previousWeek,
   });
 

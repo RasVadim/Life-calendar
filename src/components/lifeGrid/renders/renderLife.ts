@@ -28,14 +28,9 @@ export const renderLife = (state: TLifeGridState) => {
   app.stage.addChild(weekContainer);
 
   if (lifeMode === ELifeMode.Seasons) {
-    const scrollContainer = renderSeasonList(state);
-
-    if (!scrollContainer) return;
-
-    // add scrollable container to stage
-    app.stage.addChild(scrollContainer);
-    // Important: scrollContainer.y can be changed for scrolling (wheel/touch processing — outside this function)
-    return scrollContainer;
+    // Renders into the weekContainer just like years/months; scrolling is handled
+    // by the native DOM scroller synced to the container (see SnailGrid).
+    renderSeasonList(state);
   }
 
   if (lifeMode === ELifeMode.Years) {

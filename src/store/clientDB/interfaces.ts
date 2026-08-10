@@ -9,12 +9,12 @@ import {
   TLanguage,
   TDay,
   TWeekIndxsMap,
-  ESegmentsWeekIndxsValues,
   EYearsWeekIndxsValues,
   ESide,
   TMedia,
   TMediaDatesMap,
   TMonthsIndxsValue,
+  TSeasonsIndxsValue,
 } from '@/types';
 
 export interface IHoliday {
@@ -52,7 +52,7 @@ export interface IWeek {
 export interface IDrawWeekIndexes {
   id: string;
   yearsIndxs: TWeekIndxsMap<EYearsWeekIndxsValues>;
-  seasonsIndxs: TWeekIndxsMap<ESegmentsWeekIndxsValues>;
+  seasonsIndxs: TWeekIndxsMap<TSeasonsIndxsValue>;
   monthsIndxs: TWeekIndxsMap<TMonthsIndxsValue>;
   holidaysIndxs: TWeekIndxsMap<THolidayName>;
   seasonOffset: number;

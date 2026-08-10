@@ -8,18 +8,24 @@ import { useThemeMode } from '@/store/atoms/themeMode/useThemeMode';
 import { IDrawWeekIndexes } from '@/store/clientDB';
 import { ELifeMode, TMedia, TMediaDatesMap, TTodayData } from '@/types';
 
-import { BORDER_RADIUS_MAP, CONTAINER_LABELS, WEEK_IN_MONTH_GAP } from '../constants';
+import {
+  BIG_BORDER_RADIUS_MAP,
+  BORDER_RADIUS_MAP,
+  CONTAINER_LABELS,
+  LARGE_MONTH_WEEK_SIZE_MULTIPLIER,
+  WEEK_IN_MONTH_GAP,
+} from '../constants';
+import { computeSeasonsLayout, computeYearsLayout } from '../layouts';
 import { renderLife } from '../renders';
 import { getMonthDynamicWeekWidth } from '../renders/utils';
 import { TLifeGridState } from '../types';
 import { clearPixiCache, initPixi } from '../utils';
-
 import { SnailGridRenderer } from './bridge';
 import { computeMonthsFrames } from './frames/monthsFrames';
+import { computeSeasonsFrames } from './frames/seasonsFrames';
 import { computeYearsFrames } from './frames/yearsFrames';
 import { easeInOutCubic } from './interpolate';
 import { buildWeekModels, TWeekModel } from './weekModel';
-
 import s from '../s.module.styl';
 
 type TProps = {
@@ -30,9 +36,13 @@ type TProps = {
 
 const MORPH_DURATION = 480;
 
-// Seasons has no dedicated scene yet — render it as years for now.
-const effectiveMode = (mode: ELifeMode): ELifeMode =>
-  mode === ELifeMode.Seasons ? ELifeMode.Years : mode;
+// Modes that scroll vertically via the native DOM scroller synced to the canvas.
+const isScrollable = (mode: ELifeMode): boolean =>
+  mode === ELifeMode.Months || mode === ELifeMode.Seasons;
+
+// Every mode now has a frame scene, so all transitions animate.
+const hasMorphFrames = (mode: ELifeMode): boolean =>
+  mode === ELifeMode.Years || mode === ELifeMode.Months || mode === ELifeMode.Seasons;
 
 /**
  * Grid with animated mode transitions. Rest states are drawn by the original,
@@ -56,7 +66,7 @@ export const SnailGrid: FC<TProps> = ({ drawWeekIndexes, today, media }) => {
     today,
     theme,
     isScreenMedium: window.innerWidth < DEVICE_SCREEN_WIDTH.medium,
-    lifeMode: effectiveMode(lifeMode),
+    lifeMode,
     zodiacIconSet,
     container: null,
     app: null,
@@ -66,13 +76,67 @@ export const SnailGrid: FC<TProps> = ({ drawWeekIndexes, today, media }) => {
   const modelsRef = useRef<TWeekModel[]>([]);
   const morphRef = useRef<SnailGridRenderer | null>(null);
   const rafRef = useRef<number>(0);
-  const paintedRef = useRef<ELifeMode>(effectiveMode(lifeMode));
+  const paintedRef = useRef<ELifeMode>(lifeMode);
   const scrollRef = useRef<number>(0);
 
-  const framesFor = (mode: ELifeMode) =>
-    mode === ELifeMode.Months
-      ? computeMonthsFrames(stateRef.current)
-      : computeYearsFrames(stateRef.current);
+  const framesFor = (mode: ELifeMode) => {
+    if (mode === ELifeMode.Months) return computeMonthsFrames(stateRef.current);
+    if (mode === ELifeMode.Seasons) return computeSeasonsFrames(stateRef.current);
+    return computeYearsFrames(stateRef.current);
+  };
+
+  // Corner ratio (radius / cell size) for the morph sprite, matched to a mode's
+  // rest cells. Picking the target keeps the morph END exactly on the rest radius.
+  const cornerRatioFor = (mode: ELifeMode): number => {
+    const state = stateRef.current;
+    if (!state.app) return 0;
+    const screenSize = state.isScreenMedium ? 'small' : 'large';
+    const radius = BORDER_RADIUS_MAP[mode][screenSize];
+
+    let cell = 0;
+    if (mode === ELifeMode.Months) {
+      const width = state.container?.clientWidth || state.app.renderer.width;
+      cell = getMonthDynamicWeekWidth(5, width, WEEK_IN_MONTH_GAP);
+    } else if (mode === ELifeMode.Seasons) {
+      cell = computeSeasonsLayout(state).small;
+    } else {
+      cell = computeYearsLayout(state).cellWidth;
+    }
+
+    return cell > 0 ? radius / cell : 0;
+  };
+
+  // Big (preview) weeks settle on a fixed radius, not a size-scaled one. Give the
+  // morph their own corner ratio + index set so they land exactly on the rest look.
+  const bigInfoFor = (mode: ELifeMode): { indices: Set<number>; ratio: number } => {
+    const state = stateRef.current;
+    const indices = new Set<number>();
+    if (!state.app) return { indices, ratio: 0 };
+    const screenSize = state.isScreenMedium ? 'small' : 'large';
+
+    if (mode === ELifeMode.Months) {
+      const { drawWeekIndexes, media } = state;
+      const { lastWeekIndex, monthsIndxs } = drawWeekIndexes;
+      for (let i = 0; i <= lastWeekIndex; i += 1) {
+        const m = monthsIndxs[i];
+        if (m?.media && media[m.media]?.isMonthPreview === true) indices.add(i);
+      }
+      const width = state.container?.clientWidth || state.app.renderer.width;
+      const bigSize =
+        getMonthDynamicWeekWidth(5, width, WEEK_IN_MONTH_GAP) * LARGE_MONTH_WEEK_SIZE_MULTIPLIER;
+      const radius = BIG_BORDER_RADIUS_MAP[ELifeMode.Months][screenSize];
+      return { indices, ratio: bigSize > 0 ? radius / bigSize : 0 };
+    }
+
+    if (mode === ELifeMode.Seasons) {
+      const layout = computeSeasonsLayout(state);
+      layout.blocks.forEach(({ block }) => indices.add(block.indices[block.bigPos]));
+      const radius = BIG_BORDER_RADIUS_MAP[ELifeMode.Seasons][screenSize];
+      return { indices, ratio: layout.bigSize > 0 ? radius / layout.bigSize : 0 };
+    }
+
+    return { indices, ratio: 0 };
+  };
 
   const weeksContainer = () =>
     stateRef.current.app?.stage.getChildByLabel(CONTAINER_LABELS.weeks) ?? null;
@@ -83,8 +147,8 @@ export const SnailGrid: FC<TProps> = ({ drawWeekIndexes, today, media }) => {
     const spacer = spacerRef.current;
     if (!scroller || !spacer) return;
 
-    const scrollable = mode === ELifeMode.Months;
-    // Extra room past the content so the final month can be scrolled up toward
+    const scrollable = isScrollable(mode);
+    // Extra room past the content so the final row can be scrolled up toward
     // the screen center instead of being stuck at the bottom edge / behind nav.
     const bottomPad = scrollable ? scroller.clientHeight * 0.35 : 0;
     spacer.style.height = scrollable ? `${contentHeight + bottomPad}px` : '0px';
@@ -116,12 +180,18 @@ export const SnailGrid: FC<TProps> = ({ drawWeekIndexes, today, media }) => {
 
     stopMorph();
 
+    // Seasons has no frame scene yet: switch instantly rather than faking a morph.
+    if (!hasMorphFrames(fromMode) || !hasMorphFrames(toMode)) {
+      paint(toMode);
+      return;
+    }
+
     const from = framesFor(fromMode);
     const to = framesFor(toMode);
     const models = modelsRef.current;
 
-    // Start the morph from where a scrolled months view currently sits.
-    if (fromMode === ELifeMode.Months && scrollRef.current !== 0) {
+    // Start the morph from where a scrolled (months / seasons) view currently sits.
+    if (isScrollable(fromMode) && scrollRef.current !== 0) {
       from.translate(0, scrollRef.current);
     }
 
@@ -130,17 +200,18 @@ export const SnailGrid: FC<TProps> = ({ drawWeekIndexes, today, media }) => {
     if (weeks) weeks.visible = false;
     if (scrollerRef.current) scrollerRef.current.style.pointerEvents = 'none';
 
-    // Corner ratio so a month-sized square matches the months border radius.
-    const screenSize = state.isScreenMedium ? 'small' : 'large';
-    const width = state.container?.clientWidth || state.app.renderer.width;
-    const monthCell = getMonthDynamicWeekWidth(5, width, WEEK_IN_MONTH_GAP);
-    const cornerRatio = monthCell > 0 ? BORDER_RADIUS_MAP[ELifeMode.Months][screenSize] / monthCell : 0;
+    // Corner ratio matched to the target mode so the morph ends on its rest radius.
+    // Big weeks carry their own ratio so their fixed radius doesn't snap at settle.
+    const cornerRatio = cornerRatioFor(toMode);
+    const big = bigInfoFor(toMode);
 
     const renderer = new SnailGridRenderer(
       state.app.stage,
       state.app.renderer,
       state.theme,
       cornerRatio,
+      big.ratio,
+      big.indices,
     );
     morphRef.current = renderer;
 
@@ -173,7 +244,7 @@ export const SnailGrid: FC<TProps> = ({ drawWeekIndexes, today, media }) => {
     // Native scroll drives the canvas: sync weekContainer.y to scrollTop.
     // Snap to whole pixels so thin borders/threads don't shimmer while moving.
     const onScroll = () => {
-      if (paintedRef.current !== ELifeMode.Months || morphRef.current) return;
+      if (!isScrollable(paintedRef.current) || morphRef.current) return;
       const y = -Math.round(scroller.scrollTop);
       scrollRef.current = y;
       const weeks = weeksContainer();
@@ -194,7 +265,7 @@ export const SnailGrid: FC<TProps> = ({ drawWeekIndexes, today, media }) => {
       stateRef.current.app = app;
       stateRef.current.container = el;
       modelsRef.current = buildWeekModels(stateRef.current.drawWeekIndexes, stateRef.current.today);
-      paint(effectiveMode(lifeMode));
+      paint(lifeMode);
     })();
 
     window.addEventListener('resize', onResize);
@@ -213,12 +284,11 @@ export const SnailGrid: FC<TProps> = ({ drawWeekIndexes, today, media }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Animate on mode change (years <-> months); seasons folds into years.
+  // Animate on mode change (years <-> months); seasons switches instantly for now.
   useEffect(() => {
     if (!stateRef.current.app) return;
-    const target = effectiveMode(lifeMode);
-    if (paintedRef.current === target) return;
-    runMorph(paintedRef.current, target);
+    if (paintedRef.current === lifeMode) return;
+    runMorph(paintedRef.current, lifeMode);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lifeMode]);
 

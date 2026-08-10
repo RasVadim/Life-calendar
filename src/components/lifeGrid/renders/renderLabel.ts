@@ -24,6 +24,7 @@ type TRenderLabelParams = {
   x: number;
   y: number;
   theme: Record<string, string>;
+  labelColor?: string; // explicit label colour (e.g. seasons match their thread)
 };
 
 /**
@@ -37,14 +38,15 @@ export const renderLabel = ({
   x,
   y,
   theme,
+  labelColor: labelColorOverride,
 }: TRenderLabelParams) => {
   const labelKey = month || season || '';
 
   const label = i18n.t(`life.${labelKey}`);
 
-  let labelColor = theme.text;
+  let labelColor = labelColorOverride ?? theme.text;
 
-  if (month) {
+  if (!labelColorOverride && month) {
     // Get month color based on alternating pattern starting from January
     const monthNumber = parseInt(month, 10);
     const isEvenMonth = monthNumber % 2 === 0;

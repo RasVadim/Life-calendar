@@ -21,6 +21,7 @@ type TRenderWeekProps = {
   weekType: EWeekType;
   holiday: THolidayName | null;
   half: boolean | ESide;
+  borderRadius?: number; // override the mode default (seasons scales it per cell size)
 };
 
 /**
@@ -46,10 +47,11 @@ export const renderWeek = ({
   weekType,
   holiday,
   half,
+  borderRadius: borderRadiusOverride,
 }: TRenderWeekProps) => {
   const screenSize = isScreenMedium ? 'small' : 'large';
 
-  const borderRadius = BORDER_RADIUS_MAP[lifeMode][screenSize];
+  const borderRadius = borderRadiusOverride ?? BORDER_RADIUS_MAP[lifeMode][screenSize];
   const borderWidth = BORDER_WIDTH_MAP[lifeMode][screenSize];
 
   const borderColor = getCachedColor(getBorderColor(weekType, theme));
