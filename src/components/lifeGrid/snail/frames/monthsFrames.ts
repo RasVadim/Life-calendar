@@ -11,13 +11,14 @@ import {
 import { calculateMonthWeekXPosition, getMonthDynamicWeekWidth } from '../../renders/utils';
 import { TLifeGridState } from '../../types';
 
-// Mirrors the constants used inside renderMonthList (kept in sync manually).
+// Mirrors the constant used inside renderMonthList (kept in sync manually).
 const ROW_GAP = 72;
-const MONTHS_MODE_WEEK_COUNT = 50;
 
 /**
- * One rect per week matching the original months grid geometry. Weeks past the
- * visible window collapse to zero size so the morph fades them out in place.
+ * One rect per week matching the original months grid geometry, laid out for
+ * ALL weeks (rows continue down the whole life). This lets every square morph
+ * directly into its month slot instead of collapsing when it leaves the
+ * original 50-week window.
  */
 export const computeMonthsFrames = (state: TLifeGridState): RectsDataBuffer => {
   const { drawWeekIndexes, isScreenMedium, media, container, app } = state;
@@ -40,14 +41,12 @@ export const computeMonthsFrames = (state: TLifeGridState): RectsDataBuffer => {
     ref.height = h;
   };
 
-  const visibleCount = Math.min(MONTHS_MODE_WEEK_COUNT, lastWeekIndex);
-
   let row = 0;
   let col = 0;
   let weeksPerRow = 5;
   let accumulatedOffsetX = 0;
 
-  for (let i = 0; i < visibleCount; i += 1) {
+  for (let i = 0; i < lastWeekIndex; i += 1) {
     const monthData: TMonthsIndxsValue = monthsIndxs[i];
     const monthFlag = monthData?.type;
 
@@ -93,11 +92,6 @@ export const computeMonthsFrames = (state: TLifeGridState): RectsDataBuffer => {
     const y = baseY + (isMonthPreview ? -(cellHeight - weekHeight) / 2 : 0);
 
     put(i, x, y, cellWidth, cellHeight);
-  }
-
-  // Collapse the rest so the morph fades them out (position ignored when zero).
-  for (let i = visibleCount; i < lastWeekIndex; i += 1) {
-    put(i, 0, 0, 0, 0);
   }
 
   return buffer;

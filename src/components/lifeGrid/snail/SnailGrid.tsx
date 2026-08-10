@@ -8,10 +8,11 @@ import { useThemeMode } from '@/store/atoms/themeMode/useThemeMode';
 import { IDrawWeekIndexes } from '@/store/clientDB';
 import { ELifeMode, TMedia, TMediaDatesMap, TTodayData } from '@/types';
 
-import { CONTAINER_LABELS } from '../constants';
+import { BORDER_RADIUS_MAP, CONTAINER_LABELS, WEEK_IN_MONTH_GAP } from '../constants';
 import { renderLife } from '../renders';
+import { getMonthDynamicWeekWidth } from '../renders/utils';
 import { TLifeGridState } from '../types';
-import { initPixi } from '../utils';
+import { clearPixiCache, initPixi } from '../utils';
 
 import { SnailGridRenderer } from './bridge';
 import { computeMonthsFrames } from './frames/monthsFrames';
@@ -94,7 +95,18 @@ export const SnailGrid: FC<TProps> = ({ drawWeekIndexes, today, media }) => {
     const weeks = state.app.stage.getChildByLabel(CONTAINER_LABELS.weeks);
     if (weeks) weeks.visible = false;
 
-    const renderer = new SnailGridRenderer(state.app.stage, state.theme);
+    // Corner ratio so a month-sized square matches the months border radius.
+    const screenSize = state.isScreenMedium ? 'small' : 'large';
+    const width = state.container?.clientWidth || state.app.renderer.width;
+    const monthCell = getMonthDynamicWeekWidth(5, width, WEEK_IN_MONTH_GAP);
+    const cornerRatio = monthCell > 0 ? BORDER_RADIUS_MAP[ELifeMode.Months][screenSize] / monthCell : 0;
+
+    const renderer = new SnailGridRenderer(
+      state.app.stage,
+      state.app.renderer,
+      state.theme,
+      cornerRatio,
+    );
     morphRef.current = renderer;
 
     const start = performance.now();
@@ -128,6 +140,8 @@ export const SnailGrid: FC<TProps> = ({ drawWeekIndexes, today, media }) => {
         app.destroy(true, { children: true });
         return;
       }
+      // Drop textures cached against a previous renderer (HMR / remount).
+      clearPixiCache();
       el.appendChild(app.canvas);
       stateRef.current.app = app;
       stateRef.current.container = el;
@@ -143,6 +157,8 @@ export const SnailGrid: FC<TProps> = ({ drawWeekIndexes, today, media }) => {
       window.removeEventListener('resize', onResize);
       stateRef.current.app?.destroy(true, { children: true });
       stateRef.current.app = null;
+      // Invalidate textures bound to the destroyed renderer.
+      clearPixiCache();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
