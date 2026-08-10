@@ -25,7 +25,7 @@ export class LayoutNode implements LayoutNodeProps {
     }
     
     // TODO: probably Infinity values should be stored and used separately
-    layout(frame: Rect, context: LayoutContext): void {
+    layout(frame: Rect, _context: LayoutContext): void {
         this.frame.width = Number.isFinite(this.frame.width) ? this.frame.width : frame.width,
         this.frame.height = Number.isFinite(this.frame.height) ? this.frame.height : frame.height
     }

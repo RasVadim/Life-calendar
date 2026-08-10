@@ -6,7 +6,7 @@ export class ViewNode extends LayoutNode {
         super({ frame, children: [], models: models, indicesRange: indicesRange })
     }
 
-    override layout(frame: Rect, context: LayoutContext): void {
+    override layout(_frame: Rect, context: LayoutContext): void {
         for (let i = 0 ; i < this.models.length ; i++) {
             context.modelIndices.push(context.modelIndex++)
         }

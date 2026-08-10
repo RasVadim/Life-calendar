@@ -1,4 +1,4 @@
-import { Size } from "@/geometry/size"
+import { Size } from "@snail/geometry/size"
 
 export interface RectData {
     get x(): number

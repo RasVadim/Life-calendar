@@ -1,6 +1,6 @@
 import { FC } from 'react';
 
-import { LifeGrid } from '@/components';
+import { SnailGrid } from '@/components/lifeGrid/snail';
 import { usePageLoading } from '@/store/atoms';
 import { useDBDrawWeekIndexes, useDBTodayWeek, useDBMedia } from '@/store/clientDB';
 import { PageLoadingHolder } from '@/ui-kit/pageLoadingHolder/PageLoadingHolder';
@@ -19,7 +19,7 @@ export const Content: FC = () => {
 
   return (
     <div className={s.content}>
-      <LifeGrid drawWeekIndexes={drawWeekIndexes} today={today} media={mediaData?.media || {}} />
+      <SnailGrid drawWeekIndexes={drawWeekIndexes} today={today} media={mediaData?.media || {}} />
     </div>
   );
 };

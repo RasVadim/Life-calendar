@@ -1,4 +1,4 @@
-import { RectAdapter, RectsDataBuffer } from '@snail/geometry/rect'
+import { RectAdapter } from '@snail/geometry/rect'
 import { Size } from '@snail/geometry/size'
 import { LayoutNode } from '@snail/layout/LayoutNode'
 import { LayoutBuildContext, LayoutNodeBuilder } from '@snail/layout/LayoutNodeBuilder'
