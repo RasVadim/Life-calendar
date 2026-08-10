@@ -109,6 +109,8 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
+      // Vendored layout engine (src/lib/snail-layout) — keep before '@'
+      '@snail': path.resolve(__dirname, 'src/lib/snail-layout'),
       '@': path.resolve(__dirname, 'src'),
     },
   },

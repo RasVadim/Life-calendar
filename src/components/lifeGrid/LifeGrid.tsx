@@ -6,7 +6,7 @@ import { useZodiacIconSet } from '@/hooks';
 import { useLifeGridMode } from '@/store/atoms';
 import { useThemeMode } from '@/store/atoms/themeMode/useThemeMode';
 import { IDrawWeekIndexes } from '@/store/clientDB';
-import { TMediaDatesMap, TMedia, TTodayData } from '@/types';
+import { TMedia, TMediaDatesMap, TTodayData } from '@/types';
 
 import { renderLife } from './renders';
 import { TLifeGridState } from './types';

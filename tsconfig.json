@@ -8,6 +8,8 @@
     "skipLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@snail": ["src/lib/snail-layout"],
+      "@snail/*": ["src/lib/snail-layout/*"],
       "@/*": ["src/*"]
     },
 
