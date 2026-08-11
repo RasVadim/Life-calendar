@@ -1,5 +1,7 @@
 import { FC, useEffect, useRef } from 'react';
 
+import type { RectsDataBuffer } from '@snail/geometry/rect';
+
 import { DEVICE_SCREEN_WIDTH } from '@/constants';
 import { THEMES } from '@/constants/themes';
 import { useZodiacIconSet } from '@/hooks';
@@ -88,6 +90,8 @@ export const SnailGrid: FC<TProps> = ({ drawWeekIndexes, today, media }) => {
   const scrollRef = useRef<number>(0);
   const pinchRef = useRef<{ base: number } | null>(null);
   const lastStepRef = useRef<number>(0);
+  // Pinch midpoint (container coords) to anchor the next zoom step on.
+  const zoomAnchorRef = useRef<{ x: number; y: number } | null>(null);
 
   const framesFor = (mode: ELifeMode) => {
     if (mode === ELifeMode.Months) return computeMonthsFrames(stateRef.current);
@@ -151,31 +155,92 @@ export const SnailGrid: FC<TProps> = ({ drawWeekIndexes, today, media }) => {
   const weeksContainer = () =>
     stateRef.current.app?.stage.getChildByLabel(CONTAINER_LABELS.weeks) ?? null;
 
-  // Configure the native scroller for the given mode (only months scrolls).
-  const setupScroller = (mode: ELifeMode, contentHeight: number) => {
+  // Extra room past the content so the final row can be scrolled up toward the
+  // screen center instead of being stuck at the bottom edge / behind nav.
+  const bottomPadFor = (scroller: HTMLDivElement, mode: ELifeMode) =>
+    isScrollable(mode) ? scroller.clientHeight * 0.35 : 0;
+
+  // Configure the native scroller for the given mode (only months / seasons
+  // scroll). `initialScroll` lets a zoom step land the view anchored, not at top.
+  const setupScroller = (mode: ELifeMode, contentHeight: number, initialScroll = 0) => {
     const scroller = scrollerRef.current;
     const spacer = spacerRef.current;
     if (!scroller || !spacer) return;
 
     const scrollable = isScrollable(mode);
-    // Extra room past the content so the final row can be scrolled up toward
-    // the screen center instead of being stuck at the bottom edge / behind nav.
-    const bottomPad = scrollable ? scroller.clientHeight * 0.35 : 0;
+    const bottomPad = bottomPadFor(scroller, mode);
     spacer.style.height = scrollable ? `${contentHeight + bottomPad}px` : '0px';
     scroller.style.pointerEvents = scrollable ? 'auto' : 'none';
-    scroller.scrollTop = 0;
+    // Browser clamps to the valid range once the spacer height is applied.
+    scroller.scrollTop = scrollable ? initialScroll : 0;
   };
 
-  const paint = (mode: ELifeMode) => {
+  const paint = (mode: ELifeMode, initialScroll = 0) => {
     const state = stateRef.current;
     state.lifeMode = mode;
     renderLife(state);
     paintedRef.current = mode;
 
-    scrollRef.current = 0;
     const weeks = weeksContainer();
-    if (weeks) weeks.y = 0;
-    setupScroller(mode, weeks?.height ?? 0);
+    setupScroller(mode, weeks?.height ?? 0, initialScroll);
+
+    // Sync the canvas offset to the (clamped) scroll position.
+    const top = isScrollable(mode) ? (scrollerRef.current?.scrollTop ?? 0) : 0;
+    scrollRef.current = -Math.round(top);
+    if (weeks) weeks.y = scrollRef.current;
+  };
+
+  // Target scroll (px) for the zoomed-in `to` layout so the week currently under
+  // the pinch point stays under it. `from` is already in screen coords here.
+  const anchoredScroll = (
+    from: RectsDataBuffer,
+    to: RectsDataBuffer,
+    anchorX: number,
+    anchorY: number,
+  ): number => {
+    const a = from.buffer;
+    const b = to.buffer;
+    const n = modelsRef.current.length;
+
+    // The focused week is the one under the fingers (rect hit, else nearest).
+    let focus = 0;
+    let best = Infinity;
+    let hit = -1;
+    for (let i = 0; i < n; i += 1) {
+      const o = i * 4;
+      const x = a[o] ?? 0;
+      const y = a[o + 1] ?? 0;
+      const w = a[o + 2] ?? 0;
+      const h = a[o + 3] ?? 0;
+      if (anchorX >= x && anchorX <= x + w && anchorY >= y && anchorY <= y + h) {
+        hit = i;
+        break;
+      }
+      const dx = x + w / 2 - anchorX;
+      const dy = y + h / 2 - anchorY;
+      const d = dx * dx + dy * dy;
+      if (d < best) {
+        best = d;
+        focus = i;
+      }
+    }
+    if (hit >= 0) focus = hit;
+
+    const o = focus * 4;
+    const targetCenter = (b[o + 1] ?? 0) + (b[o + 3] ?? 0) / 2;
+    const desired = targetCenter - anchorY;
+
+    // Clamp to the target layout's scrollable range (content + bottom pad).
+    let contentH = 0;
+    for (let i = 0; i < n; i += 1) {
+      const p = i * 4;
+      contentH = Math.max(contentH, (b[p + 1] ?? 0) + (b[p + 3] ?? 0));
+    }
+    const scroller = scrollerRef.current;
+    const viewport = scroller?.clientHeight ?? 0;
+    const bottomPad = scroller ? bottomPadFor(scroller, ELifeMode.Months) : 0;
+    const maxScroll = Math.max(0, contentH + bottomPad - viewport);
+    return Math.min(Math.max(desired, 0), maxScroll);
   };
 
   const stopMorph = () => {
@@ -203,6 +268,16 @@ export const SnailGrid: FC<TProps> = ({ drawWeekIndexes, today, media }) => {
     // Start the morph from where a scrolled (months / seasons) view currently sits.
     if (isScrollable(fromMode) && scrollRef.current !== 0) {
       from.translate(0, scrollRef.current);
+    }
+
+    // Anchor the zoom at the pinch midpoint: keep the focused week put instead of
+    // snapping to the start of life. Only when the target scrolls (months/seasons).
+    const anchor = zoomAnchorRef.current;
+    zoomAnchorRef.current = null;
+    let toScroll = 0;
+    if (anchor && isScrollable(toMode)) {
+      toScroll = anchoredScroll(from, to, anchor.x, anchor.y);
+      if (toScroll !== 0) to.translate(0, -toScroll);
     }
 
     // Hide the exact rest layer + disable scrolling while the morph plays.
@@ -233,7 +308,7 @@ export const SnailGrid: FC<TProps> = ({ drawWeekIndexes, today, media }) => {
         rafRef.current = requestAnimationFrame(tick);
       } else {
         stopMorph();
-        paint(toMode);
+        paint(toMode, toScroll);
       }
     };
     rafRef.current = requestAnimationFrame(tick);
@@ -242,13 +317,15 @@ export const SnailGrid: FC<TProps> = ({ drawWeekIndexes, today, media }) => {
   // Advance one mode along the zoom axis. dir=+1 zooms in (toward Months),
   // dir=-1 zooms out (toward Years). Ignored while a morph plays, and rate-
   // limited to one step per morph so the sequence stays clean and smooth.
-  const stepZoom = (dir: 1 | -1) => {
+  const stepZoom = (dir: 1 | -1, anchor: { x: number; y: number } | null = null) => {
     const now = performance.now();
     if (morphRef.current || now - lastStepRef.current < MORPH_DURATION) return;
     const i = MODE_ZOOM_ORDER.indexOf(paintedRef.current);
     const next = Math.min(MODE_ZOOM_ORDER.length - 1, Math.max(0, i + dir));
     if (next === i) return;
     lastStepRef.current = now;
+    // Consumed by the upcoming morph to keep the focused week under the fingers.
+    zoomAnchorRef.current = anchor;
     setLifeMode(MODE_ZOOM_ORDER[next]);
   };
 
@@ -317,6 +394,15 @@ export const SnailGrid: FC<TProps> = ({ drawWeekIndexes, today, media }) => {
     const dist = (t: TouchList) =>
       Math.hypot(t[0].clientX - t[1].clientX, t[0].clientY - t[1].clientY);
 
+    // Client point -> container-local coords (matches frame coordinate space).
+    const toLocal = (clientX: number, clientY: number) => {
+      const r = el.getBoundingClientRect();
+      return { x: clientX - r.left, y: clientY - r.top };
+    };
+
+    const midpoint = (t: TouchList) =>
+      toLocal((t[0].clientX + t[1].clientX) / 2, (t[0].clientY + t[1].clientY) / 2);
+
     const onTouchStart = (e: TouchEvent) => {
       if (e.touches.length === 2) pinchRef.current = { base: dist(e.touches) };
     };
@@ -328,10 +414,10 @@ export const SnailGrid: FC<TProps> = ({ drawWeekIndexes, today, media }) => {
       const d = dist(e.touches);
       const ratio = d / pinchRef.current.base;
       if (ratio >= PINCH_STEP_IN) {
-        stepZoom(1);
+        stepZoom(1, midpoint(e.touches));
         pinchRef.current.base = d;
       } else if (ratio <= PINCH_STEP_OUT) {
-        stepZoom(-1);
+        stepZoom(-1, midpoint(e.touches));
         pinchRef.current.base = d;
       }
     };
@@ -343,8 +429,9 @@ export const SnailGrid: FC<TProps> = ({ drawWeekIndexes, today, media }) => {
     const onWheel = (e: WheelEvent) => {
       if (!e.ctrlKey) return; // trackpad pinch arrives as ctrl+wheel
       e.preventDefault();
-      if (e.deltaY < 0) stepZoom(1);
-      else if (e.deltaY > 0) stepZoom(-1);
+      const anchor = toLocal(e.clientX, e.clientY);
+      if (e.deltaY < 0) stepZoom(1, anchor);
+      else if (e.deltaY > 0) stepZoom(-1, anchor);
     };
 
     // Capture phase + non-passive so we intercept before the native scroller.
