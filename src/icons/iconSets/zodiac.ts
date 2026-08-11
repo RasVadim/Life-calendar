@@ -31,17 +31,17 @@ export const ZODIAC_ICONS: Record<TWeekZodiac, FC<{ size?: string; color?: strin
   pig: PigIcon,
 };
 
-export const ZODIAC_SVG_PATHS: Record<TWeekZodiac, string> = {
-  rat: '/icons/zodiac/rat.svg',
-  ox: '/icons/zodiac/bull.svg',
-  tiger: '/icons/zodiac/tiger.svg',
-  rabbit: '/icons/zodiac/rabbit.svg',
-  dragon: '/icons/zodiac/dragon.svg',
-  snake: '/icons/zodiac/snake.svg',
-  horse: '/icons/zodiac/horse.svg',
-  goat: '/icons/zodiac/goat.svg',
-  monkey: '/icons/zodiac/monkey.svg',
-  rooster: '/icons/zodiac/rooster.svg',
-  dog: '/icons/zodiac/dog.svg',
-  pig: '/icons/zodiac/pig.svg',
+export const ZODIAC_PNG_PATHS: Record<TWeekZodiac, string> = {
+  rat: '/icons/zodiac/rat.png',
+  ox: '/icons/zodiac/bull.png',
+  tiger: '/icons/zodiac/tiger.png',
+  rabbit: '/icons/zodiac/rabbit.png',
+  dragon: '/icons/zodiac/dragon.png',
+  snake: '/icons/zodiac/snake.png',
+  horse: '/icons/zodiac/horse.png',
+  goat: '/icons/zodiac/goat.png',
+  monkey: '/icons/zodiac/monkey.png',
+  rooster: '/icons/zodiac/rooster.png',
+  dog: '/icons/zodiac/dog.png',
+  pig: '/icons/zodiac/pig.png',
 };

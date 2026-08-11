@@ -9,7 +9,7 @@ export const RabbitIcon: FC<PropsType> = ({ size = '20', color = '#9DB2CE' }) =>
   <svg
     width={size}
     height={size}
-    viewBox="0 0 770.892 770.893"
+    viewBox="-110 -110 850 850"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
   >

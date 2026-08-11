@@ -1,66 +1,29 @@
-import { Application, Container } from 'pixi.js';
-
-import { THEMES } from '@/constants/themes';
-import { IWeek } from '@/store/clientDB';
-import { TLifeMode, TZodiacIconSet } from '@/types';
-
-import { resizeApp } from './resizeApp';
-
-type TInitPixiOptions = {
-  container: HTMLDivElement;
-  weeks: IWeek[];
-  theme: (typeof THEMES)[keyof typeof THEMES];
-  onDestroy?: () => void;
-  isMedium?: boolean;
-  mode: TLifeMode;
-  zodiacIconSet?: TZodiacIconSet;
-};
+import { Application } from 'pixi.js';
 
 /**
- * Initializes PixiJS application with full setup including canvas mounting and resize handling.
- * @param options - Container, weeks data, theme and cleanup callback
- * @returns Promise<Application|null>
+ * Initialize the pixi application.
+ * @param container - The container element.
+ * @returns The pixi application.
  */
-export async function initPixi(options: TInitPixiOptions) {
-  const { container, weeks, theme, onDestroy, isMedium, mode, zodiacIconSet } = options;
+export const initPixi = async (container: HTMLDivElement): Promise<Application> => {
+  const app = new Application();
 
-  try {
-    const app = new Application();
-    await app.init({
-      width: 100,
-      height: 100,
-      antialias: true,
-      resolution: window.devicePixelRatio || 1,
-      autoDensity: true,
-    });
+  await app.init({
+    width: container.clientWidth,
+    height: container.clientHeight,
+    backgroundAlpha: 0, // Make canvas transparent
+    // Cap at 2x: phones report DPR 3, but rendering thousands of cells at 3x
+    // (~2.25x the fill of 2x) tanks the GPU for no visible gain on this grid.
+    resolution: Math.min(window.devicePixelRatio || 1, 2),
+    autoDensity: true,
+    antialias: true,
+    resizeTo: container,
+  });
 
-    // Add canvas to container
-    container.appendChild(app.canvas);
+  // Render-on-demand: stop the always-on 60fps loop (it re-traverses the whole
+  // scene every frame even when idle). Callers render explicitly on scroll /
+  // morph / paint instead — big idle CPU + battery win on mobile.
+  app.ticker.stop();
 
-    // Initial resize
-    let scrollContainer: Container | null = null;
-    const handleResize = () => {
-      const width = container.clientWidth;
-      const height = container.clientHeight;
-      app.renderer.resize(width, height);
-      scrollContainer = resizeApp({ app, weeks, theme, isMedium, mode, zodiacIconSet }) || null;
-    };
-
-    handleResize();
-    window.addEventListener('resize', handleResize);
-
-    // Return cleanup function
-    const cleanup = () => {
-      window.removeEventListener('resize', handleResize);
-      if (app && typeof app.destroy === 'function') {
-        app.destroy(true, { children: true });
-      }
-      onDestroy?.();
-    };
-
-    return { app, cleanup, scrollContainer };
-  } catch (e) {
-    console.error('PixiJS init error:', e);
-    return null;
-  }
-}
+  return app;
+};

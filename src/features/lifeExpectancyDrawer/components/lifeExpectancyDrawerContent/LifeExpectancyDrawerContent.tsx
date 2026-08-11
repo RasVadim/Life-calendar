@@ -5,10 +5,18 @@ import { addYears, format, parseISO, differenceInHours } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import { useLocation, useNavigate } from 'react-router-dom';
 
+import { clearPixiCache } from '@/components/lifeGrid/utils';
 import { ISO_DATE_FORMAT } from '@/constants';
 import { useTranslation } from '@/hooks';
 import { useSetOpenDrawerKey, useSetPageLoading, useSetSyncPending } from '@/store/atoms';
-import { resetDBWeeks, saveDBWeeks, updateDBTodayWeek, updateDBUserData } from '@/store/clientDB';
+import {
+  resetDBWeeks,
+  saveDBWeeks,
+  saveDBDrawWeekIndexes,
+  updateDBTodayWeek,
+  updateDBUserData,
+  safeUpdateDBMedia,
+} from '@/store/clientDB';
 import { useDBUserData } from '@/store/clientDB';
 import { WheelDatePicker, Select, Button } from '@/ui-kit';
 import { generateWeeksInWorker } from '@/webWorkers';
@@ -91,18 +99,23 @@ export const LifeExpectancyDrawerContent = () => {
       setPending(true);
       setPageLoading(true);
 
+      // Clear texture cache when changing life expectancy
+      clearPixiCache();
+
       try {
         await updateDBUserData({ deathDate, lifeExpectancy });
         // --- Web Worker helper ---
-        const { weeks, todayWeekId, todayWeekIndex } = await generateWeeksInWorker(
+        const { weeks, today, drawWeekIndexes, media } = await generateWeeksInWorker(
           userData?.birthDate || '',
           lifeExpectancy,
           deathDate || undefined,
         );
         await resetDBWeeks();
         await saveDBWeeks(weeks);
+        await saveDBDrawWeekIndexes(drawWeekIndexes);
+        await safeUpdateDBMedia(media);
 
-        await updateDBTodayWeek({ todayWeekId, todayWeekIndex });
+        await updateDBTodayWeek(today);
       } catch (err) {
         console.error('generate weeks not finished, error: ', err);
       } finally {

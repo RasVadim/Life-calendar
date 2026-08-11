@@ -9,7 +9,7 @@ export const RoosterIcon: FC<PropsType> = ({ size = '20', color = '#9DB2CE' }) =
   <svg
     width={size}
     height={size}
-    viewBox="0 0 464.6 464.6"
+    viewBox="-115 -85 550 550"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
   >

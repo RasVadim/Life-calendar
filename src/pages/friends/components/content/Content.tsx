@@ -1,23 +1,18 @@
 import { FC } from 'react';
 
-import { LifeGrid } from '@/components';
-import { usePageLoading } from '@/store/atoms';
-import { useDBWeeks } from '@/store/clientDB';
-import { PageLoadingHolder } from '@/ui-kit/pageLoadingHolder/PageLoadingHolder';
+import { useTranslation } from '@/hooks';
 
 import s from './s.module.styl';
 
 export const Content: FC = () => {
-  const weeks = useDBWeeks();
-  const [pageLoading] = usePageLoading();
-
-  if (!weeks.length && pageLoading) {
-    return <PageLoadingHolder />;
-  }
+  const { t } = useTranslation();
 
   return (
     <div className={s.content}>
-      <LifeGrid weeks={weeks} />
+      <div className={s.placeholder}>
+        <div className={s.title}>{t('layout.pageInDevelopmentTitle')}</div>
+        <div className={s.text}>{t('layout.pageInDevelopment')}</div>
+      </div>
     </div>
   );
 };

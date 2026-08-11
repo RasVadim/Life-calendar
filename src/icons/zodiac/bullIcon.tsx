@@ -9,7 +9,7 @@ export const BullIcon: FC<PropsType> = ({ size = '20', color = '#9DB2CE' }) => (
   <svg
     width={size}
     height={size}
-    viewBox="0 0 2400 2000"
+    viewBox="250 50 1900 1900"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
   >

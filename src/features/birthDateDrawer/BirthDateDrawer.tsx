@@ -4,11 +4,19 @@ import { addYears, format } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import { useNavigate, useLocation } from 'react-router-dom';
 
+import { clearPixiCache } from '@/components/lifeGrid/utils';
 import { ISO_DATE_FORMAT, DEFAULT_BIRTH_DATE } from '@/constants';
 import { useTranslation } from '@/hooks';
 import { OutlineProfileIcon } from '@/icons';
 import { useSetOpenDrawerKey, useSetPageLoading, useSetSyncPending } from '@/store/atoms';
-import { resetDBWeeks, saveDBWeeks, updateDBUserData, updateDBTodayWeek } from '@/store/clientDB';
+import {
+  resetDBWeeks,
+  saveDBWeeks,
+  updateDBUserData,
+  updateDBTodayWeek,
+  saveDBDrawWeekIndexes,
+  safeUpdateDBMedia,
+} from '@/store/clientDB';
 import { useDBUserData } from '@/store/clientDB';
 import { EModalKeys } from '@/types';
 import { Button, Drawer, WheelDatePicker } from '@/ui-kit';
@@ -68,12 +76,15 @@ export const BirthDateDrawer = () => {
   };
 
   const calculateLifeExpectancy = async () => {
-    console.log('calculateLifeExpectancy!!!', birthDate, lifeExpectancy);
     setDrawerKey(null);
 
     if (birthDate) {
       setPageLoading(true);
       setPending(true);
+
+      // Clear texture cache when changing birth date
+      clearPixiCache();
+
       try {
         if (location.pathname !== '/') {
           navigate('/');
@@ -87,15 +98,17 @@ export const BirthDateDrawer = () => {
           deathDate,
         });
         // --- Web Worker helper ---
-        const { weeks, todayWeekId, todayWeekIndex } = await generateWeeksInWorker(
+        const { weeks, today, drawWeekIndexes, media } = await generateWeeksInWorker(
           birthDate,
           lifeExpectancy,
         );
 
         await resetDBWeeks();
         await saveDBWeeks(weeks);
+        await saveDBDrawWeekIndexes(drawWeekIndexes);
+        await safeUpdateDBMedia(media);
 
-        await updateDBTodayWeek({ todayWeekId, todayWeekIndex });
+        await updateDBTodayWeek(today);
       } catch (err) {
         console.error('generate weeks not finished, error: ', err);
       } finally {

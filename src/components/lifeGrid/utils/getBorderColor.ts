@@ -1,5 +1,7 @@
 import { EWeekType } from '@/types';
 
+import { TTheme } from '../types';
+
 /**
  * Returns HEX color for week border based on week type and theme.
  *
@@ -8,7 +10,7 @@ import { EWeekType } from '@/types';
  * @returns HEX color string for the border of the week.
  *
  */
-export const getBorderColor = (type: EWeekType, theme: Record<string, string>): string => {
+export const getBorderColor = (type: EWeekType, theme: TTheme): string => {
   if (type === EWeekType.Past) return theme.weekPast;
   if (type === EWeekType.Present) return theme.weekPresent;
   if (type === EWeekType.Future) return theme.weekFuture;

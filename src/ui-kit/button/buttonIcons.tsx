@@ -1,6 +1,5 @@
 import { FC } from 'react';
 
-import { LIFE_MODES } from '@/constants';
 import {
   BackIcon,
   HouseIcon,
@@ -11,9 +10,10 @@ import {
   SeasonsIcon,
   YearsIcon,
 } from '@/icons';
+import { ELifeMode } from '@/types';
 
 type TBaseIconName = 'menu' | 'back' | 'life' | 'settings' | 'friends';
-export type TIconName = TBaseIconName | (typeof LIFE_MODES)[keyof typeof LIFE_MODES];
+export type TIconName = TBaseIconName | ELifeMode;
 
 export type TIconProps = {
   isActive?: boolean;
@@ -25,7 +25,7 @@ export const BUTTON_ICONS: Record<TIconName, FC<TIconProps>> = {
   life: PartOfLifeIcon,
   settings: ProfileIcon,
   friends: HouseIcon,
-  [LIFE_MODES.MONTHS]: MonthsIcon,
-  [LIFE_MODES.SEASONS]: SeasonsIcon,
-  [LIFE_MODES.YEARS]: YearsIcon,
+  [ELifeMode.Months]: MonthsIcon,
+  [ELifeMode.Seasons]: SeasonsIcon,
+  [ELifeMode.Years]: YearsIcon,
 };

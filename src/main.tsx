@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { Provider } from 'jotai';
 import { AliveScope } from 'react-activation';
 import ReactDOM from 'react-dom/client';
@@ -13,7 +11,12 @@ import './index.css';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   // <React.StrictMode>
-  <BrowserRouter>
+  <BrowserRouter
+    future={{
+      v7_startTransition: true,
+      v7_relativeSplatPath: true,
+    }}
+  >
     <AliveScope>
       <Provider>
         <I18nextProvider i18n={i18n}>

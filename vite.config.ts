@@ -1,19 +1,27 @@
 import react from '@vitejs/plugin-react';
 import path from 'path';
-import { defineConfig } from 'vite';
 import mkcert from 'vite-plugin-mkcert';
 import { VitePWA } from 'vite-plugin-pwa';
 import svgr from 'vite-plugin-svgr';
+import { defineConfig } from 'vitest/config';
+
+// Enable local HTTPS (mkcert) only when explicitly requested via HTTPS=true,
+// so a plain `yarn dev` never triggers the macOS keychain password prompt.
+const useHttps = process.env.HTTPS === 'true';
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  test: {
+    globals: true,
+    environment: 'node',
+  },
   server: {
     host: '0.0.0.0',
   },
   plugins: [
     svgr(),
     react(),
-    mkcert(),
+    ...(useHttps ? [mkcert()] : []),
     VitePWA({
       registerType: 'prompt',
       includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'mask-icon.svg'],
@@ -101,6 +109,8 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
+      // Vendored layout engine (src/lib/snail-layout) — keep before '@'
+      '@snail': path.resolve(__dirname, 'src/lib/snail-layout'),
       '@': path.resolve(__dirname, 'src'),
     },
   },

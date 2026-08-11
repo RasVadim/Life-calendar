@@ -1,25 +1,23 @@
 import { Application, Container } from 'pixi.js';
 
+import { ELifeMode } from '@/types';
+
 type TGetHandleWheelOptions = {
-  lifeMode: string;
-  scrollContainerRef: React.RefObject<Container>;
-  appRef: React.RefObject<Application>;
+  lifeMode: ELifeMode;
+  scrollContainer: Container | null;
+  app: Application | null;
 };
 
-export const getHandleWheel = ({
-  lifeMode,
-  scrollContainerRef,
-  appRef,
-}: TGetHandleWheelOptions) => {
+export const getHandleWheel = ({ lifeMode, scrollContainer, app }: TGetHandleWheelOptions) => {
   const handleWheel = (e: WheelEvent) => {
-    if (lifeMode !== 'seasons') return;
-    if (!scrollContainerRef.current) return;
+    if (lifeMode !== ELifeMode.Seasons) return;
+    if (!scrollContainer) return;
     e.preventDefault();
-    scrollContainerRef.current.y -= e.deltaY;
+    scrollContainer.y -= e.deltaY;
     // Scroll constraints
-    const minY = Math.min(0, appRef.current!.renderer.height - scrollContainerRef.current.height);
-    if (scrollContainerRef.current.y > 0) scrollContainerRef.current.y = 0;
-    if (scrollContainerRef.current.y < minY) scrollContainerRef.current.y = minY;
+    const minY = Math.min(0, (app?.renderer.height || 0) - scrollContainer.height);
+    if (scrollContainer.y > 0) scrollContainer.y = 0;
+    if (scrollContainer.y < minY) scrollContainer.y = minY;
   };
   return handleWheel;
 };

@@ -1,119 +1,107 @@
 import { Container } from 'pixi.js';
 
-import { IWeek } from '@/store/clientDB';
-import { TLifeMode, TZodiacIconSet } from '@/types';
+import { ESide, EWeekType, EYearsWeekIndxsValues, THolidayName } from '@/types';
 
 import { renderWeek } from './renderWeek';
+import { CONTAINER_LABELS } from '../constants';
+import { computeYearsLayout } from '../layouts';
+import { TLifeGridState } from '../types';
+import { getWeekType } from '../utils';
 
-type TRenderYearsProps = {
-  weeks: IWeek[];
-  theme: Record<string, string>;
-  width: number;
-  height: number;
-  gap?: number;
-  isMedium?: boolean;
-  stage: Container;
-  mode: TLifeMode;
-  zodiacIconSet?: TZodiacIconSet;
-};
+type TRenderProps = { half: ESide | false; weekType?: EWeekType | null; stage?: Container | null };
 
-export const renderYearList = ({
-  weeks,
-  theme,
-  width,
-  height,
-  gap = 1.5,
-  isMedium,
-  stage,
-  mode,
-}: TRenderYearsProps) => {
-  // --- mode: years (default) ---
-  // Group weeks by years
-  const yearsMap: Record<number, IWeek[]> = {};
-  let minYear = Infinity;
-  let maxYear = -Infinity;
-  weeks.forEach((week) => {
-    if (!yearsMap[week.year]) yearsMap[week.year] = [];
-    yearsMap[week.year].push(week);
-    if (week.year < minYear) minYear = week.year;
-    if (week.year > maxYear) maxYear = week.year;
-  });
+export const renderYearList = (state: TLifeGridState) => {
+  const { app, drawWeekIndexes, theme, isScreenMedium, lifeMode, today } = state;
 
-  // Define the maximum number of weeks in a year (columns)
-  let maxWeeksInYear = 0;
-  Object.values(yearsMap).forEach((arr) => {
-    if (arr.length > maxWeeksInYear) maxWeeksInYear = arr.length;
-  });
+  if (!app) return;
 
-  const rows = maxYear - minYear + 1;
-  const cols = maxWeeksInYear;
+  const { lastWeekIndex, yearsIndxs } = drawWeekIndexes;
 
-  // --- Quadratic and adaptive gap ---
-  const minRows = 90;
-  let cellHeight: number;
-  let actualGap: number;
-  // Padding for header and navbar in years mode
-  const PADDING_TOP = 45;
-  const PADDING_BOTTOM = 74;
-  const availableHeight = height - PADDING_TOP - PADDING_BOTTOM;
-  if (rows < minRows) {
-    cellHeight = (availableHeight - gap * (minRows + 1)) / minRows;
-    actualGap = (availableHeight - cellHeight * rows) / (rows + 1);
-  } else {
-    cellHeight = (availableHeight - gap * (rows + 1)) / rows;
-    actualGap = gap;
-  }
-  const cellWidth = (width - gap * (cols + 1)) / cols;
+  const weekContainer = app.stage.getChildByLabel(CONTAINER_LABELS.weeks);
 
-  // For quick search of present week
-  let presentWeek: IWeek | null = null;
-  let presentRow = 0;
-  let presentCol = 0;
+  const layout = computeYearsLayout(state);
+  const { cellWidth, cellHeight, positionAt } = layout;
 
-  // Render all weeks
-  for (let y = 0; y < rows; y++) {
-    const year = minYear + y;
-    const weeksOfYear = yearsMap[year] || [];
-    for (let x = 0; x < weeksOfYear.length; x++) {
-      const week = weeksOfYear[x];
-      if (week.type === 'present') {
-        presentWeek = week;
-        presentRow = y;
-        presentCol = x;
-        continue;
-      }
-      const px = x * (cellWidth + gap) + gap;
-      const py = PADDING_TOP + y * (cellHeight + actualGap) + actualGap;
+  let currentRow = 0;
+  let currentCol = 0;
+
+  const baseProps = {
+    theme,
+    cellWidth,
+    cellHeight,
+    isScreenMedium,
+    stage: weekContainer!,
+    lifeMode,
+    weekType: EWeekType.Future,
+    holiday: null as THolidayName | null,
+  };
+
+  for (let i = 0; i <= lastWeekIndex; i++) {
+    const drawType = yearsIndxs[i];
+
+    const holiday = drawWeekIndexes.holidaysIndxs[i];
+
+    baseProps.holiday = holiday;
+    baseProps.weekType = getWeekType(i, today.todayWeekIndex);
+
+    const render = ({ half, weekType, stage }: TRenderProps) => {
       renderWeek({
-        week,
-        theme,
-        x: px,
-        y: py,
-        cellWidth,
-        cellHeight,
-        isMedium: isMedium || false,
-        isPresent: false,
-        stage,
-        mode,
+        ...baseProps,
+        ...positionAt(currentRow, currentCol),
+        ...(weekType ? { weekType } : {}),
+        ...(stage ? { stage } : {}),
+        half,
       });
-    }
-  }
+    };
 
-  // Render present week last
-  if (presentWeek) {
-    const px = presentCol * (cellWidth + gap) + gap;
-    const py = PADDING_TOP + presentRow * (cellHeight + actualGap) + actualGap;
-    renderWeek({
-      week: presentWeek,
-      theme,
-      x: px,
-      y: py,
-      cellWidth,
-      cellHeight,
-      isMedium: isMedium || false,
-      isPresent: true,
-      stage,
-      mode,
-    });
+    switch (drawType) {
+      case EYearsWeekIndxsValues.Half:
+        if (i === 0) {
+          render({ half: ESide.Right });
+        } else if (i === lastWeekIndex) {
+          // Real death week that died mid-week: only its left (earlier) half exists.
+          currentCol++;
+          render({ half: ESide.Left });
+        } else {
+          let leftWeekType: EWeekType | null = null;
+          let rightWeekType: EWeekType | null = null;
+
+          if (i === today.todayWeekIndex) {
+            leftWeekType =
+              today.todayWeekYearHalf === ESide.Left ? EWeekType.Present : EWeekType.Past;
+            rightWeekType =
+              today.todayWeekYearHalf === ESide.Right ? EWeekType.Present : EWeekType.Future;
+          }
+
+          // Create container for two weeks that will be positioned separately
+          const twoWeekHalfsContainer = new Container();
+          weekContainer?.addChild(twoWeekHalfsContainer);
+
+          currentCol++;
+          render({ half: ESide.Left, weekType: leftWeekType, stage: twoWeekHalfsContainer });
+          currentRow++;
+          currentCol = 0;
+          render({ half: ESide.Right, weekType: rightWeekType, stage: twoWeekHalfsContainer });
+        }
+        break;
+
+      case EYearsWeekIndxsValues.HalfLeap:
+        currentRow++;
+        currentCol = 0;
+        render({ half: ESide.Right });
+        break;
+
+      case EYearsWeekIndxsValues.FullFirst:
+        if (i !== 0) {
+          currentRow++;
+          currentCol = 0;
+        }
+        render({ half: false });
+        break;
+
+      default:
+        currentCol++;
+        render({ half: false });
+    }
   }
 };

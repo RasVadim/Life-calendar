@@ -9,7 +9,7 @@ export const GoatIcon: FC<PropsType> = ({ size = '20', color = '#9DB2CE' }) => (
   <svg
     width={size}
     height={size}
-    viewBox="0 0 2000 2000"
+    viewBox="200 0 2000 2000"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
   >

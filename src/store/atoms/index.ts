@@ -1,10 +1,10 @@
 export { useThemeMode, useSetThemeMode } from './themeMode/useThemeMode';
-
-export { useLanguage, useSetLanguage } from './language/useLanguage';
+export { ThemeMode } from './themeMode/atom';
 
 export { useLifeGridMode, useSetLifeGridMode } from './lifeGridMode/useLifeGridMode';
+export { LifeGridMode } from './lifeGridMode/atom';
 
-export { useZoomCentralWeek, useSetZoomCentralWeek } from './zoomCentralWeek/useCentralWeek';
+export { useLanguage, useSetLanguage } from './language/useLanguage';
 
 export { useSyncPending, useSetSyncPending } from './syncPending/useSyncPending';
 

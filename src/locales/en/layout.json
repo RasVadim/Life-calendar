@@ -40,6 +40,8 @@
     "yearIcons": "Year icons",
     "circles": "Circles",
     "natural": "Nature",
-    "off": "Off"
+    "off": "Off",
+    "pageInDevelopmentTitle": "In development",
+    "pageInDevelopment": "This page isn't ready yet — it's under construction."
   }
 }

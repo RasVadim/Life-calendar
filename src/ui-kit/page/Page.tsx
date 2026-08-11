@@ -4,8 +4,6 @@ import KeepAlive from 'react-activation';
 
 import { PageLoadingHolder } from '@/ui-kit';
 
-import s from './s.module.styl';
-
 type PropsType = {
   children?: ReactNode;
   name?: string;
@@ -14,9 +12,7 @@ type PropsType = {
 export const Page: FC<PropsType> = ({ children, name = 'page' }) => {
   return (
     <KeepAlive name={name} cacheKey={name} id={name} autoFreeze>
-      <Suspense fallback={<PageLoadingHolder />}>
-        <div className={s.page}>{children}</div>
-      </Suspense>
+      <Suspense fallback={<PageLoadingHolder />}>{children}</Suspense>
     </KeepAlive>
   );
 };

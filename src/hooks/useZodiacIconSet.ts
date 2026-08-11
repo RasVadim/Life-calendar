@@ -1,13 +1,8 @@
 import { useMemo } from 'react';
 
-import {
-  ZODIAC_CIRCLES_ICONS,
-  ZODIAC_CIRCLES_SVG_PATHS,
-  ZODIAC_ICONS,
-  ZODIAC_SVG_PATHS,
-} from '@/icons';
+import { MAP_ZODIAC_JSX_SET, MAP_ZODIAC_PNG_SET } from '@/constants/icons';
 import { useDBSettings } from '@/store/clientDB';
-import { EZodiacMode, TZodiacIconSet } from '@/types';
+import { TZodiacIconSet } from '@/types';
 
 export const useZodiacIconSet = (
   { jsx }: { jsx: boolean } = { jsx: false },
@@ -15,10 +10,13 @@ export const useZodiacIconSet = (
   const settings = useDBSettings();
 
   const actualSet = useMemo(() => {
-    if (settings?.zodiacMode === EZodiacMode.NATURAL) return jsx ? ZODIAC_ICONS : ZODIAC_SVG_PATHS;
-    if (settings?.zodiacMode === EZodiacMode.CIRCLES)
-      return jsx ? ZODIAC_CIRCLES_ICONS : ZODIAC_CIRCLES_SVG_PATHS;
-    return undefined;
+    if (!settings?.zodiacMode) return undefined;
+
+    if (jsx) {
+      return MAP_ZODIAC_JSX_SET[settings.zodiacMode as keyof typeof MAP_ZODIAC_JSX_SET];
+    }
+
+    return MAP_ZODIAC_PNG_SET[settings.zodiacMode as keyof typeof MAP_ZODIAC_PNG_SET];
   }, [settings?.zodiacMode]);
 
   return actualSet;

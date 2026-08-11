@@ -6,7 +6,7 @@ import { EThemeMode } from '@/types';
 export const themeIcons: Record<EThemeMode, JSX.Element> = {
   [EThemeMode.LIGHT]: <SunIcon />,
   [EThemeMode.DARK]: <MoonIcon />,
-  [EThemeMode.EXPEREMENTAL]: <StarIcon />,
+  [EThemeMode.EXPERIMENTAL]: <StarIcon />,
   [EThemeMode.CUSTOM]: <PaletteIcon />,
   [EThemeMode.FUTURE]: <RocketIcon />,
 };

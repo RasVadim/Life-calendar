@@ -1,5 +1,5 @@
-export { layout } from "./layout.json";
+export { layout } from './layout.json';
 
-export { life } from "./life.json";
+export { life } from './life.json';
 
-export * as default from "./";
+export * as default from './';

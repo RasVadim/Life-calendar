@@ -31,17 +31,17 @@ export const ZODIAC_CIRCLES_ICONS: Record<TWeekZodiac, FC<{ size?: string; color
   pig: PigCircleIcon,
 };
 
-export const ZODIAC_CIRCLES_SVG_PATHS: Record<TWeekZodiac, string> = {
-  rat: '/icons/zodiac/circles/Rat.svg',
-  ox: '/icons/zodiac/circles/Bull.svg',
-  tiger: '/icons/zodiac/circles/Tiger.svg',
-  rabbit: '/icons/zodiac/circles/Rabbit.svg',
-  dragon: '/icons/zodiac/circles/Dragon.svg',
-  snake: '/icons/zodiac/circles/Snake.svg',
-  horse: '/icons/zodiac/circles/Horse.svg',
-  goat: '/icons/zodiac/circles/Goat.svg',
-  monkey: '/icons/zodiac/circles/Monkey.svg',
-  rooster: '/icons/zodiac/circles/Rooster.svg',
-  dog: '/icons/zodiac/circles/Dog.svg',
-  pig: '/icons/zodiac/circles/Pig.svg',
+export const ZODIAC_CIRCLES_PNG_PATHS: Record<TWeekZodiac, string> = {
+  rat: '/icons/zodiac/circles/Rat.png',
+  ox: '/icons/zodiac/circles/Bull.png',
+  tiger: '/icons/zodiac/circles/Tiger.png',
+  rabbit: '/icons/zodiac/circles/Rabbit.png',
+  dragon: '/icons/zodiac/circles/Dragon.png',
+  snake: '/icons/zodiac/circles/Snake.png',
+  horse: '/icons/zodiac/circles/Horse.png',
+  goat: '/icons/zodiac/circles/Goat.png',
+  monkey: '/icons/zodiac/circles/Monkey.png',
+  rooster: '/icons/zodiac/circles/Rooster.png',
+  dog: '/icons/zodiac/circles/Dog.png',
+  pig: '/icons/zodiac/circles/Pig.png',
 };
