@@ -20,5 +20,10 @@ export const initPixi = async (container: HTMLDivElement): Promise<Application> 
     resizeTo: container,
   });
 
+  // Render-on-demand: stop the always-on 60fps loop (it re-traverses the whole
+  // scene every frame even when idle). Callers render explicitly on scroll /
+  // morph / paint instead — big idle CPU + battery win on mobile.
+  app.ticker.stop();
+
   return app;
 };

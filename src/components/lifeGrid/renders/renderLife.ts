@@ -25,6 +25,9 @@ export const renderLife = (state: TLifeGridState) => {
   const weekContainer = new Container({
     label: CONTAINER_LABELS.weeks,
   });
+  // Bake the grid into a GPU render group: scrolling (moving weekContainer.y)
+  // becomes a single O(1) transform instead of re-traversing thousands of cells.
+  weekContainer.enableRenderGroup();
   app.stage.addChild(weekContainer);
 
   if (lifeMode === ELifeMode.Seasons) {

@@ -175,6 +175,10 @@ export const SnailGrid: FC<TProps> = ({ drawWeekIndexes, today, media }) => {
     scroller.scrollTop = scrollable ? initialScroll : 0;
   };
 
+  // Render-on-demand: the ticker is stopped (see initPixi), so every state change
+  // that should be visible must ask for a frame explicitly.
+  const render = () => stateRef.current.app?.render();
+
   const paint = (mode: ELifeMode, initialScroll = 0) => {
     const state = stateRef.current;
     state.lifeMode = mode;
@@ -188,6 +192,8 @@ export const SnailGrid: FC<TProps> = ({ drawWeekIndexes, today, media }) => {
     const top = isScrollable(mode) ? (scrollerRef.current?.scrollTop ?? 0) : 0;
     scrollRef.current = -Math.round(top);
     if (weeks) weeks.y = scrollRef.current;
+
+    render();
   };
 
   // Week under a screen point in the current (screen-space) `from` layout —
@@ -307,6 +313,7 @@ export const SnailGrid: FC<TProps> = ({ drawWeekIndexes, today, media }) => {
     const tick = (now: number) => {
       const progress = Math.min(1, (now - start) / MORPH_DURATION);
       renderer.morph(from, to, easeInOutCubic(progress), models, viewportHeight);
+      render();
       if (progress < 1) {
         rafRef.current = requestAnimationFrame(tick);
       } else {
@@ -341,7 +348,11 @@ export const SnailGrid: FC<TProps> = ({ drawWeekIndexes, today, media }) => {
 
     const onResize = () => {
       stateRef.current.isScreenMedium = window.innerWidth < DEVICE_SCREEN_WIDTH.medium;
-      if (!morphRef.current) paint(paintedRef.current);
+      if (morphRef.current) return;
+      paint(paintedRef.current);
+      // Pixi's resize plugin resizes the backing store on its own rAF; with the
+      // ticker stopped we must render again afterwards or the canvas stays stale.
+      requestAnimationFrame(() => render());
     };
 
     // Native scroll drives the canvas: sync weekContainer.y to scrollTop.
@@ -352,6 +363,7 @@ export const SnailGrid: FC<TProps> = ({ drawWeekIndexes, today, media }) => {
       scrollRef.current = y;
       const weeks = weeksContainer();
       if (weeks) weeks.y = y;
+      render();
     };
 
     (async () => {
