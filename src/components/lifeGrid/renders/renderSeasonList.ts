@@ -3,7 +3,11 @@ import { Container } from 'pixi.js';
 import { ELifeMode, EWeekType, THolidayName } from '@/types';
 
 import { renderLabel } from './renderLabel';
-import { renderSeasonThreadLine } from './renderSeasonThreadLine';
+import {
+  renderSeasonThreadLine,
+  TSeasonEndCap,
+  TSeasonStartCap,
+} from './renderSeasonThreadLine';
 import { renderWeek } from './renderWeek';
 import { BIG_BORDER_RADIUS_MAP, BORDER_RADIUS_MAP, CONTAINER_LABELS } from '../constants';
 import { computeSeasonsLayout } from '../layouts';
@@ -11,11 +15,17 @@ import { TLifeGridState } from '../types';
 import { getCachedColor, getWeekType } from '../utils';
 
 export const renderSeasonList = (state: TLifeGridState) => {
-  const { app, drawWeekIndexes, theme, isScreenMedium, lifeMode, today } = state;
+  const { app, drawWeekIndexes, theme, isScreenMedium, lifeMode, today, container } = state;
   if (!app) return;
 
   const renderer = app.renderer;
-  const { seasonsIndxs } = drawWeekIndexes;
+  const containerWidth = container?.clientWidth || app.renderer.width;
+  const { seasonsIndxs, monthsIndxs, lastWeekIndex } = drawWeekIndexes;
+
+  // Life's first/last weeks may be partial (born / die mid-week). Reuse the months
+  // extreme flag ("half*") to decide if the birth/death point sits inside the cell.
+  const isHalfLifeWeek = (index: number): boolean =>
+    (monthsIndxs[index]?.type ?? '').startsWith('half');
 
   const weekContainer = app.stage.getChildByLabel(CONTAINER_LABELS.weeks) as Container;
   if (!weekContainer) return;
@@ -72,20 +82,58 @@ export const renderSeasonList = (state: TLifeGridState) => {
       });
     }
 
-    // Season thread: from the first week's left edge to the last week's cell. The
-    // last week is wherever the bottom row ended (variable), so the end cap is read
-    // straight off its rendered position; a mid-week season end pulls it to centre.
-    const startX = cellX[0];
-    const isEndHalf = !!seasonsIndxs[block.indices[n - 1]]?.secondSeason;
-    const endX = cellX[n - 1] + (isEndHalf ? cellSize[n - 1] / 2 : cellSize[n - 1]);
+    // Season thread: one underline anchored to the block's first and last cells
+    // (wherever they landed in the two rows). Caps mirror the month vocabulary.
+    // A mid-week season boundary lives on the single week that straddles the two
+    // seasons — that week can be either the END of this block or the START of the
+    // next, so we detect both and place the transition on the correct cell:
+    //   - shared week is this block's LAST cell  -> borderEnd (wrap off right edge)
+    //   - shared week is the NEXT block's first  -> this block ends full, next wrapIn
+    //   - shared week is this block's FIRST cell -> borderStart (wrap in from left)
+    // A clean Sunday/Monday boundary is a full dot on both sides.
+    const firstIdx = block.indices[0];
+    const lastIdx = block.indices[n - 1];
+    const isLifeStart = blockIndex === 0 && firstIdx === 0;
+    const isLifeEnd = lastIdx === lastWeekIndex;
+
+    const startSharedHere = !!seasonsIndxs[firstIdx]?.secondSeason;
+    const prevWeekShared = firstIdx > 0 && !!seasonsIndxs[firstIdx - 1]?.secondSeason;
+    const endShared = !!seasonsIndxs[lastIdx]?.secondSeason;
+
+    const startCap: TSeasonStartCap = isLifeStart
+      ? isHalfLifeWeek(firstIdx)
+        ? 'halfLife'
+        : 'full'
+      : startSharedHere
+        ? 'borderStart'
+        : prevWeekShared
+          ? 'wrapIn'
+          : 'full';
+
+    const endCap: TSeasonEndCap = isLifeEnd
+      ? isHalfLifeWeek(lastIdx)
+        ? 'halfLife'
+        : 'full'
+      : endShared
+        ? 'borderEnd'
+        : 'full';
+
+    // Alternating block colour; the neighbour season is always the opposite one.
+    const otherColor = blockIndex % 2 === 0 ? theme.primary2 : theme.primary;
 
     renderSeasonThreadLine({
       container: weekContainer,
       renderer,
-      startX,
-      endX,
       threadY,
+      containerWidth,
+      startX: cellX[0],
+      startWidth: cellSize[0],
+      endX: cellX[n - 1],
+      endWidth: cellSize[n - 1],
+      startCap,
+      endCap,
       colorNumber: getCachedColor(threadColor).toNumber(),
+      otherColorNumber: getCachedColor(otherColor).toNumber(),
     });
   });
 };
