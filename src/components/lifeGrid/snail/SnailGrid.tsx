@@ -18,7 +18,7 @@ import {
   WEEK_IN_MONTH_GAP,
 } from '../constants';
 import { computeSeasonsLayout, computeYearsLayout } from '../layouts';
-import { renderLife } from '../renders';
+import { preloadZodiacTextures, renderLife } from '../renders';
 import { getMonthDynamicWeekWidth } from '../renders/utils';
 import { TLifeGridState } from '../types';
 import { clearPixiCache, initPixi } from '../utils';
@@ -458,6 +458,22 @@ export const SnailGrid: FC<TProps> = ({ drawWeekIndexes, today, media }) => {
     runMorph(paintedRef.current, lifeMode);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lifeMode]);
+
+  // Zodiac icons load async (settings resolve late). Preload the active set's
+  // textures, then repaint so seasons can draw them synchronously.
+  useEffect(() => {
+    stateRef.current.zodiacIconSet = zodiacIconSet;
+    let cancelled = false;
+    preloadZodiacTextures(zodiacIconSet).then(() => {
+      if (cancelled || !stateRef.current.app || morphRef.current) return;
+      // Keep the current scroll position; only the icons need to appear.
+      paint(paintedRef.current, -scrollRef.current);
+    });
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [zodiacIconSet]);
 
   // Re-tint / repaint on theme change.
   useEffect(() => {

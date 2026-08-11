@@ -8,7 +8,7 @@ export { renderMonthList } from './renderMonthList';
 
 export { renderWeek } from './renderWeek';
 
-export { renderIcon } from './renderIcon';
+export { renderIcon, preloadZodiacTextures } from './renderIcon';
 
 export { renderLabel } from './renderLabel';
 

@@ -4,11 +4,11 @@ import i18n from '@/i18n';
 
 import { getCachedColor } from '../utils';
 
-// Constants for month labels
-const LABEL_FONT_SIZE = 13;
-const LABEL_MARGIN_BOTTOM = 36;
+// Constants for month labels (exported so the seasons icon aligns with them).
+export const LABEL_FONT_SIZE = 13;
+export const LABEL_MARGIN_BOTTOM = 36;
 const LABEL_GAP = 8;
-const LABEL_LEFT_MARGIN = 26;
+export const LABEL_LEFT_MARGIN = 26;
 
 const DEFAULT_TEXT_STYLE = {
   fontFamily: 'Montserrat, sans-serif',
@@ -25,6 +25,7 @@ type TRenderLabelParams = {
   y: number;
   theme: Record<string, string>;
   labelColor?: string; // explicit label colour (e.g. seasons match their thread)
+  leftMargin?: number; // year indent override (seasons push right to fit the icon)
 };
 
 /**
@@ -39,6 +40,7 @@ export const renderLabel = ({
   y,
   theme,
   labelColor: labelColorOverride,
+  leftMargin = LABEL_LEFT_MARGIN,
 }: TRenderLabelParams) => {
   const labelKey = month || season || '';
 
@@ -72,7 +74,7 @@ export const renderLabel = ({
   });
 
   // Position texts
-  yearText.x = x + LABEL_LEFT_MARGIN;
+  yearText.x = x + leftMargin;
   yearText.y = y - LABEL_MARGIN_BOTTOM - LABEL_FONT_SIZE;
 
   labelText.x = yearText.x + yearText.width + LABEL_GAP; // 8px gap between year and month

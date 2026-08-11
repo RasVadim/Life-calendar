@@ -1,21 +1,25 @@
 import { Container } from 'pixi.js';
 
 import { ELifeMode, EWeekType, THolidayName } from '@/types';
+import { getZodiac } from '@/utils/weeks/generateWeeks/generateWeek/helpers';
 
-import { renderLabel } from './renderLabel';
-import {
-  renderSeasonThreadLine,
-  TSeasonEndCap,
-  TSeasonStartCap,
-} from './renderSeasonThreadLine';
+import { renderIcon } from './renderIcon';
+import { LABEL_FONT_SIZE, LABEL_MARGIN_BOTTOM, renderLabel } from './renderLabel';
+import { renderSeasonThreadLine, TSeasonEndCap, TSeasonStartCap } from './renderSeasonThreadLine';
 import { renderWeek } from './renderWeek';
 import { BIG_BORDER_RADIUS_MAP, BORDER_RADIUS_MAP, CONTAINER_LABELS } from '../constants';
 import { computeSeasonsLayout } from '../layouts';
 import { TLifeGridState } from '../types';
 import { getCachedColor, getWeekType } from '../utils';
 
+// Year/season sit further right than months (36 vs 26) to leave a comfortable gap
+// after the zodiac icon, which hugs the left margin above the first week.
+const SEASON_LABEL_INDENT = 30;
+const SEASON_ICON_INSET = 6;
+
 export const renderSeasonList = (state: TLifeGridState) => {
-  const { app, drawWeekIndexes, theme, isScreenMedium, lifeMode, today, container } = state;
+  const { app, drawWeekIndexes, theme, isScreenMedium, lifeMode, today, container, zodiacIconSet } =
+    state;
   if (!app) return;
 
   const renderer = app.renderer;
@@ -63,6 +67,20 @@ export const renderSeasonList = (state: TLifeGridState) => {
       y: topRowY,
       theme,
       labelColor: threadColor,
+      leftMargin: SEASON_LABEL_INDENT,
+    });
+
+    // Zodiac icon of the block's calendar year, tinted to match the season colour.
+    // Sits near the left margin (above the first week), with the year/season pushed
+    // right (SEASON_LABEL_INDENT) so there's a comfortable gap after it.
+    const labelTopY = topRowY - LABEL_MARGIN_BOTTOM - LABEL_FONT_SIZE;
+    renderIcon({
+      container: weekContainer,
+      zodiacIconSet,
+      zodiac: getZodiac(Number(block.year)),
+      x: margin + SEASON_ICON_INSET,
+      y: labelTopY - 2,
+      colorNumber: getCachedColor(threadColor).toNumber(),
     });
 
     const n = block.indices.length;
