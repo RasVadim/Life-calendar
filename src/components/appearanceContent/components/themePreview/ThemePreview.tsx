@@ -1,11 +1,12 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 
 import cx from 'classnames';
 
 import { Header, TabBar } from '@/components';
-import { getBGColor, getBorderColor } from '@/components/lifeCalendar/components/week/utils';
 import { useDBWeeks } from '@/store/clientDB';
 import { EWeekType } from '@/types/life';
+
+import { getBGColor, getBorderColor } from './utils';
 
 import s from './s.module.styl';
 

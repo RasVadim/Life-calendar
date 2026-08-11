@@ -1,7 +1,8 @@
 import { DEFAULT_LIFE_SPAN_YEARS } from '@/constants';
 import { EWeekType } from '@/types';
 
-import { IWeek, lifeCalendarDB } from '../lifeCalendarDB';
+import type { IWeek } from '../interfaces';
+import { lifeCalendarDB } from '../lifeCalendarDB';
 
 // Initialize default weeks (empty, gray) if not present
 export const initDefaultWeeks = async () => {

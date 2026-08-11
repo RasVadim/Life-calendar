@@ -1,1 +1,0 @@
-export { resizeYearsList } from './resizeYearsList';

@@ -175,7 +175,10 @@ describe('findCurrentWeek', () => {
       vi.setSystemTime(new Date('2024-03-04T12:00:00.000Z'));
 
       const weeks = [
-        { ...createMockWeek('week-1', '2024-03-01', '2024-03-07'), dateStart: null },
+        {
+          ...createMockWeek('week-1', '2024-03-01', '2024-03-07'),
+          dateStart: null as unknown as string,
+        },
         createMockWeek('week-2', '2024-03-08', '2024-03-14'),
       ];
 
@@ -189,7 +192,10 @@ describe('findCurrentWeek', () => {
       vi.setSystemTime(new Date('2024-03-04T12:00:00.000Z'));
 
       const weeks = [
-        { ...createMockWeek('week-1', '2024-03-01', '2024-03-07'), dateEnd: null },
+        {
+          ...createMockWeek('week-1', '2024-03-01', '2024-03-07'),
+          dateEnd: null as unknown as string,
+        },
         createMockWeek('week-2', '2024-03-08', '2024-03-14'),
       ];
 
@@ -203,7 +209,10 @@ describe('findCurrentWeek', () => {
       vi.setSystemTime(new Date('2024-03-04T12:00:00.000Z'));
 
       const weeks = [
-        { ...createMockWeek('week-1', '2024-03-01', '2024-03-07'), dateStart: undefined },
+        {
+          ...createMockWeek('week-1', '2024-03-01', '2024-03-07'),
+          dateStart: undefined as unknown as string,
+        },
         createMockWeek('week-2', '2024-03-08', '2024-03-14'),
       ];
 
@@ -217,7 +226,10 @@ describe('findCurrentWeek', () => {
       vi.setSystemTime(new Date('2024-03-04T12:00:00.000Z'));
 
       const weeks = [
-        { ...createMockWeek('week-1', '2024-03-01', '2024-03-07'), dateEnd: undefined },
+        {
+          ...createMockWeek('week-1', '2024-03-01', '2024-03-07'),
+          dateEnd: undefined as unknown as string,
+        },
         createMockWeek('week-2', '2024-03-08', '2024-03-14'),
       ];
 

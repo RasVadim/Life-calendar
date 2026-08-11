@@ -1,4 +1,4 @@
-import { IGenerateWeeksResult } from '@/utils';
+import type { IGenerateWeeksResult } from '@/utils/weeks/generateWeeks/types';
 
 export const generateWeeksInWorker = (
   birthDateISO: string,

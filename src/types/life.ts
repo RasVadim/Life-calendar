@@ -1,6 +1,6 @@
 import { HOLIDAY_NAMES } from '@/constants';
 import type { IWeek } from '@/store/clientDB';
-import { IMeta } from '@/store/clientDB/lifeCalendarDB';
+import type { IMeta } from '@/store/clientDB/interfaces';
 
 export enum EWeekType {
   Past = 'past',

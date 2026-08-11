@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 
 import { SettingBlock, SettingsGroup } from '@/components';
 import { LifeExpectancyDrawer } from '@/features';
