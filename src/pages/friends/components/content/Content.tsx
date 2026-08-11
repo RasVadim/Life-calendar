@@ -1,25 +1,18 @@
 import { FC } from 'react';
 
-import { SnailGrid } from '@/components/lifeGrid/snail';
-import { usePageLoading } from '@/store/atoms';
-import { useDBDrawWeekIndexes, useDBTodayWeek, useDBMedia } from '@/store/clientDB';
-import { PageLoadingHolder } from '@/ui-kit/pageLoadingHolder/PageLoadingHolder';
+import { useTranslation } from '@/hooks';
 
 import s from './s.module.styl';
 
 export const Content: FC = () => {
-  const drawWeekIndexes = useDBDrawWeekIndexes();
-  const today = useDBTodayWeek();
-  const mediaData = useDBMedia();
-  const [pageLoading] = usePageLoading();
-
-  if (!drawWeekIndexes || pageLoading || !today.todayWeekIndex) {
-    return <PageLoadingHolder />;
-  }
+  const { t } = useTranslation();
 
   return (
     <div className={s.content}>
-      <SnailGrid drawWeekIndexes={drawWeekIndexes} today={today} media={mediaData?.media || {}} />
+      <div className={s.placeholder}>
+        <div className={s.title}>{t('layout.pageInDevelopmentTitle')}</div>
+        <div className={s.text}>{t('layout.pageInDevelopment')}</div>
+      </div>
     </div>
   );
 };

@@ -40,6 +40,8 @@
     "yearIcons": "Иконки лет",
     "circles": "Кружки",
     "natural": "Природа",
-    "off": "Откл."
+    "off": "Откл.",
+    "pageInDevelopmentTitle": "В разработке",
+    "pageInDevelopment": "Эта страница ещё не готова — она в разработке."
   }
 }
