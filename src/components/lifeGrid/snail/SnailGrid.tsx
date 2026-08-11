@@ -1,4 +1,4 @@
-import { FC, useEffect, useRef } from 'react';
+import { FC, useEffect, useMemo, useRef, useState } from 'react';
 
 import type { RectsDataBuffer } from '@snail/geometry/rect';
 
@@ -7,7 +7,7 @@ import { THEMES } from '@/constants/themes';
 import { useZodiacIconSet } from '@/hooks';
 import { useLifeGridMode } from '@/store/atoms';
 import { useThemeMode } from '@/store/atoms/themeMode/useThemeMode';
-import { IDrawWeekIndexes } from '@/store/clientDB';
+import { IDrawWeekIndexes, useDBWeeks } from '@/store/clientDB';
 import { ELifeMode, TMedia, TMediaDatesMap, TTodayData } from '@/types';
 
 import {
@@ -28,6 +28,7 @@ import { computeSeasonsFrames } from './frames/seasonsFrames';
 import { computeYearsFrames } from './frames/yearsFrames';
 import { easeInOutCubic } from './interpolate';
 import { buildWeekModels, TWeekModel } from './weekModel';
+import { computeYearRowLabels } from './yearRowLabels';
 import s from '../s.module.styl';
 
 type TProps = {
@@ -65,6 +66,18 @@ export const SnailGrid: FC<TProps> = ({ drawWeekIndexes, today, media }) => {
   const [themeMode] = useThemeMode();
   const zodiacIconSet = useZodiacIconSet();
   const theme = THEMES[themeMode];
+
+  // Per-row calendar-year labels for the left gutter on wide screens. Built from
+  // the canvas's own trusted data (chronological weeks + yearsIndxs), so rows map
+  // 1:1 to the grid and the canvas layout stays untouched.
+  const weeks = useDBWeeks();
+  const rowLabels = useMemo(
+    () => computeYearRowLabels(weeks, drawWeekIndexes.yearsIndxs, drawWeekIndexes.lastWeekIndex),
+    [weeks, drawWeekIndexes.yearsIndxs, drawWeekIndexes.lastWeekIndex],
+  );
+  const rowLabelsRef = useRef(rowLabels);
+  rowLabelsRef.current = rowLabels;
+  const [yearLabels, setYearLabels] = useState<{ y: number; start: string; end: string }[]>([]);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const scrollerRef = useRef<HTMLDivElement>(null);
@@ -179,6 +192,27 @@ export const SnailGrid: FC<TProps> = ({ drawWeekIndexes, today, media }) => {
   // that should be visible must ask for a frame explicitly.
   const render = () => stateRef.current.app?.render();
 
+  // Left-gutter year labels: wide screens only, years mode only. The canvas is
+  // clipped to ~532px and centred, so labels live in a DOM overlay in the free
+  // margin — computed from the same grid geometry, so they line up per row and
+  // never shift the canvas. Reads refs, so a stale closure (resize handler) is safe.
+  const updateYearLabels = (mode: ELifeMode) => {
+    const state = stateRef.current;
+    const labels = rowLabelsRef.current;
+    if (mode !== ELifeMode.Years || state.isScreenMedium || !state.app || labels.length === 0) {
+      setYearLabels((prev) => (prev.length ? [] : prev));
+      return;
+    }
+    const layout = computeYearsLayout(state);
+    setYearLabels(
+      labels.map((l) => ({
+        y: layout.positionAt(l.row, 0).y + layout.cellHeight / 2,
+        start: l.start,
+        end: l.end,
+      })),
+    );
+  };
+
   const paint = (mode: ELifeMode, initialScroll = 0) => {
     const state = stateRef.current;
     state.lifeMode = mode;
@@ -194,6 +228,7 @@ export const SnailGrid: FC<TProps> = ({ drawWeekIndexes, today, media }) => {
     if (weeks) weeks.y = scrollRef.current;
 
     render();
+    updateYearLabels(mode);
   };
 
   // Week under a screen point in the current (screen-space) `from` layout —
@@ -511,11 +546,39 @@ export const SnailGrid: FC<TProps> = ({ drawWeekIndexes, today, media }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [drawWeekIndexes.lastWeekIndex, today.todayWeekIndex]);
 
+  // Keep the gutter labels in sync: they arrive async (weeks load late) and must
+  // hide the instant we leave years. Entering years is handled by the settle paint.
+  useEffect(() => {
+    if (!stateRef.current.app) return;
+    if (lifeMode !== ELifeMode.Years) {
+      setYearLabels((prev) => (prev.length ? [] : prev));
+      return;
+    }
+    if (!morphRef.current) updateYearLabels(ELifeMode.Years);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [rowLabels, lifeMode]);
+
   return (
-    <div ref={containerRef} className={s.pixiContainer}>
-      <div ref={scrollerRef} className={s.scroller}>
-        <div ref={spacerRef} className={s.scrollSpacer} />
+    <>
+      <div ref={containerRef} className={s.pixiContainer}>
+        <div ref={scrollerRef} className={s.scroller}>
+          <div ref={spacerRef} className={s.scrollSpacer} />
+        </div>
       </div>
-    </div>
+      {yearLabels.length > 0 && (
+        <div className={s.yearLabels} aria-hidden>
+          {yearLabels.map((label, i) => (
+            <span key={i}>
+              <span className={s.yearLabelStart} style={{ top: label.y }}>
+                {label.start}
+              </span>
+              <span className={s.yearLabelEnd} style={{ top: label.y }}>
+                {label.end}
+              </span>
+            </span>
+          ))}
+        </div>
+      )}
+    </>
   );
 };
