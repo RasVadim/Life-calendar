@@ -61,6 +61,7 @@ export const renderSeasonList = (state: TLifeGridState) => {
 
     renderLabel({
       container: weekContainer,
+      renderer,
       season: block.season,
       year: block.year,
       x: margin,

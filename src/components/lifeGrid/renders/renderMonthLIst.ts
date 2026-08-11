@@ -57,18 +57,6 @@ export const renderMonthList = (state: TLifeGridState) => {
   const largeWeekWidth = weekWidth * LARGE_MONTH_WEEK_SIZE_MULTIPLIER;
   const largeWeekHeight = largeWeekWidth;
 
-  // Hide weeks beyond the first 100 by moving them off-screen
-  const hideOffsetY = 10000; // Move off-screen
-
-  // Hide all existing weeks first (inclusive of the death week at lastWeekIndex)
-  for (let i = 0; i <= lastWeekIndex; i++) {
-    const weekChild = weekContainer.children[i];
-    if (weekChild) {
-      weekChild.y = hideOffsetY;
-      weekChild.visible = false;
-    }
-  }
-
   // Identity of the last month (the row that ends life). Its own start marker is
   // suppressed so the end-cap renderer owns the whole thread, exactly like the
   // first month is fully owned by renderThreadLineStart.
@@ -159,6 +147,7 @@ export const renderMonthList = (state: TLifeGridState) => {
 
         renderLabel({
           container: weekContainer,
+          renderer,
           month: monthData.month,
           year: monthData.year,
           x: WEEK_IN_MONTH_GAP,
@@ -215,7 +204,10 @@ export const renderMonthList = (state: TLifeGridState) => {
       cellWidth,
       cellHeight,
       ...(isMonthPreview
-        ? { borderRadius: BIG_BORDER_RADIUS_MAP[ELifeMode.Months][isScreenMedium ? 'small' : 'large'] }
+        ? {
+            borderRadius:
+              BIG_BORDER_RADIUS_MAP[ELifeMode.Months][isScreenMedium ? 'small' : 'large'],
+          }
         : {}),
     });
 

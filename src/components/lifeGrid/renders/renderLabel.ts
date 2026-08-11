@@ -1,4 +1,4 @@
-import { Container, Text } from 'pixi.js';
+import { Container, Renderer, Sprite, Text, Texture } from 'pixi.js';
 
 import i18n from '@/i18n';
 
@@ -16,8 +16,35 @@ const DEFAULT_TEXT_STYLE = {
   fontWeight: '300' as const,
 };
 
+// Cache label textures keyed by string (font is fixed). Rendered white so colour
+// comes from the sprite tint — one texture serves every theme / month colour.
+// Persists across paints, so months (~960 rows) rasterizes each unique string
+// ONCE instead of ~1920 Text objects every time the mode is painted.
+type TCachedText = { texture: Texture; width: number; height: number };
+const textCache = new Map<string, TCachedText>();
+
+export const clearLabelCache = (): void => {
+  textCache.clear();
+};
+
+const getCachedText = (renderer: Renderer, text: string): TCachedText => {
+  let cached = textCache.get(text);
+  if (!cached || cached.texture.destroyed) {
+    const node = new Text({ text, style: { ...DEFAULT_TEXT_STYLE, fill: 0xffffff } });
+    // Measure in logical units before baking, so sprite sizing is resolution-proof.
+    const width = node.width;
+    const height = node.height;
+    const texture = renderer.generateTexture({ target: node, resolution: renderer.resolution });
+    node.destroy();
+    cached = { texture, width, height };
+    textCache.set(text, cached);
+  }
+  return cached;
+};
+
 type TRenderLabelParams = {
   container: Container;
+  renderer: Renderer;
   month?: string | null;
   season?: string | null;
   year: string;
@@ -29,10 +56,12 @@ type TRenderLabelParams = {
 };
 
 /**
- * Render month and year label for a row
+ * Render month/season and year label for a row as tinted sprites off cached
+ * white-text textures (see getCachedText).
  */
 export const renderLabel = ({
   container,
+  renderer,
   month,
   season,
   year,
@@ -43,7 +72,6 @@ export const renderLabel = ({
   leftMargin = LABEL_LEFT_MARGIN,
 }: TRenderLabelParams) => {
   const labelKey = month || season || '';
-
   const label = i18n.t(`life.${labelKey}`);
 
   let labelColor = labelColorOverride ?? theme.text;
@@ -55,31 +83,21 @@ export const renderLabel = ({
     labelColor = isEvenMonth ? theme.primary2 : theme.primary;
   }
 
-  // Create month text with alternating color
-  const labelText = new Text({
-    text: label,
-    style: {
-      ...DEFAULT_TEXT_STYLE,
-      fill: getCachedColor(labelColor).toNumber(),
-    },
-  });
+  const labelTopY = y - LABEL_MARGIN_BOTTOM - LABEL_FONT_SIZE;
 
-  // Create year text with text color
-  const yearText = new Text({
-    text: year,
-    style: {
-      ...DEFAULT_TEXT_STYLE,
-      fill: getCachedColor(theme.text).toNumber(),
-    },
-  });
+  const yearCached = getCachedText(renderer, year);
+  const yearSprite = new Sprite(yearCached.texture);
+  yearSprite.setSize(yearCached.width, yearCached.height);
+  yearSprite.tint = getCachedColor(theme.text).toNumber();
+  yearSprite.position.set(x + leftMargin, labelTopY);
 
-  // Position texts
-  yearText.x = x + leftMargin;
-  yearText.y = y - LABEL_MARGIN_BOTTOM - LABEL_FONT_SIZE;
+  const labelCached = getCachedText(renderer, label);
+  const labelSprite = new Sprite(labelCached.texture);
+  labelSprite.setSize(labelCached.width, labelCached.height);
+  labelSprite.tint = getCachedColor(labelColor).toNumber();
+  // 8px gap between year and month/season
+  labelSprite.position.set(yearSprite.x + yearCached.width + LABEL_GAP, labelTopY);
 
-  labelText.x = yearText.x + yearText.width + LABEL_GAP; // 8px gap between year and month
-  labelText.y = y - LABEL_MARGIN_BOTTOM - LABEL_FONT_SIZE;
-
-  container.addChild(yearText);
-  container.addChild(labelText);
+  container.addChild(yearSprite);
+  container.addChild(labelSprite);
 };

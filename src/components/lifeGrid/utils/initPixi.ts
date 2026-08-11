@@ -12,7 +12,9 @@ export const initPixi = async (container: HTMLDivElement): Promise<Application> 
     width: container.clientWidth,
     height: container.clientHeight,
     backgroundAlpha: 0, // Make canvas transparent
-    resolution: window.devicePixelRatio || 1,
+    // Cap at 2x: phones report DPR 3, but rendering thousands of cells at 3x
+    // (~2.25x the fill of 2x) tanks the GPU for no visible gain on this grid.
+    resolution: Math.min(window.devicePixelRatio || 1, 2),
     autoDensity: true,
     antialias: true,
     resizeTo: container,

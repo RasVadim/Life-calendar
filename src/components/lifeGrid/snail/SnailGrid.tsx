@@ -299,10 +299,14 @@ export const SnailGrid: FC<TProps> = ({ drawWeekIndexes, today, media }) => {
     );
     morphRef.current = renderer;
 
+    // Cull weeks that never enter the screen during this morph (safe: linear
+    // interpolation keeps each square between its two endpoints).
+    const viewportHeight = state.app.screen.height;
+
     const start = performance.now();
     const tick = (now: number) => {
       const progress = Math.min(1, (now - start) / MORPH_DURATION);
-      renderer.morph(from, to, easeInOutCubic(progress), models);
+      renderer.morph(from, to, easeInOutCubic(progress), models, viewportHeight);
       if (progress < 1) {
         rafRef.current = requestAnimationFrame(tick);
       } else {
