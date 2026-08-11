@@ -190,47 +190,39 @@ export const SnailGrid: FC<TProps> = ({ drawWeekIndexes, today, media }) => {
     if (weeks) weeks.y = scrollRef.current;
   };
 
-  // Target scroll (px) for the zoomed-in `to` layout so the week currently under
-  // the pinch point stays under it. `from` is already in screen coords here.
-  const anchoredScroll = (
-    from: RectsDataBuffer,
-    to: RectsDataBuffer,
-    anchorX: number,
-    anchorY: number,
-  ): number => {
+  // Week under a screen point in the current (screen-space) `from` layout —
+  // rect hit if any, else the nearest by centre. Used to anchor a pinch.
+  const focusWeekAt = (from: RectsDataBuffer, x0: number, y0: number): number => {
     const a = from.buffer;
-    const b = to.buffer;
     const n = modelsRef.current.length;
-
-    // The focused week is the one under the fingers (rect hit, else nearest).
     let focus = 0;
     let best = Infinity;
-    let hit = -1;
     for (let i = 0; i < n; i += 1) {
       const o = i * 4;
       const x = a[o] ?? 0;
       const y = a[o + 1] ?? 0;
       const w = a[o + 2] ?? 0;
       const h = a[o + 3] ?? 0;
-      if (anchorX >= x && anchorX <= x + w && anchorY >= y && anchorY <= y + h) {
-        hit = i;
-        break;
-      }
-      const dx = x + w / 2 - anchorX;
-      const dy = y + h / 2 - anchorY;
+      if (x0 >= x && x0 <= x + w && y0 >= y && y0 <= y + h) return i;
+      const dx = x + w / 2 - x0;
+      const dy = y + h / 2 - y0;
       const d = dx * dx + dy * dy;
       if (d < best) {
         best = d;
         focus = i;
       }
     }
-    if (hit >= 0) focus = hit;
+    return focus;
+  };
 
+  // Target scroll (px) for `to` so the focus week's centre lands at screen `anchorY`,
+  // clamped to the target layout's scrollable range (content + bottom pad).
+  const scrollForFocus = (to: RectsDataBuffer, focus: number, anchorY: number): number => {
+    const b = to.buffer;
+    const n = modelsRef.current.length;
     const o = focus * 4;
-    const targetCenter = (b[o + 1] ?? 0) + (b[o + 3] ?? 0) / 2;
-    const desired = targetCenter - anchorY;
+    const desired = (b[o + 1] ?? 0) + (b[o + 3] ?? 0) / 2 - anchorY;
 
-    // Clamp to the target layout's scrollable range (content + bottom pad).
     let contentH = 0;
     for (let i = 0; i < n; i += 1) {
       const p = i * 4;
@@ -270,13 +262,20 @@ export const SnailGrid: FC<TProps> = ({ drawWeekIndexes, today, media }) => {
       from.translate(0, scrollRef.current);
     }
 
-    // Anchor the zoom at the pinch midpoint: keep the focused week put instead of
-    // snapping to the start of life. Only when the target scrolls (months/seasons).
+    // Anchor a scrollable target so the focus week stays put instead of snapping
+    // to the start of life. Pinch anchors on the finger midpoint; a button /
+    // programmatic switch anchors on today's week, centred in the viewport.
     const anchor = zoomAnchorRef.current;
     zoomAnchorRef.current = null;
     let toScroll = 0;
-    if (anchor && isScrollable(toMode)) {
-      toScroll = anchoredScroll(from, to, anchor.x, anchor.y);
+    if (isScrollable(toMode)) {
+      if (anchor) {
+        const focus = focusWeekAt(from, anchor.x, anchor.y);
+        toScroll = scrollForFocus(to, focus, anchor.y);
+      } else {
+        const viewport = scrollerRef.current?.clientHeight ?? 0;
+        toScroll = scrollForFocus(to, state.today.todayWeekIndex, viewport / 2);
+      }
       if (toScroll !== 0) to.translate(0, -toScroll);
     }
 
