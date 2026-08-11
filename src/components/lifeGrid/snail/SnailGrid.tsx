@@ -36,6 +36,14 @@ type TProps = {
 
 const MORPH_DURATION = 480;
 
+// Zoom axis: pinch-in (spread) walks toward Months, pinch-out toward Years,
+// stopping on Seasons in between. Kept separate from ELifeMode's own order.
+const MODE_ZOOM_ORDER = [ELifeMode.Years, ELifeMode.Seasons, ELifeMode.Months] as const;
+// How far fingers must spread / squeeze (relative to the running baseline) to
+// commit one mode step. Re-based after every step so a long pinch chains steps.
+const PINCH_STEP_IN = 1.25;
+const PINCH_STEP_OUT = 0.8;
+
 // Modes that scroll vertically via the native DOM scroller synced to the canvas.
 const isScrollable = (mode: ELifeMode): boolean =>
   mode === ELifeMode.Months || mode === ELifeMode.Seasons;
@@ -51,7 +59,7 @@ const hasMorphFrames = (mode: ELifeMode): boolean =>
  * momentum and iOS rubber-banding come for free.
  */
 export const SnailGrid: FC<TProps> = ({ drawWeekIndexes, today, media }) => {
-  const [lifeMode] = useLifeGridMode();
+  const [lifeMode, setLifeMode] = useLifeGridMode();
   const [themeMode] = useThemeMode();
   const zodiacIconSet = useZodiacIconSet();
   const theme = THEMES[themeMode];
@@ -78,6 +86,8 @@ export const SnailGrid: FC<TProps> = ({ drawWeekIndexes, today, media }) => {
   const rafRef = useRef<number>(0);
   const paintedRef = useRef<ELifeMode>(lifeMode);
   const scrollRef = useRef<number>(0);
+  const pinchRef = useRef<{ base: number } | null>(null);
+  const lastStepRef = useRef<number>(0);
 
   const framesFor = (mode: ELifeMode) => {
     if (mode === ELifeMode.Months) return computeMonthsFrames(stateRef.current);
@@ -229,6 +239,19 @@ export const SnailGrid: FC<TProps> = ({ drawWeekIndexes, today, media }) => {
     rafRef.current = requestAnimationFrame(tick);
   };
 
+  // Advance one mode along the zoom axis. dir=+1 zooms in (toward Months),
+  // dir=-1 zooms out (toward Years). Ignored while a morph plays, and rate-
+  // limited to one step per morph so the sequence stays clean and smooth.
+  const stepZoom = (dir: 1 | -1) => {
+    const now = performance.now();
+    if (morphRef.current || now - lastStepRef.current < MORPH_DURATION) return;
+    const i = MODE_ZOOM_ORDER.indexOf(paintedRef.current);
+    const next = Math.min(MODE_ZOOM_ORDER.length - 1, Math.max(0, i + dir));
+    if (next === i) return;
+    lastStepRef.current = now;
+    setLifeMode(MODE_ZOOM_ORDER[next]);
+  };
+
   // Init Pixi once, paint the initial rest state, wire native scroll + resize.
   useEffect(() => {
     let disposed = false;
@@ -280,6 +303,64 @@ export const SnailGrid: FC<TProps> = ({ drawWeekIndexes, today, media }) => {
       stateRef.current.app = null;
       // Invalidate textures bound to the destroyed renderer.
       clearPixiCache();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Pinch-to-zoom drives the mode axis. Two-finger spread zooms in, squeeze
+  // zooms out; each threshold cross commits one step and re-bases the gesture so
+  // a long pinch chains steps. Ctrl+wheel (trackpad pinch) mirrors it on desktop.
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+
+    const dist = (t: TouchList) =>
+      Math.hypot(t[0].clientX - t[1].clientX, t[0].clientY - t[1].clientY);
+
+    const onTouchStart = (e: TouchEvent) => {
+      if (e.touches.length === 2) pinchRef.current = { base: dist(e.touches) };
+    };
+
+    const onTouchMove = (e: TouchEvent) => {
+      if (e.touches.length !== 2 || !pinchRef.current) return;
+      // Own the two-finger gesture: block native scroll / page zoom underneath.
+      e.preventDefault();
+      const d = dist(e.touches);
+      const ratio = d / pinchRef.current.base;
+      if (ratio >= PINCH_STEP_IN) {
+        stepZoom(1);
+        pinchRef.current.base = d;
+      } else if (ratio <= PINCH_STEP_OUT) {
+        stepZoom(-1);
+        pinchRef.current.base = d;
+      }
+    };
+
+    const onTouchEnd = (e: TouchEvent) => {
+      if (e.touches.length < 2) pinchRef.current = null;
+    };
+
+    const onWheel = (e: WheelEvent) => {
+      if (!e.ctrlKey) return; // trackpad pinch arrives as ctrl+wheel
+      e.preventDefault();
+      if (e.deltaY < 0) stepZoom(1);
+      else if (e.deltaY > 0) stepZoom(-1);
+    };
+
+    // Capture phase + non-passive so we intercept before the native scroller.
+    const opts = { passive: false, capture: true } as const;
+    el.addEventListener('touchstart', onTouchStart, opts);
+    el.addEventListener('touchmove', onTouchMove, opts);
+    el.addEventListener('touchend', onTouchEnd, opts);
+    el.addEventListener('touchcancel', onTouchEnd, opts);
+    el.addEventListener('wheel', onWheel, opts);
+
+    return () => {
+      el.removeEventListener('touchstart', onTouchStart, opts);
+      el.removeEventListener('touchmove', onTouchMove, opts);
+      el.removeEventListener('touchend', onTouchEnd, opts);
+      el.removeEventListener('touchcancel', onTouchEnd, opts);
+      el.removeEventListener('wheel', onWheel, opts);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
